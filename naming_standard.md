@@ -60,26 +60,26 @@ In the **Azure Acceleration Framework (AAF)**, naming conventions can be further
 
 - **Using a Suffix-Based Naming Convention:**
    - setup **config.yaml** file as follow:
-     - prefix: "ab4-dev-sea"
+     - prefix: "abc-prod-sea"
      - is_prefix: true
   ```
   [resource-type]-[workload, application, or project]-[environment]-[location]
   ```
-  Example: set "[workload, application, or project]-[environment]" as suffix e.g. "abc-dev-southeastasia"
+  Example: set "[workload, application, or project]-[environment]" as suffix e.g. "abc-dev-sea"
   ```
-  vm-abc-dev-southeastasia-001
+  vm-abc-dev-sea-001
   ```
   
 - **Using Prefix Based Naming Convention:**  
    - setup **config.yaml** file as follow:
-     - prefix: "ab4-dev-sea"
+     - prefix: "crm-prod-southeastasia"
      - is_prefix: false
   ```
   [workload, application, or project]-[environment]-[location]-[resource-type]-[custom string]
   ```
-  Example: set "[workload, application, or project]-[environment]" as suffix e.g. "crm-prod-southeastasia".
+  Example: set "[workload, application, or project]-[environment]" as suffix e.g. "abc-prod-sea".
   ```
-  crm-prod-southeastasia-vm-001
+  abc-prod-sea-vm-001
   ```
 
 ### **Considerations for Naming Conventions**
