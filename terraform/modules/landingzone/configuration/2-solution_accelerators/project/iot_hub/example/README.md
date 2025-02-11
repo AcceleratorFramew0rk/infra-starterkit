@@ -4,9 +4,9 @@
 
 # prepare and create launchpad - only run once per subscription
 
-sudo chmod -R -f 777 /tf/avm/terraform/modules/landingzone/configuration/0-launchpad/scripts
+sudo chmod -R -f 777 /tf/avm/gcc_starter_kit/landingzone/configuration/0-launchpad/scripts
 
-cd /tf/avm/terraform/modules/landingzone/configuration/0-launchpad/scripts
+cd /tf/avm/gcc_starter_kit/landingzone/configuration/0-launchpad/scripts
 
 PREFIX="aoaiuat"
 echo $PREFIX
@@ -14,7 +14,7 @@ echo $PREFIX
 ./launchpad.sh $PREFIX
 
 # goto solution accelerator folder
-cd /tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators/project/acr
+cd /tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/acr
 
 # get subscription id
 ACCOUNT_INFO=$(az account show 2> /dev/null)
@@ -72,7 +72,7 @@ terraform apply -auto-approve \
 # ------------------------------------------------------------------
 
 # create terraform.tfvars file
-cat <<EOF | sudo tee /tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars
+cat <<EOF | sudo tee /tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars
 storage_account_name="${STG_NAME}"
 resource_group_name="${RG_NAME}"
 vnet_id="${VNET_ID}"
@@ -82,7 +82,7 @@ prefix="${PROJECT_CODE}"
 environment="${ENV}"
 EOF
 
-sudo chmod -R -f 777 /tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars
+sudo chmod -R -f 777 /tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars
 
 terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
@@ -91,8 +91,8 @@ terraform init  -reconfigure \
 -backend-config="key=solution_accelerators-project-acr.tfstate"
 
 terraform plan \
--var-file="/tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars" 
+-var-file="/tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars" 
 
 terraform apply -auto-approve \
--var-file="/tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars" 
+-var-file="/tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/acr/example/terraform.tfvars" 
 

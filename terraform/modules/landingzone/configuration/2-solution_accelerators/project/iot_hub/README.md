@@ -2,7 +2,7 @@
 
 # Extract the value of 'prefix' using yq and assign it to the PREFIX variable and generate resource group name to store state file
 
-PREFIX=$(yq  -r '.prefix' /tf/avm/terraform/modules/landingzone/configuration/0-launchpad/scripts/config.yaml)
+PREFIX=$(yq  -r '.prefix' /tf/avm/gcc_starter_kit/landingzone/configuration/0-launchpad/scripts/config.yaml)
 RG_NAME="${PREFIX}-rg-launchpad"
 STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
 echo $RG_NAME
@@ -10,7 +10,7 @@ echo $STG_NAME
 
 # deploy the solution accelerator
 
-cd /tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators/project/iot_hub
+cd /tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/iot_hub
 
 terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
