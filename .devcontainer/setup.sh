@@ -16,3 +16,13 @@ if [ ! -d /tf/avm/modules/framework/terraform-azurerm-aaf ]; then
   # clone latest aaf terraform framework - 0.0.3 for reference
   git clone https://github.com/AcceleratorFramew0rk/terraform-azurerm-aaf.git /tf/avm/modules/terraform-azurerm-aaf
 fi
+
+if [ ! -f /usr/local/bin/terraform-init ]; then
+  sudo cp /tf/avm/scripts/bin/terraform-init-custom /usr/local/bin/
+  sudo chmod +x /usr/local/bin/terraform-init-custom
+fi
+
+if [ ! -f /usr/local/bin/terraform-init ]; then
+  sudo cp /tf/avm/scripts/bin/aaf /usr/local/bin/
+  sudo chmod +x /usr/local/bin/aaf
+fi

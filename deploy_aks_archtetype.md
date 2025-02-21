@@ -29,7 +29,7 @@ az account show # to show the current login account
 ** IMPORTANT: if required, modify config.yaml file to determine the vnets name and cidr ranage you want to deploy. 
 
 ```bash
-cd /tf/avm/terraform/modules/0-setup_gcc_dev_env
+cd /tf/avm/templates/0-setup_gcc_dev_env
 
 terraform init -reconfigure
 terraform plan
@@ -39,14 +39,14 @@ terraform apply -auto-approve
 ## Step 1 - create launchpad storage account and containers
 
 - set prefix and configuration
-- modify /tf/avm/terraform/modules/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
+- modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
 
 
 ```bash
-sudo chmod -R -f 777 /tf/avm/terraform/modules/landingzone/configuration
+sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
 # goto launchpad folder
-cd /tf/avm/terraform/modules/landingzone/configuration/0-launchpad/launchpad
+cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 
 # create launchpad storage account
 ./scripts/import.sh 
@@ -56,7 +56,7 @@ cd /tf/avm/terraform/modules/landingzone/configuration/0-launchpad/launchpad
 
 ```bash
 # goto landing zone folder
-cd /tf/avm/terraform/modules/landingzone/configuration/1-landingzones
+cd /tf/avm/templates/landingzone/configuration/1-landingzones
 
 # application landing zone
 ./deploy_application_landingzone_script.sh
@@ -66,7 +66,7 @@ cd /tf/avm/terraform/modules/landingzone/configuration/1-landingzones
 
 ```bash
 # goto solution accelerators folder
-cd /tf/avm/terraform/modules/landingzone/configuration/2-solution_accelerators
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
 
 # application aks architype - aks, sql server, storage account etc...
 ./deploy_pattern_aks_architype_script.sh

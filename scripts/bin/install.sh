@@ -59,6 +59,8 @@ if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; th
 cat <<EOF > ./../config/input.yaml
 subscription_id: "${SUB_ID}"
 prefix: "${PREFIX}"
+is_prefix: false
+is_single_resource_group: false
 environment: "${ENVIRONMENT}"
 vnets:
   hub_ingress_internet: 
@@ -89,6 +91,8 @@ else
 cat <<EOF > ./../config/input.yaml
 subscription_id: "${SUB_ID}"
 prefix: "${PREFIX}"
+is_prefix: false
+is_single_resource_group: false
 environment: "${ENVIRONMENT}"
 vnets:
   hub_ingress_internet: 
@@ -129,7 +133,7 @@ if [ $? -ne 0 ]; then
 fi
 # perform copy
 echo "copy output_config.yaml to working directory"
-cp "$(dirname "$0")/../config/output_config.yaml" "/tf/avm/terraform/modules/landingzone/configuration/0-launchpad/scripts/config.yaml"
+cp "$(dirname "$0")/../config/output_config.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 
 # process terraform based on settings.yaml
