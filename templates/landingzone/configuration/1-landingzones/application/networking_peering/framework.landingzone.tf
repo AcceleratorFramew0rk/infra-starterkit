@@ -68,14 +68,27 @@ locals {
   remote =  try(module.landingzone.remote, null)   
 } 
 
-data "external" "get_storage_account" {
-  program = ["bash", "aaf"]
+variable "config_path" {
+  description = "Path to the config.yaml file"
+  type        = string
+  default     = "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+}
+
+data "external" "get_backend_config" {
+  program = [
+    "bash", "-c", <<EOT
+      PREFIX=$(yq -r '.prefix' "${var.config_path}")
+      RG_NAME="$${PREFIX}-rg-launchpad"
+      STG_NAME=$(az storage account list --resource-group "$RG_NAME" --query "[?contains(name, 'stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
+      echo "{\"storage_account_name\": \"$STG_NAME\", \"resource_group_name\": \"$RG_NAME\"}"
+    EOT
+  ]
 }
 
 # Assign the output to a Terraform local variable
 locals {
-  storage_account_name = data.external.get_storage_account.result["storage_account_name"]
-  resource_group_name = data.external.get_storage_account.result["resource_group_name"]  
+  storage_account_name = data.external.get_backend_config.result["storage_account_name"]
+  resource_group_name = data.external.get_backend_config.result["resource_group_name"]  
 }
 
 output "storage_account_name" {

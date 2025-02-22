@@ -22,7 +22,3 @@ if [ ! -f /usr/local/bin/terraform-init ]; then
   sudo chmod +x /usr/local/bin/terraform-init-custom
 fi
 
-if [ ! -f /usr/local/bin/terraform-init ]; then
-  sudo cp /tf/avm/scripts/bin/aaf /usr/local/bin/
-  sudo chmod +x /usr/local/bin/aaf
-fi

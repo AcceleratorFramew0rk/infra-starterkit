@@ -41,8 +41,10 @@ module "landingzone" {
 module "naming" {
   source  = "Azure/naming/azurerm"
   version = ">= 0.3.0"
+ 
   prefix = local.global_settings.is_prefix == true ? ["${try(local.global_settings.prefix, var.prefix)}"] : []
-  suffix = local.global_settings.is_prefix == true ? [] : ["${try(local.global_settings.prefix, var.prefix)}"] 
+  suffix = local.global_settings.is_prefix == true ? [] : ["${try(local.global_settings.prefix, var.prefix)}"]
+
   unique-seed            = "random"
   unique-length          = 3
   unique-include-numbers = false  
@@ -62,6 +64,10 @@ locals {
   global_settings = try(module.landingzone.global_settings, null)   
   remote =  try(module.landingzone.remote, null)   
 } 
+
+# data "external" "get_backend_config" {
+#   program = ["bash", "aaf"]
+# }
 
 variable "config_path" {
   description = "Path to the config.yaml file"
@@ -84,6 +90,9 @@ data "external" "get_backend_config" {
 locals {
   storage_account_name = data.external.get_backend_config.result["storage_account_name"]
   resource_group_name = data.external.get_backend_config.result["resource_group_name"]  
+  
+  # tfstatefile_storage_account_name = data.external.get_backend_config.result["storage_account_name"]
+  # tfstatefile_resource_group_name = data.external.get_backend_config.result["resource_group_name"]
 }
 
 output "storage_account_name" {
@@ -93,3 +102,11 @@ output "storage_account_name" {
 output "resource_group_name" {
   value = local.resource_group_name
 }
+
+# output "tfstatefile_resource_group_name" {
+#   value = local.tfstatefile_resource_group_name
+# }
+
+# output "tfstatefile_storage_account_name" {
+#   value = local.tfstatefile_storage_account_name
+# }
