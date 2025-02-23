@@ -40,6 +40,7 @@ tfignite plan -path=./infra -var='resource_names=["web"]'
 
 #### **Behind the Scenes (What `tfignite` Does)**
 1️⃣ **Change to specified Terraform configuration directory**  
+1️⃣ Retrieve **resource group name** and **storage account name** storing TFState File via azure CLI  
 2️⃣ **Run `terraform init`** to initialize the backend and providers  
 3️⃣ **Run `terraform plan`** to preview changes  
 4️⃣ **Run `terraform apply -auto-approve`** for automatic deployment  
