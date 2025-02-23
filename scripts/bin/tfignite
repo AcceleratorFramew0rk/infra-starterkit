@@ -8,7 +8,7 @@
 
 # Check if at least 2 arguments are provided
 if [[ $# -lt 1 ]]; then
-    echo "Usage: tftool <init|apply|plan> [-var=key=value | -path=path]..."
+    echo "Usage: tfignite <init|apply|plan> [-var=key=value | -path=path]..."
     echo " "
     echo "The available commands for execution are listed below."
     echo "The primary workflow commands are given first, followed by"
@@ -21,11 +21,15 @@ if [[ $# -lt 1 ]]; then
     echo " "
     echo "All other commands:"
     echo "  -path       The path to the Terraform configuration (if not the current directory)"
+    echo "  -config     The path and filename to the Terraform configuration file - config.yaml"
     echo "  -var        Set a variable in the Terraform configuration"
     echo " "
     echo "Example: "
+    echo "tfignite init -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr"  
     echo "tfignite plan -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr"  
     echo "tfignite apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr -var=resource_names=[\"web\"] "       
+    echo "tfignite apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr -config=/tf/avm/scripts/templates/config.yaml"
+    echo "tfignite apply" 
     exit 1
 fi
 
@@ -41,6 +45,7 @@ fi
 # Collect variables and path
 TF_VARS=()
 TF_PATH=""
+TF_CONFIG=""
 
 while [[ $# -gt 0 ]]; do
     # echo "Processing argument: $1"
@@ -52,12 +57,23 @@ while [[ $# -gt 0 ]]; do
             exit 1
         fi
         TF_PATH="${1#-path=}"
+    elif [[ "$1" =~ ^-config= ]]; then
+        if [[ -n "$TF_CONFIG" ]]; then
+            echo "Error: Only one '-path' argument is allowed."
+            exit 1
+        fi
+        TF_CONFIG="${1#-config=}"        
     else
         echo "ERROR: invalid argument '$1'"
         exit 1
     fi
     shift
 done
+
+if [[ -z "$TF_CONFIG" ]]; then
+  echo "Using default config file"
+  TF_CONFIG="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+fi
 
 # Ensure at least one -path is provided
 if [[ -z "$TF_PATH" ]]; then
@@ -76,7 +92,9 @@ fi
 if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* ]]; then
   # alway exec terraform init
 
-  PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+  # PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+  echo "Using config file: $TF_CONFIG"
+  PREFIX=$(yq  -r '.prefix' $TF_CONFIG)
   RG_NAME="${PREFIX}-rg-launchpad"
   STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
   echo "Resource Group name: ${RG_NAME}"
