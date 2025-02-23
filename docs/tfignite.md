@@ -29,10 +29,10 @@ tfignite apply -path=/path/to/terraform/config -var="region=westus" -var="instan
 
 ##### **Example with Debug Mode**  
 ```bash
-tfignite init -path=./infra -vars="env=prod"
+tfignite plan -path=./infra -vars="env=prod"
 ```
 
-- Runs **`terraform init`**
+- Runs **`terraform init`** and **`terraform plan`**  
 - Uses Terraform configuration located in `./infra` directory  
 - Passes `-var="env=prod"` dynamically
 
