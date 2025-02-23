@@ -22,20 +22,19 @@ With **`tfignite`**, you can:
 #### **Usage**  
 ##### **Basic Execution**  
 ```bash
-tfignite apply -path=/path/to/terraform/config -var="region=westus" -var="instance_count=3"
+tfignite apply -path=/path/to/terraform/config 
 ```
 - Runs **`terraform init`**, **`terraform plan`**, and **`terraform apply -auto-approve`**  
 - Uses Terraform configuration located in `/path/to/terraform/config`  
-- Passes `-var="region=westus"` and `-var="instance_count=3"` dynamically  
 
-##### **Example with Debug Mode**  
+##### **Example with -var variables**  
 ```bash
-tfignite plan -path=./infra -vars="env=prod"
+tfignite plan -path=./infra -var='resource_names=["web"]'
 ```
 
 - Runs **`terraform init`** and **`terraform plan`**  
 - Uses Terraform configuration located in `./infra` directory  
-- Passes `-var="env=prod"` dynamically
+- Passes **-var='resource_names=["web"]'** dynamically
 
 ---
 
