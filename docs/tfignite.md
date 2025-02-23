@@ -7,6 +7,7 @@ With **`tfignite`**, you can:
 ✅ **Specify the Terraform configuration directory** for execution  
 ✅ **Pass custom `-var` values** dynamically  
 ✅ **Ensure smooth execution** of `init`, `plan`, and `apply` in one streamlined workflow  
+✅ **Specify the config.yaml file location** for prefix and virtual network name and cidr details  
 
 ---
 
