@@ -155,8 +155,11 @@ LOC=$(yq '.location' $CONFIG_FILE_PATH)
 echo $LOC
 
 # Generate storage acc name to store state file
-RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
-echo $RND_NUM
+# RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
+# echo $RND_NUM
+
+RND_NUM=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 3)
+echo "Generated Code: $RND_NUM"
 STG_NAME="${PROJECT_CODE}stgtfstate${RND_NUM}"
 echo $STG_NAME
 STG_NAME="${STG_NAME//-/}"
