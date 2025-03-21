@@ -144,7 +144,7 @@ echo "--------------------------------------------------------------------------
 az group show --name $RG_NAME > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
-    read -p "ERROR: Resource group $RG_NAME already exists. Exiting."
+    echo "ERROR: Resource group $RG_NAME already exists. Exiting."
     exit 1
 else
     # If the resource group does not exist, attempt to create it
@@ -152,7 +152,7 @@ else
     if [ $? -eq 0 ]; then
         echo "Resource group $RG_NAME created successfully."
     else
-        read -p "ERROR: Failed to create resource group $RG_NAME. Exiting."
+        echo "ERROR: Failed to create resource group $RG_NAME. Exiting."
         exit 1
     fi
 fi
