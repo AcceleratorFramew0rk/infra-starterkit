@@ -120,7 +120,7 @@ module "vmss" {
   platform_fault_domain_count = 1
   admin_password              = random_password.password.result # "P@ssw0rd1234!"
   sku_name                    = module.get_valid_sku_for_deployment_region.sku
-  instances                   = 2
+  instances                   = var.instances # 2
   extension_protected_setting = {}
   user_data_base64            = null
   automatic_instance_repair   = null

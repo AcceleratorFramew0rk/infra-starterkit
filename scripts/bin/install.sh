@@ -137,6 +137,8 @@ cp "$(dirname "$0")/../config/output_config.yaml" "/tf/avm/templates/landingzone
 
 
 # process terraform based on settings.yaml
-# source ./exec_terraform.sh
 pwd
-source "$(dirname "$0")/../lib/exec_terraform.sh"
+
+# execute terraform init, plan and apply
+# for testing, comment it out
+# source "$(dirname "$0")/../lib/exec_terraform.sh"

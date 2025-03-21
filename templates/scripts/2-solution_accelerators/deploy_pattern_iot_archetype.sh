@@ -14,13 +14,7 @@ linux_fx_version="DOCKER|nginx"
 # Define the resource_names array string, default is two app service with names ["web","api"]
 resource_names='["web"]'
 
-tfignite plan \
--path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service \
--var="linux_fx_version=${linux_fx_version}" \
--var="resource_names=${resource_names}" 
-
-tfignite apply \
--path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service \
+tfignite apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service \
 -var="linux_fx_version=${linux_fx_version}" \
 -var="resource_names=${resource_names}" 
 
@@ -70,8 +64,7 @@ SITE_CONFIG_JSON=$(cat <<EOF
 EOF
 )
 
-tfignite apply \
--path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/linux_function_app \
+tfignite apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/linux_function_app \
 -var "site_config=${SITE_CONFIG_JSON}"
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 

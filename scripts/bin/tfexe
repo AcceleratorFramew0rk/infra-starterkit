@@ -1,0 +1,266 @@
+#!/bin/bash
+
+# example:
+# tfexec plan -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr
+# tfexec apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr
+# tfexec plan -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr -var="prefix=hubspoke -var=location=westus2"
+# tfexec apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr -var="prefix=hubspoke -var=location=westus2"
+# tfexec apply run-all -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project"
+# tfexec apply run-all -include=/tf/avm/config/path.hcl"
+
+# Begin Functions
+exec_terraform() {
+
+  local ACTION=$1
+  local TF_CONFIG=$2
+
+  if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* ]]; then
+    # alway exec terraform init
+
+    # PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+    echo "Using config file: $TF_CONFIG"
+    PREFIX=$(yq  -r '.prefix' $TF_CONFIG)
+    RG_NAME="${PREFIX}-rg-launchpad"
+    STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
+    echo "Resource Group name: ${RG_NAME}"
+    echo "Storage Account name: ${STG_NAME}"
+
+    # Get the folder name from the current directory
+
+    PATH_STRING="$(pwd)"
+
+    if [[ "$PATH_STRING" == *"2-solution_accelerators"* ]]; then
+      # solution accelerators
+      PATH_STRING=$(echo "$(pwd)" | tr -d '_')
+      EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $(NF-1) "-" $NF}')
+      CONTAINER_NAME="1-landingzones"
+      KEY="solution_accelerators-${EXTRACTED_NAME}.tfstate"
+      echo "Container name: ${CONTAINER_NAME}"
+      echo "Key: ${KEY}"
+    else 
+      # 1-landingzones
+      PATH_STRING=$(echo "$(pwd)" | tr -d '_')
+      EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $(NF-1) "-" $NF}')
+      CONTAINER_NAME="1-landingzones"
+      KEY="landingzones-${EXTRACTED_NAME}.tfstate"
+      echo "Container name: ${CONTAINER_NAME}"
+      echo "Key: ${KEY}"
+    fi
+
+    # Store the command in a variable
+    cmdexecute="terraform init -reconfigure \
+      -backend-config=\"resource_group_name=${RG_NAME}\" \
+      -backend-config=\"storage_account_name=${STG_NAME}\" \
+      -backend-config=\"container_name=${CONTAINER_NAME}\" \
+      -backend-config=\"key=${KEY}\""
+
+    # Print the command (for debugging)
+    echo "Running..."
+    echo $cmdexecute
+
+    # deploy the solution accelerator
+    terraform init  -reconfigure \
+    -backend-config="resource_group_name=${RG_NAME}" \
+    -backend-config="storage_account_name=${STG_NAME}" \
+    -backend-config="container_name=${CONTAINER_NAME}" \
+    -backend-config="key=${KEY}"
+
+    if [ $? -ne 0 ]; then
+      echo -e "     "
+      echo -e "\e[31mTerraform init failed for ${EXTRACTED_NAME}. Exiting.\e[0m"
+      exit 1
+    else
+      echo -e "     "
+      echo -e "\e[32mTerraform init succeeded for ${EXTRACTED_NAME}!\e[0m"
+    fi
+
+  fi
+
+
+  if [[ "$ACTION" == *"apply"* ]]; then
+    echo "     "
+    echo "Running..."
+    echo "terraform $ACTION ${TF_VARS[@]}"
+    echo "     "
+    terraform "$ACTION" -auto-approve "${TF_VARS[@]}"
+    
+    if [ $? -ne 0 ]; then
+      echo -e "     "
+      echo -e "\e[31mTerraform $ACTION failed for ${EXTRACTED_NAME}. Exiting.\e[0m"
+      exit 1
+    else
+      echo -e "     "
+      echo -e "\e[32mTerraform $ACTION succeeded for ${EXTRACTED_NAME}!\e[0m"
+    fi
+
+  elif [[ "$ACTION" == *"plan"* ]]; then
+    echo "     "
+    echo "Running..."
+    echo "terraform $ACTION ${TF_VARS[@]}"
+    echo "     "
+    terraform "$ACTION" "${TF_VARS[@]}"
+    
+    if [ $? -ne 0 ]; then
+      echo -e "     "
+      echo -e "\e[31mTerraform $ACTION failed for ${EXTRACTED_NAME}. Exiting.\e[0m"
+      exit 1
+    else
+      echo -e "     "
+      echo -e "\e[32mTerraform $ACTION succeeded for ${EXTRACTED_NAME}!\e[0m"
+    fi
+  fi
+
+}
+# End Functions
+
+# Check if at least 2 arguments are provided
+if [[ $# -lt 1 ]]; then
+    echo "Usage: aztfexec <init|apply|plan> [-var=key=value | -path=path | -config=configpath]..."
+    echo " "
+    echo "The available commands for execution are listed below."
+    echo "The primary workflow commands are given first, followed by"
+    echo "less common or more advanced commands."
+    echo " "
+    echo "Main commands:"
+    echo "  init          Prepare your working directory for other commands"
+    echo "  plan          Execute init and then show changes required by the current configuration"
+    echo "  apply         Execute init and then create or update infrastructure"
+    echo " "
+    echo "All other commands:"
+    echo "  run-all    Execute all the solution accelerators of all sub-folders under this parent folder"
+    echo "  -include    Execute all the solution accelerators under the folders listed in the file"
+    echo "  -path       The path to the Terraform configuration (if not the current directory)"
+    echo "  -config     The path and filename to the Terraform configuration file - config.yaml"
+    echo "  -var        Set a variable in the Terraform configuration"
+    echo " "
+    echo "Example: "
+    echo "aztfexec init -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr"  
+    echo "aztfexec plan -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr"  
+    echo "aztfexec apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr -var=resource_names=[\"web\"] "       
+    echo "aztfexec apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr -config=/tf/avm/scripts/templates/config.yaml"
+    echo "aztfexec apply" 
+    echo "aztfexec apply run-all -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project"
+    echo "aztfexec apply run-all -include=/tf/avm/config/path.hcl"
+    exit 1
+fi
+
+# Extract first argument (apply or plan)
+ACTION=$1
+shift
+
+if [[ "$ACTION" != "apply" && "$ACTION" != "plan" && "$ACTION" != "init" ]]; then
+    echo -e "\e[31mError: First parameter must be 'int' or 'apply' or 'plan'\e[0m"
+    exit 1
+fi
+
+# Collect variables and path
+TF_VARS=()
+TF_PATH=""
+TF_CONFIG=""
+TF_RUN_ALL=""
+TF_INCLUDE=""
+
+while [[ $# -gt 0 ]]; do
+    # echo "Processing argument: $1"
+    if [[ "$1" =~ ^-var= ]]; then
+        TF_VARS+=("$1")
+    elif [[ "$1" =~ ^-path= ]]; then
+        if [[ -n "$TF_PATH" ]]; then
+            echo -e "\e[31mError: Only one '-path' argument is allowed.\e[0m"
+            exit 1
+        fi
+        TF_PATH="${1#-path=}"
+    elif [[ "$1" =~ ^-config= ]]; then
+        if [[ -n "$TF_CONFIG" ]]; then
+            echo -e "\e[31mError: Only one '-path' argument is allowed.\e[0m"
+            exit 1
+        fi
+        TF_CONFIG="${1#-config=}"   
+
+    elif [[ "$1" =~ ^-run-all ]]; then
+        if [[ -n "$TF_RUN_ALL" ]]; then
+            echo -e "\e[31mError: Only one 'run-all' argument is allowed.\e[0m"
+            exit 1
+        fi
+        TF_RUN_ALL="${1}"      
+
+    elif [[ "$1" =~ ^-include ]]; then
+        if [[ -n "$TF_INCLUDE" ]]; then
+            echo -e "\e[31mError: Only one '-include' argument is allowed.\e[0m"
+            exit 1
+        fi
+        TF_INCLUDE="${1#-include=}"                             
+    else
+        echo -e "\e[31mError: invalid argument '$1'\e[0m"
+        exit 1
+    fi
+    shift
+done
+
+if [[ -z "$TF_CONFIG" ]]; then
+  echo "Using default config file"
+  TF_CONFIG="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+fi
+
+# Ensure at least one -path is provided
+if [[ -z "$TF_PATH" ]]; then
+    echo "using current directory as path"
+    echo "$(pwd)"
+else
+  if [[ ! -d "$TF_PATH" ]]; then
+      echo -e "\e[31mError: Specified path '$TF_PATH' does not exist.\e[0m"
+      exit 1
+  fi
+  # goto working directory
+  echo "Executing Terraform in directory: $TF_PATH"
+  cd "$TF_PATH" || exit
+fi
+
+
+if [[ -z "$TF_RUN_ALL" ]]; then
+
+    echo "execute only the solution accelerator under this folder"
+    exec_terraform "$ACTION" "$TF_CONFIG"
+
+else
+
+  if [[ -z "$TF_INCLUDE" ]]; then
+
+
+    echo "execute all the solution accelerators of all sub-folders under this parent folder"
+    echo "$(pwd)"
+
+    # Loop through first-level subfolders
+    PARENT_FOLDER="$(pwd)"  # Set parent folder to the current directory
+    for dir in "$PARENT_FOLDER"/*/; do
+      # Check if it is a directory
+      if [ -d "$dir" ]; then
+        echo "$dir"
+        cd "$dir"
+        exec_terraform "$ACTION" "$TF_CONFIG"
+      fi
+    done
+
+
+  else
+
+
+    FILE="$TF_INCLUDE" # "include.hcl"  # File containing paths
+
+    # Check if file exists
+    if [[ ! -f "$FILE" ]]; then
+      echo -e "\e[31mError: File '$FILE' not found.\e[0m"
+      exit 1
+    fi
+
+    # Read and loop through each line
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      echo "$line"
+      cd "$line"
+      exec_terraform "$ACTION" "$TF_CONFIG"
+
+    done < "$FILE"
+
+  fi
+
+fi

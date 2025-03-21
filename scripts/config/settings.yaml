@@ -41,23 +41,23 @@ management:
 devops:
   containter_instance_avm: true
 project:
-  acr: true
+  acr_avm: true
   ai_foundry_enterprise: false
   aks_avm_ptn: false
-  apim: false
-  app_service: false
+  apim: true
+  app_service: true
   azure_open_ai: false
-  container_app: false
+  container_app: true
   container_instance_avm: false
-  cosmos_db_mongo: false
-  cosmos_db_sql: false
+  cosmos_db_mongo: true
+  cosmos_db_sql: true
   data_explorer: false
   event_hubs: false
   iot_hub: false
   keyvault: false
   linux_function_app: false
   logic_app: false
-  mssql: false
+  mssql: true
   notification_hub: false
   postgresql: false 
   redis_cache_avm: false

@@ -17,16 +17,15 @@ terraform apply -auto-approve
 
 cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/vm
 
-# max count is 5 only
-count='2'
+resource_names='["1","2"]'
 
 # Run the Custom Terraform initialization script "terraform-init-custom" at location "/usr/local/bin" to set up the backend and providers
 terraform-init-custom
 
 # Generate an execution plan to preview the changes Terraform will make
 terraform plan \
--var="count=${count}" 
+-var="resource_names=${resource_names}" 
 
 # Apply the Terraform configuration and automatically approve changes without prompting for confirmation
 terraform apply -auto-approve \
--var="count=${count}" 
+-var="resource_names=${resource_names}" 

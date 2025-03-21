@@ -55,45 +55,8 @@ variable "subnet_name" {
   default = "AppSubnet"
 }
 
-# variable deprecated
 variable "resource_names" {
   description = "List of Virtual Machine names"
   type        = list(string)
   default     = ["1"] # default to one virtual machine # ["1", "2"] default to two virtual machines. make sure the vaule is single digit
 }
-
-# variable "cpu" {
-#   description = "CPU core for the Virtual Machines to deploy"
-#   type        = string
-#   default     = null # default to null. make sure the vaule is single digit
-# }
-
-# variable "memory" {
-#   description = "Memory in MB for the Virtual Machines to deploy"
-#   type        = string
-#   default     = null # default to null. make sure the vaule is single digit
-# }
-
-variable "sku" {
-  description = "Sku size for the Virtual Machines to deploy"
-  type        = string
-  default     = "Standard_D8s_v3" 
-}
-
-variable "storage" {
-  description = "storage in GB for the Virtual Machines to deploy"
-  type        = string
-  default     = "32" # default to 32. 
-}
-
-variable "vm_count" {
-  description = "Number Virtual Machines to deploy"
-  type        = number
-  default     = 1 # default to 1. make sure the vaule is single digit
-}
-
-# developer portal variables
-# - os type: windows or linux
-# - sku: 2 cpu to 16 cpu
-# - storage: 32 to 2 TB
-# - count: 1-5

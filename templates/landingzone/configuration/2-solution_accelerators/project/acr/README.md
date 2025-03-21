@@ -9,3 +9,7 @@ terraform plan
 
 # Apply the Terraform configuration and automatically approve changes without prompting for confirmation
 terraform apply -auto-approve
+
+
+# OR using AAF terraform tool "tfdeploy apply"
+tfignite apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr

@@ -1,9 +1,10 @@
-### **tfignite: Accelerate Your Terraform Deployments 🚀**  
+🚀 **EzTF: Effortless Terraform, Simplified.**  
 
 #### **Overview**  
-**`tfignite`** is a powerful command-line tool designed to **automate and accelerate Terraform deployments**. It simplifies running Terraform **`init`**, **`plan`**, and **`apply`** with flexible configuration options, making infrastructure provisioning faster and more efficient.  
 
-With **`tfignite`**, you can:  
+EzTF is a lightweight, powerful wrapper for Terraform and command-line tool designed to **automate and accelerate Terraform deployments**. It simplifies running Terraform **`init`**, **`plan`**, and **`apply`** with flexible configuration options, making infrastructure provisioning faster and more efficient. EzTF makes Terraform **faster, easier, and more reliable**—so you can focus on what matters.  
+
+With **`eztf`**, you can:  
 ✅ **Specify the Terraform configuration directory** for execution  
 ✅ **Pass custom `-var` values** dynamically  
 ✅ **Ensure smooth execution** of `init`, `plan`, and `apply` in one streamlined workflow  
@@ -22,14 +23,14 @@ With **`tfignite`**, you can:
 #### **Usage**  
 ##### **Basic Execution**  
 ```bash
-tfignite apply -path=/path/to/terraform/config 
+eztf apply -path=/path/to/terraform/config 
 ```
 - Runs **`terraform init`**, **`terraform plan`**, and **`terraform apply -auto-approve`**  
 - Uses Terraform configuration located in `/path/to/terraform/config`  
 
 ##### **Example with -var variables**  
 ```bash
-tfignite plan -path=./infra -var='resource_names=["web"]'
+eztf plan -path=./infra -var='resource_names=["web"]'
 ```
 
 - Runs **`terraform init`** and **`terraform plan`**  
@@ -38,7 +39,7 @@ tfignite plan -path=./infra -var='resource_names=["web"]'
 
 ---
 
-#### **Behind the Scenes (What `tfignite` Does)**
+#### **Behind the Scenes (What `eztf` Does)**
 1️⃣ **Change to specified Terraform configuration directory**  
 1️⃣ Retrieve **resource group name** and **storage account name** storing TFState File via azure CLI  
 2️⃣ **Run `terraform init`** to initialize the backend and providers  
@@ -47,12 +48,12 @@ tfignite plan -path=./infra -var='resource_names=["web"]'
 
 ---
 
-#### **Why tfignite?**  
+#### **Why eztf?**  
 🚀 **Faster Deployments** – Eliminates repetitive Terraform command inputs  
 🔄 **Automation-Friendly** – Ideal for CI/CD pipelines and infrastructure automation  
 🛠️ **Customizable** – Supports variable injection and custom Terraform directories  
 
 ---
 
-### **Get Started with tfignite Today! 🔥**  
+### **Get Started with eztf Today! 🔥**  
 

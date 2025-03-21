@@ -80,10 +80,8 @@ resource "azurerm_user_assigned_identity" "user" {
 module "virtualmachine1" {
   source = "Azure/avm-res-compute-virtualmachine/azurerm"
   version = "0.14.0"
-  # version = "0.18.1" # Mar 2025
 
-  # for_each                     = toset(var.resource_names)
-  for_each                     = local.vm_indices 
+  for_each                     = toset(var.resource_names)
   
   enable_telemetry                       = var.enable_telemetry
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
@@ -96,7 +94,7 @@ module "virtualmachine1" {
     : replace("${module.naming.virtual_machine.name}-${each.value}-${random_string.this.result}", "-", "")
   )
   admin_credential_key_vault_resource_id = module.avm_res_keyvault_vault.resource_id # module.avm_res_keyvault_vault.resource.id
-  virtualmachine_sku_size                = var.sku # "Standard_D8s_v3" # "Standard_D8s_v3" 
+  virtualmachine_sku_size                = "Standard_D8s_v3" # "Standard_D8s_v3" 
   zone                                   = random_integer.zone_index.result 
 
   # use source_image_resource_id for gcc, else use default source_image_reference
@@ -126,7 +124,7 @@ module "virtualmachine1" {
       storage_account_type = "StandardSSD_LRS"
       lun                  = 0
       caching              = "ReadWrite"
-      disk_size_gb         = var.storage # default is 32 gb
+      disk_size_gb         = 32
     }
   }
 

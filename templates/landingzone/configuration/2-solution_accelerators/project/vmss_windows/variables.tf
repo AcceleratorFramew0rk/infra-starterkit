@@ -54,3 +54,8 @@ variable "subnet_name" {
   type        = string  
   default = "AppSubnet"
 }
+
+variable "instances" {
+  type        = string  
+  default = "2"
+}

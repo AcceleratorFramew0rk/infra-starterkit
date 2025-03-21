@@ -44,16 +44,16 @@ locals {
       sku = {
         name     = "StandardPool"
         capacity = 50
-        tier     = "Standard"
+        tier     = var.tier # "Standard"
       }
       per_database_settings = {
-        min_capacity = 50
-        max_capacity = 50
+        min_capacity = 10
+        max_capacity = var.max_capacity # 50
       }
       maintenance_configuration_name = "SQL_Default"
       zone_redundant                 = false
       license_type                   = "LicenseIncluded"
-      max_size_gb                    = 50
+      max_size_gb                    = var.max_size # 50
     }
   }
 
@@ -63,7 +63,7 @@ locals {
       collation       = "SQL_Latin1_General_CP1_CI_AS"
       elastic_pool_id = module.sql_server.resource_elasticpools["elasticpool1"].id
       license_type    = "LicenseIncluded"
-      max_size_gb     = 50
+      max_size_gb     = var.max_size # 50
       sku_name        = "ElasticPool"
 
       short_term_retention_policy = {
