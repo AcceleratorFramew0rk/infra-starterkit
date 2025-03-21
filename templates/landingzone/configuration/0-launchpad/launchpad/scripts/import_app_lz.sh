@@ -152,11 +152,15 @@ RG_NAME="${PROJECT_CODE}-rg-launchpad"
 # Location
 # LOC="${CONFIG_location}" # "southeastasia"
 LOC=$(yq '.location' $CONFIG_FILE_PATH)
+echo $LOC
 
 # Generate storage acc name to store state file
 RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
+echo $RND_NUM
 STG_NAME="${PROJECT_CODE}stgtfstate${RND_NUM}"
+echo $STG_NAME
 STG_NAME="${STG_NAME//-/}"
+echo $STG_NAME
 CONTAINER1="0-launchpad"
 CONTAINER2="1-landingzones"
 CONTAINER3="2-solution-accelerators"
