@@ -40,31 +40,31 @@ generate_random_string() {
     echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 3 | head -n 1 | tr '[:upper:]' '[:lower:]')
 }
 
-# Define the function for configuring project files
-configure_project_files() {
-  local search_word="$1"
-  local replace_word="$2"
-  local exclude_file="import.sh" # The file to exclude from the search and replace
+# # Define the function for configuring project files
+# configure_project_files() {
+#   local search_word="$1"
+#   local replace_word="$2"
+#   local exclude_file="import.sh" # The file to exclude from the search and replace
 
-  echo " "
-  echo "-----------------------------------------------------------------------------"  
-  echo "Configure files for project with search word $search_word"  
-  timestamp
-  echo "-----------------------------------------------------------------------------"  
+#   echo " "
+#   echo "-----------------------------------------------------------------------------"  
+#   echo "Configure files for project with search word $search_word"  
+#   timestamp
+#   echo "-----------------------------------------------------------------------------"  
 
-  # Check if the directory exists
-  if [[ -d "$DIRECTORY_PATH" ]]; then
-      # Perform the search and replace, excluding the specified file
-      # find only terraform.tf files
-      # find "$DIRECTORY_PATH" -name 'terraform.tf' -exec grep -Iq . {} \; -print | while read file; do
-      find "$DIRECTORY_PATH" -type f ! -name "$exclude_file" -exec grep -Iq . {} \; -print | while read file; do
-          sed -i -e "s/$search_word/$replace_word/g" "$file"
-      done
-      echo "Replacement complete in directory: $DIRECTORY_PATH"
-  else
-      echo "Directory not found."
-  fi
-}
+#   # Check if the directory exists
+#   if [[ -d "$DIRECTORY_PATH" ]]; then
+#       # Perform the search and replace, excluding the specified file
+#       # find only terraform.tf files
+#       # find "$DIRECTORY_PATH" -name 'terraform.tf' -exec grep -Iq . {} \; -print | while read file; do
+#       find "$DIRECTORY_PATH" -type f ! -name "$exclude_file" -exec grep -Iq . {} \; -print | while read file; do
+#           sed -i -e "s/$search_word/$replace_word/g" "$file"
+#       done
+#       echo "Replacement complete in directory: $DIRECTORY_PATH"
+#   else
+#       echo "Directory not found."
+#   fi
+# }
 
 # Define a timestamp function
 timestamp() {
@@ -206,13 +206,15 @@ echo "Start replacing variables"
 timestamp
 echo "-----------------------------------------------------------------------------"  
 
-# Call the function with different search and replace terms
-# Update this path based on your environment (Git Bash/Cygwin or WSL)
-# DIRECTORY_PATH="/tf/avm/templates/landingzone"      
+# # Call the function with different search and replace terms
+# # Update this path based on your environment (Git Bash/Cygwin or WSL)
+# # DIRECTORY_PATH="/tf/avm/templates/landingzone"      
+
 DIRECTORY_PATH="./../../../configuration"               
-configure_project_files "{{resource_group_name}}" "$RG_NAME"
-configure_project_files "{{storage_account_name}}" "$STG_NAME"
-configure_project_files "{{prefix}}" "$PROJECT_CODE"
+
+# configure_project_files "{{resource_group_name}}" "$RG_NAME"
+# configure_project_files "{{storage_account_name}}" "$STG_NAME"
+# configure_project_files "{{prefix}}" "$PROJECT_CODE"
 
 echo "-----------------------------------------------------------------------------"  
 echo "Start terraform import commands"  
@@ -258,10 +260,9 @@ CONFIG_vnets_hub_ingress_intranet_name=""
 CONFIG_vnets_hub_egress_intranet_name=""
 CONFIG_vnets_management_name=""
 
-
 # Call the function and capture the output
-GCCI_VNET_DEVOPS_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$CONFIG_vnets_devops_name")
-GCCI_VNET_PROJECT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$CONFIG_vnets_project_name")
+# GCCI_VNET_DEVOPS_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$CONFIG_vnets_devops_name")
+# GCCI_VNET_PROJECT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$CONFIG_vnets_project_name")
 
 
 # Replace the hardcoded subscription ID with the $SUBSCRIPTION_ID variable
