@@ -119,7 +119,8 @@ echo $CWD
 # CONFIG_FILE_PATH="${CWD}/../scripts/config.yaml"
 CONFIG_FILE_PATH="./../scripts/config.yaml"
 echo $CONFIG_FILE_PATH
-eval $(parse_yaml $CONFIG_FILE_PATH "CONFIG_")
+
+# eval $(parse_yaml $CONFIG_FILE_PATH "CONFIG_")
 
 #------------------------------------------------------------------------
 # generate templates
@@ -131,14 +132,18 @@ eval $(parse_yaml $CONFIG_FILE_PATH "CONFIG_")
 
 
 RESOURCE_GROUP_NAME=$(yq '.resource_group_name' $CONFIG_FILE_PATH)
+echo $RESOURCE_GROUP_NAME
 LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME=$(yq '.log_analytics_workspace_resource_group_name' $CONFIG_FILE_PATH)
+echo $LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME
 LOG_ANALYTICS_WORKSPACE_NAME=$(yq '.log_analytics_workspace_name' $CONFIG_FILE_PATH)
-
+echo $LOG_ANALYTICS_WORKSPACE_NAME
 
 # Define your variables
 
 # PROJECT_CODE="${CONFIG_prefix}" 
 PROJECT_CODE=$(yq '.prefix' $CONFIG_FILE_PATH)
+
+echo $PROJECT_CODE
 SUBSCRIPTION_ID="${SUB_ID}" # "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"
 
 # Generate resource group name to store state file
@@ -250,10 +255,9 @@ echo "vnets:"
 # echo $CONFIG_vnets_devops_name
 
 
-# Variables for GCCI DevOps VNet
+# Variables for VNET Name
 CONFIG_vnets_project_name="gcci-vnet-devops"
 CONFIG_vnets_devops_name="gcci-vnet-project"
-
 CONFIG_vnets_hub_ingress_internet_name=""
 CONFIG_vnets_hub_egress_internet_name=""
 CONFIG_vnets_hub_ingress_intranet_name=""
