@@ -263,8 +263,8 @@ echo "vnets:"
 
 
 # Variables for VNET Name
-CONFIG_vnets_project_name="gcci-vnet-devops"
-CONFIG_vnets_devops_name="gcci-vnet-project"
+CONFIG_vnets_project_name="gcci-vnet-project"
+CONFIG_vnets_devops_name="gcci-vnet-devops"
 CONFIG_vnets_hub_ingress_internet_name=""
 CONFIG_vnets_hub_egress_internet_name=""
 CONFIG_vnets_hub_ingress_intranet_name=""
