@@ -33,3 +33,14 @@ variable "subnet_name" {
   type        = string  
   default = "ServiceSubnet"
 }
+
+
+# developer portal variables
+# sku: Standard, Premium (default Premium)
+# admin enabled: true (readonly)
+# pep: yes (readonly)
+
+variable "sku" {
+  type        = string  
+  default = "Premium"
+}

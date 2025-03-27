@@ -58,7 +58,7 @@ module "container_registry" {
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   resource_group_name           = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   public_network_access_enabled = false
-  sku                          = "Premium" # ["Basic", "Standard", "Premium"]
+  sku                          = var.sku # "Premium" # ["Basic", "Standard", "Premium"]
   admin_enabled                = true 
   
   diagnostic_settings = {
