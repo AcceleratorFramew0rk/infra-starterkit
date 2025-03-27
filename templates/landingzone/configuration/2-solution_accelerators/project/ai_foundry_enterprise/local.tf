@@ -36,7 +36,7 @@ locals {
 
   aiservice_config = {
     private_dns_zone_ids     = []
-    aiServiceSkuName         = "S0"
+    aiServiceSkuName         = var.sku # "S0"
     base_name                = local.base_name
     disableLocalAuth         = false
     deploy_private_dns_zones = true

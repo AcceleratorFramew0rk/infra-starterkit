@@ -39,6 +39,7 @@ variable "subnet_name" {
 # sku: Standard, Premium (default Premium)
 # admin enabled: true (readonly)
 # pep: yes (readonly)
+# pte dns: yes (readonly)
 
 variable "sku" {
   type        = string  

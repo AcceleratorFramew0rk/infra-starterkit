@@ -34,3 +34,28 @@ variable "subnet_name" {
   type        = string  
   default = "ServiceSubnet"
 }
+
+
+# developer portal variables
+
+# account_replication_type      = "LRS" # "GRS" (readonly)
+# account_tier                  = "Standard" (readonly)
+# account_kind                  = "StorageV2" (readonly)
+# PEP                          = "yes" (readonly)
+
+
+
+variable "type" {
+  type        = string  
+  default = "LRS"
+}
+
+variable "tier" {
+  type        = string  
+  default = "Standard"
+}
+
+variable "kind" {
+  type        = string  
+  default = "Standard"
+}

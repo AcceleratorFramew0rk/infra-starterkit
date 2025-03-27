@@ -38,3 +38,4 @@ variable "subnet_name" {
 # Purge Protect: yes (readonly) purge_protection_enabled 
 # Soft Delete: yes (readonly) soft_delete_retention_days 
 # pep: yes (readonly)
+# pte dns: yes (readonly)

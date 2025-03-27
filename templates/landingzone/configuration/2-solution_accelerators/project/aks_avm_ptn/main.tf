@@ -86,7 +86,7 @@ module "aks_cluster" {
   resource_group_id = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.id : local.remote.resource_group.id # azurerm_resource_group.this.id
 
   rbac_aad_tenant_id = data.azurerm_client_config.current.tenant_id # tenant_id from client config
-  default_node_pool_vm_sku = "Standard_D4_v3" # "Standard_D2d_v5"
+  default_node_pool_vm_sku = var.vm_size # "Standard_D4_v3" # "Standard_D2d_v5"
 
   network = {
     name = "gcci-vnet-project"  # variable not used in module
@@ -115,10 +115,10 @@ module "aks_cluster" {
   node_pools = {
     ezwl = {
       name                 = "ezwl" # intranet (ez) workload (wl) - the "name" must begin with a lowercase letter, contain only lowercase letters and numbers and be between 1 and 12 characters in length
-      vm_size              = "Standard_D4_v3" # "Standard_D2d_v5"
+      vm_size              = var.vm_size # "Standard_D4_v3" # "Standard_D2d_v5"
       orchestrator_version = var.kubernetes_version # "1.31" # "1.30"
-      max_count            = 8 # ensure subnet has sufficent IPs
-      min_count            = 2
+      max_count            = var.max_count # 8 # ensure subnet has sufficent IPs
+      min_count            = var.min_count # 2
       os_sku               = "Ubuntu"
       mode                 = "User"
       vnet_subnet_id       = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.usernode_subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.usernode_subnet_name].resource.id : var.usernode_subnet_id
@@ -132,8 +132,8 @@ module "aks_cluster" {
       name                 = "izwl" # intranet (iz) workload (wl)- the "name" must begin with a lowercase letter, contain only lowercase letters and numbers and be between 1 and 12 characters in length
       vm_size              = "Standard_D4_v3" # "Standard_D2d_v5"
       orchestrator_version = var.kubernetes_version # "1.31" # "1.30"
-      max_count            = 8 # ensure subnet has sufficent IPs
-      min_count            = 2
+      max_count            = var.max_count # 8 # ensure subnet has sufficent IPs
+      min_count            = var.min_count # 2
       os_sku               = "Ubuntu"
       mode                 = "User"
       vnet_subnet_id       = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.usernodeintranet_subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.usernodeintranet_subnet_name].resource.id : var.usernodeintranet_subnet_id

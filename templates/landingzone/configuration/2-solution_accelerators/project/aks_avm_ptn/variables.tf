@@ -102,3 +102,27 @@ variable "kubernetes_version" {
   default     = "1.31" # "1.26.3"
   type        = string
 }
+
+
+
+# developer portal variables
+# min_count: 2 (default 2)
+# max_count: 8 (default 8)
+# pep: yes (readonly)
+# pte dns: yes (readonly)
+
+variable "min_count" {
+  type        = string  
+  default = "2"
+}
+
+variable "max_count" {
+  type        = string  
+  default = "2"
+}
+
+variable "vm_size" {
+  type        = string  
+  default = "Standard_D4_v3"
+}
+
