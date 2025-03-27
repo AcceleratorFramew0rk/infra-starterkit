@@ -33,3 +33,8 @@ variable "subnet_name" {
   type        = string  
   default = "ServiceSubnet"
 }
+
+# developer portal variables
+# Purge Protect: yes (readonly) purge_protection_enabled 
+# Soft Delete: yes (readonly) soft_delete_retention_days 
+# pep: yes (readonly)

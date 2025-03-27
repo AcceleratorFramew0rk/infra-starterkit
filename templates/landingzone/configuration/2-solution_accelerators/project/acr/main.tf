@@ -56,7 +56,7 @@ module "container_registry" {
   name = replace("${module.naming.container_registry.name}-${random_string.this.result}", "-", "")
   resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  sku                          = "Premium" # ["Basic", "Standard", "Premium"]
+  sku                          = var.sku # "Premium" # ["Basic", "Standard", "Premium"]
   admin_enabled                = true 
   log_analytics_workspace_id   = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
   log_analytics_retention_days = 7 
