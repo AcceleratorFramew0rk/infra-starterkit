@@ -13,9 +13,9 @@ module "apim" {
   resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
 
-  publisher_name       = "My Company"
-  publisher_email      = "company@terraform.io"
-  sku_name             = try(local.global_settings.environment, var.environment) != "Production" ? "Developer_1" : "Premium"
+  publisher_name       = try(var.publisher_name, "My Company") # "My Company"
+  publisher_email      = try(var.publisher_email, "company@terraform.io") # "company@terraform.io"
+  sku_name             = tru(var.sku_name, null) != null ? var.sku_name :  try(local.global_settings.environment, var.environment) != "Production" ? "Developer_1" : "Premium"
 
   identity = {
     type = "UserAssigned"

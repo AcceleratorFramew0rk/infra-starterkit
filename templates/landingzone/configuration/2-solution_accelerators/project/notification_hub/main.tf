@@ -54,9 +54,9 @@ resource "azurerm_notification_hub_namespace" "this" {
   name                = "${module.naming.notification_hub_namespace.name}-${random_string.this.result}"
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   resource_group_name           = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  namespace_type      = "NotificationHub"
+  namespace_type      = try(var.namespace_type, "NotificationHub")
 
-  sku_name = "Free"
+  sku_name = try(var.sku_name, "Free")
 
 
   tags                           = merge(

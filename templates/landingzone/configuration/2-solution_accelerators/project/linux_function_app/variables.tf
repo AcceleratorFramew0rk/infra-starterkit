@@ -132,3 +132,11 @@ variable "site_config" {
     }
   }
 }
+
+
+
+
+# developer portal variables
+# Type: Linux (readonly)
+# PEP: yes (readonly)
+

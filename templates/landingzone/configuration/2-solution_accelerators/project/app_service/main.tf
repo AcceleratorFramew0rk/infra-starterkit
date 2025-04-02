@@ -9,8 +9,8 @@ resource "azurerm_app_service_plan" "this" {
   reserved         = try(var.kind, "Linux") == "Linux" ? true : false 
 
   sku {
-    tier     = "Standard"
-    size     = "S1"
+    tier     = var.tier # "Standard"
+    size     = var.size # "S1"
   }
 
   tags        = merge(

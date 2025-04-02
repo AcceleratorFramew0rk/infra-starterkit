@@ -33,3 +33,25 @@ variable "subnet_name" {
   type        = string  
   default = "ApiSubnet"
 }
+
+
+
+variable "publisher_name" {
+  type        = string  
+  default = "My Company"
+}
+
+variable "publisher_email" {
+  type        = string  
+  default = "company@terraform.io"
+}
+
+
+# developer portal variables
+# sku: Developer_1, Premium (default null)
+# virtual_network_type: internal (readonly) 
+
+variable "sku_name" {
+  type        = string  
+  default = null
+}

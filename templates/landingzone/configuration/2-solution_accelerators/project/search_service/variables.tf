@@ -33,3 +33,15 @@ variable "subnet_name" {
   type        = string  
   default = "AiSubnet"
 }
+
+# developer portal variables
+# sku: "Standard" default (Premium) Possible values include basic, free, standard, standard2, standard3, storage_optimized_l1 and storage_optimized_l2
+# PEP: yes (readonly)
+# Pte DNS: yes (readonly)
+
+
+variable "sku" {
+  type        = string  
+  default = "Standard"
+}
+

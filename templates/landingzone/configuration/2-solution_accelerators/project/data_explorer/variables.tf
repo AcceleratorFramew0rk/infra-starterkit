@@ -33,3 +33,19 @@ variable "subnet_name" {
   type        = string  
   default = "ServiceSubnet"
 }
+
+# developer portal variables
+# sku_name: Standard_D13_v2 (default Standard_D13_v2)
+# sku_capacity: 4 (readonly)
+# pep: yes (readonly)
+# pte dns: yes (readonly)
+
+variable "sku_name" {
+  type        = string  
+  default = "Standard_D13_v2"
+}
+
+variable "sku_capacity" {
+  type        = string  
+  default = "4"
+}

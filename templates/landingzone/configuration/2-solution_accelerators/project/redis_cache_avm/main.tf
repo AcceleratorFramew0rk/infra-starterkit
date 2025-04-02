@@ -51,7 +51,9 @@ module "redis_cache" {
   # add the variables here
   # capacity                      = 1  
   # family                        = "P"
-  sku_name                      = "Premium"
+  sku_name                      = var.sku_name # "Premium"
+  capacity = var.capacity # 2
+  redis_version = var.redis_version # 6
   # shard_count                   = 1
 
   public_network_access_enabled = false

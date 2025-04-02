@@ -81,8 +81,8 @@ module "iot_hub" {
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
 
   # iot hub configuration
-  sku                 = "S1"
-  capacity            = 1
+  sku                 = (var.sku, "S1")
+  capacity            = (var.capacity, 1)
   # public_network_access_enabled = false
 
   tags = merge(

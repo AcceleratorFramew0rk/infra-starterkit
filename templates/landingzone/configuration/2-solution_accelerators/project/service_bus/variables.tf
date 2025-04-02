@@ -33,3 +33,14 @@ variable "subnet_name" {
   type        = string  
   default = "ServiceBusSubnet"
 }
+
+# developer portal variables
+# sku: Premium (readonly) 
+# PEP readonly
+# Pte DNS: readonly
+
+
+variable "sku" {
+  type        = string  
+  default = "Premium"
+}

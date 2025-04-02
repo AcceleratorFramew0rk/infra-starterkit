@@ -79,8 +79,26 @@ variable "resource_names" {
   default     = ["web", "api"]
 }
 
+
+
+# developer portal variables
+# kind: Linux (default Linux)
+# tier: Standard (default 8)
+# size: S1  (default Standard_D4_v3)
+# pep: yes (readonly)
+
 variable "kind" {
   type        = string  
   default = "Linux" # "Windows"
+}
+
+variable "tier" {
+  type        = string  
+  default = "Standard" # "Windows"
+}
+
+variable "size" {
+  type        = string  
+  default = "S1" # "S1, S2, S3"
 }
 

@@ -33,3 +33,20 @@ variable "subnet_name" {
   type        = string  
   default = "ServiceSubnet"
 }
+
+variable "namespace_type" {
+  type        = string  
+  default = "NotificationHub"
+}
+
+
+# developer portal variables
+# sku_name: "Free" default (free) Free, Basic or Standard
+# PEP: Yes (readonly)
+# Pte DNS: Yes (readonly)
+
+variable "sku_name" {
+  type        = string  
+  default = "Free"
+}
+

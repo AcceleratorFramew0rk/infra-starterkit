@@ -8,7 +8,7 @@ module "cdn_frontdoor" {
 
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
 
-  sku_name = "Standard_AzureFrontDoor" # "Premium_AzureFrontDoor"
+  sku_name = "${var.sku_name}_azurefrontdoor" # "Standard_AzureFrontDoor" # "Premium_AzureFrontDoor"
 
   # logs_destinations_ids = [
   #   try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id

@@ -52,7 +52,7 @@ module "servicebus" {
   version = "0.1.0"
 
   # insert the 3 required variables here
-  sku                           = "Premium"
+  sku                           = try(var.sku, "Premium")
   resource_group_name           = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   name                          = "${module.naming.container_registry.name_unique}${random_string.this.result}" 

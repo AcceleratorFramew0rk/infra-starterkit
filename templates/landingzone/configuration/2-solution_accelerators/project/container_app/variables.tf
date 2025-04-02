@@ -34,16 +34,6 @@ variable "image" {
   default = "nginx:latest"
 }
 
-variable "cpu" {
-  type        = string  
-  default = "0.5"
-}
-
-variable "memory" {
-  type        = string  
-  default = "1Gi" # "2"
-}
-
 variable "frontend_image" {
   type        = string  
   default = "docker.io/hashicorp/counting-service:0.0.2"
@@ -84,4 +74,36 @@ variable "workload_profile_type" {
   type        = string  
   # ** IMPORTANT ** workload_profile_type = "D16" failed, change to other value
   default = "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
+}
+
+
+variable "minimum_count" {
+  type        = string  
+  default = "1"
+}
+
+variable "maximum_count" {
+  type        = string  
+  default = "10"
+}
+
+# developer portal variables
+# workload_profile_type: "D16" default (D16) : Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
+# cpu: 1 (default 1)
+# memory: 2Gi (default 2Gi)
+# container_count: 2 (web, api) (readonly)
+
+variable "workload_profile_type" {
+  type        = string  
+  default = "D16"
+}
+
+variable "cpu" {
+  type        = string  
+  default = "0.5"
+}
+
+variable "memory" {
+  type        = string  
+  default = "1Gi" # "2"
 }

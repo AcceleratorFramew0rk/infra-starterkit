@@ -5,7 +5,7 @@ module "searchservice" {
   name                         = "${module.naming.search_service.name}-${random_string.this.result}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
   resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  sku                 = "standard"
+  sku                 = try(var.sku, "standard")
   # A system assigned identity must be provided even though the AzureRM provider states it is optional.
   managed_identities = {
     system_assigned = true

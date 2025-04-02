@@ -7,8 +7,8 @@ module "event_hubs" {
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
 
   namespace_name      = "${module.naming.eventhub_namespace.name}-iot-${random_string.this.result}"  #  "iotehnamespace"
-  partition_count     = 2 # 4
-  message_retention   = 7
+  partition_count     = (var.partition_count ,2) # 4
+  message_retention   = (var.message_retention ,7) # 7
 
   tags = merge(
     local.global_settings.tags,

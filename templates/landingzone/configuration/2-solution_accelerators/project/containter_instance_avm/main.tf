@@ -18,7 +18,7 @@ module "container_group1" {
     workspace_key = try(local.remote.log_analytics_workspace.resource.primary_shared_key, null) 
   }
 
-  zones            = ["1"]
+  zones            = ["1","2","3"]
   priority         = "Regular"
   enable_telemetry = var.enable_telemetry
   containers = {

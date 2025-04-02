@@ -28,3 +28,21 @@ variable "environment" {
   type        = string  
   default = "sandpit"
 }
+
+
+# developer portal variables
+# partition_count: 2 (readonly) 
+# message_retention: 7 readonly
+
+
+variable "partition_count" {
+  type        = string  
+  default = "2"
+}
+
+
+variable "message_retention" {
+  type        = string  
+  default = "7"
+}
+

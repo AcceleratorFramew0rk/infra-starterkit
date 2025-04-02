@@ -16,10 +16,8 @@ resource "azurerm_container_app_environment" "this" {
     
     # ** IMPORTANT ** workload_profile_type = "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
     workload_profile_type = var.workload_profile_type # "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
-
-
-    maximum_count = 3 # - (Required) The maximum number of instances of workload profile that can be deployed in the Container App Environment.
-    minimum_count = 1 # - (Required) The minimum number of instances of workload profile that can be deployed in the Container App Environment.
+    maximum_count = try(var.maximum_count, 10) # - (Required) The maximum number of instances of workload profile that can be deployed in the Container App Environment.
+    minimum_count = try(var.minimum_count, 1) # - (Required) The minimum number of instances of workload profile that can be deployed in the Container App Environment.
 
   }
 

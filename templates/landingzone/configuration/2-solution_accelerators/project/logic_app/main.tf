@@ -9,8 +9,8 @@ resource "azurerm_app_service_plan" "this" {
   reserved         = true 
 
   sku {
-    tier     = "WorkflowStandard" # "Standard"
-    size     = "WS1" # "S1"
+    tier     = try(var.tier,"WorkflowStandard") # "WorkflowStandard" # "Standard"
+    size     = try(var.size, "WS1") # "WS1, S1"
   }
 
   tags        = merge(

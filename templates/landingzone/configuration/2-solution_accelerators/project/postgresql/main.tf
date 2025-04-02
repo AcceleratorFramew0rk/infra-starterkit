@@ -90,9 +90,9 @@ module "postgresql" {
   enable_telemetry       = var.enable_telemetry
   administrator_login    = "psqladmin"
   administrator_password = "!qaz@wsx@1234567890!qaz@wsx@1234567890" # random_password.myadminpassword.result
-  server_version         = 16
-  sku_name               = "GP_Standard_D2s_v3"
-  zone                   = 1
+  server_version         = var.server_version #16
+  sku_name               = var.sku_name # "GP_Standard_D2s_v3"
+  zone                   = var.zone # 1
   high_availability = {
     mode                      = "ZoneRedundant"
     standby_availability_zone = 2

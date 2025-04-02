@@ -54,3 +54,15 @@ variable "resource_names" {
   type        = list(string)
   default     = ["1"] # default to one resource # ["1", "2"] default to two resources. make sure the vaule is single digit
 }
+
+
+# developer portal variables
+# kind: Linux (default Linux)
+# tier: Standard (default 8)
+# size: S1  (default Standard_D4_v3)
+# pep: yes (readonly)
+
+variable "???????" {
+  type        = string  
+  default = "Linux" # "Windows"
+}

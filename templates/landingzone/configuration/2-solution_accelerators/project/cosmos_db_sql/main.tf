@@ -46,15 +46,15 @@ module "cosmos_db" {
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   cosmos_account_name = "${module.naming.cosmosdb_account.name}-${random_string.this.result}" 
   cosmos_api          = var.cosmos_api
-  sql_dbs             = var.sql_dbs
-  sql_db_containers   = var.sql_db_containers
+  sql_dbs             = try(local.sql_dbs, var.sql_dbs) # default to local sql_dbs, else var sql dbs
+  sql_db_containers   = try(local.sql_db_containers, var.sql_db_containers) # default to local sql db containers, else var sql db containers
 
   # ensure location is south east asia
   geo_locations ={
     geo_location1 = {
       geo_location          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
       failover_priority = 0
-      zone_redundant = false
+      zone_redundant = true # false
     }
   }
 

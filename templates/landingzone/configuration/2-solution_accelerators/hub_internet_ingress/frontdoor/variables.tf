@@ -47,8 +47,20 @@ variable "client_name" {
 #   type        = string
 # }
 
+
 variable "stack" {
   description = "Project stack name"
   type        = string
   default = "stack"
 }
+
+
+# developer portal variables
+# sku_name: Standard_AzureFrontDoor, Premium_AzureFrontDoor (default Standard_AzureFrontDoor)
+
+
+variable "sku_name" {
+  type        = string  
+  default = "Standard"
+}
+
