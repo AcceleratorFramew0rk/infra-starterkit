@@ -31,8 +31,13 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
 
             # tfString="./tfexe.sh apply -path=$path "
             config="$(pwd)/config.yaml"
-            # config="./config.yaml"
-            tfString="$(pwd)/cicd/scripts/tfexe init -path=$path -config=$config"
+
+
+            # testing
+            # tfString="$(pwd)/cicd/scripts/tfexe init -path=$path -config=$config"
+
+            # production
+            tfString="$(pwd)/cicd/scripts/tfexe apply -path=$path -config=$config"
 
             # retrieve -var for terraform command if available
             while read -r field; do
@@ -54,6 +59,11 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
 
             # # uncomment when testing completed
             eval "$tfString"
+            if [ $? -ne 0 ]; then
+                echo "Error: Command execution failed."
+                echo "Failed command: $tfString"                
+                exit 1
+            fi
 
         else
             echo "Key '$key' does NOT exist in JSON."
