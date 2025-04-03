@@ -19,52 +19,9 @@ get_vnet_cidr() {
   echo "$vnet_cidr"
 }
 
-# # TODO: DELME
-# parse_yaml() {
-#    local prefix=$2
-#    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-#    sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-#         -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-#    awk -F$fs '{
-#       indent = length($1)/2;
-#       vname[indent] = $2;
-#       for (i in vname) {if (i > indent) {delete vname[i]}}
-#       if (length($3) > 0) {
-#          vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-#          printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-#       }
-#    }'
-# }
-
 generate_random_string() {
     echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 3 | head -n 1 | tr '[:upper:]' '[:lower:]')
 }
-
-# # Define the function for configuring project files
-# configure_project_files() {
-#   local search_word="$1"
-#   local replace_word="$2"
-#   local exclude_file="import.sh" # The file to exclude from the search and replace
-
-#   echo " "
-#   echo "-----------------------------------------------------------------------------"  
-#   echo "Configure files for project with search word $search_word"  
-#   timestamp
-#   echo "-----------------------------------------------------------------------------"  
-
-#   # Check if the directory exists
-#   if [[ -d "$DIRECTORY_PATH" ]]; then
-#       # Perform the search and replace, excluding the specified file
-#       # find only terraform.tf files
-#       # find "$DIRECTORY_PATH" -name 'terraform.tf' -exec grep -Iq . {} \; -print | while read file; do
-#       find "$DIRECTORY_PATH" -type f ! -name "$exclude_file" -exec grep -Iq . {} \; -print | while read file; do
-#           sed -i -e "s/$search_word/$replace_word/g" "$file"
-#       done
-#       echo "Replacement complete in directory: $DIRECTORY_PATH"
-#   else
-#       echo "Directory not found."
-#   fi
-# }
 
 # Define a timestamp function
 timestamp() {
@@ -87,7 +44,7 @@ echo "init files"
 ACCOUNT_INFO=$(az account show 2> /dev/null)
 if [[ $? -ne 0 ]]; then
     echo "no subscription"
-    exit
+    exit 1
 fi
 
 SUB_ID=$(echo "$ACCOUNT_INFO" | jq ".id" -r)
@@ -112,24 +69,15 @@ echo "${STATUS_LINE}"
 # read config.yaml file data
 #------------------------------------------------------------------------
 
-# will put CONFIG_ in front of each variable finded in config.yml (it is the $2 and $prefix in function parse_yaml) line 4 and 15.
 echo "working directory:"
 CWD=$(pwd)
 echo $CWD
-# CONFIG_FILE_PATH="${CWD}/../scripts/config.yaml"
 CONFIG_FILE_PATH="./../scripts/config.yaml"
 echo $CONFIG_FILE_PATH
-
-# eval $(parse_yaml $CONFIG_FILE_PATH "CONFIG_")
 
 #------------------------------------------------------------------------
 # generate templates
 #------------------------------------------------------------------------
-
-# RESOURCE_GROUP_NAME="${CONFIG_resource_group_name}"
-# LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME="${CONFIG_log_analytics_workspace_resource_group_name}"
-# LOG_ANALYTICS_WORKSPACE_NAME="${CONFIG_log_analytics_workspace_name}"
-
 
 RESOURCE_GROUP_NAME=$(yq '.resource_group_name' $CONFIG_FILE_PATH)
 echo $RESOURCE_GROUP_NAME
@@ -218,15 +166,7 @@ echo "Start replacing variables"
 timestamp
 echo "-----------------------------------------------------------------------------"  
 
-# # Call the function with different search and replace terms
-# # Update this path based on your environment (Git Bash/Cygwin or WSL)
-# # DIRECTORY_PATH="/tf/avm/templates/landingzone"      
-
 DIRECTORY_PATH="./../../../configuration"               
-
-# configure_project_files "aoaiuat-rg-launchpad" "$RG_NAME"
-# configure_project_files "aoaiuatstgtfstateget" "$STG_NAME"
-# configure_project_files "aoaiuat" "$PROJECT_CODE"
 
 echo "-----------------------------------------------------------------------------"  
 echo "Start terraform import commands"  
@@ -239,28 +179,7 @@ MSYS_NO_PATHCONV=1 terraform init  -reconfigure \
 -backend-config="container_name=0-launchpad" \
 -backend-config="key=gcci-platform.tfstate"
 
-
-# vnets:
-#   # IMPORTANT: leave empty if there is no such virtual network   
-#   ingress_internet: "gcci-vnet-ingress-internet"   
-#   egress_internet: "gcci-vnet-egress-internet"  
-#   ingress_intranet: "gcci-vnet-ingress-intranet" 
-#   egress_intranet: "gcci-vnet-egress-intranet"  
-#   project: "gcci-vnet-project"   
-#   management: "gcci-vnet-management"   
-#   devops: "gcci-vnet-devops" 
-
-
-
 echo "vnets:" 
-# echo $CONFIG_vnets_hub_ingress_internet_name
-# echo $CONFIG_vnets_hub_egress_internet_name
-# echo $CONFIG_vnets_hub_ingress_intranet_name
-# echo $CONFIG_vnets_hub_egress_intranet_name
-# echo $CONFIG_vnets_project_name
-# echo $CONFIG_vnets_management_name
-# echo $CONFIG_vnets_devops_name
-
 
 # Variables for VNET Name
 CONFIG_vnets_project_name="gcci-vnet-project"
@@ -271,12 +190,6 @@ CONFIG_vnets_hub_ingress_intranet_name=""
 CONFIG_vnets_hub_egress_intranet_name=""
 CONFIG_vnets_management_name=""
 
-# Call the function and capture the output
-# GCCI_VNET_DEVOPS_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$CONFIG_vnets_devops_name")
-# GCCI_VNET_PROJECT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$CONFIG_vnets_project_name")
-
-
-# Replace the hardcoded subscription ID with the $SUBSCRIPTION_ID variable
 # resource group
 MSYS_NO_PATHCONV=1 terraform import "azurerm_resource_group.gcci_platform" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}" 
 MSYS_NO_PATHCONV=1 terraform import "azurerm_resource_group.gcci_agency_law" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}" 
@@ -351,8 +264,6 @@ find . -name '*.sh' -exec sed -i -e "s/$search/$replace/g" {} +
 # end rename templates to folder name
 
 # goto nsg configuration folder
-# goto nsg configuration folder
-# cd /tf/avm/${replace}/landingzone/configuration/1-landingzones/scripts
 cd ./landingzone/configuration/1-landingzones/scripts
 
 # create nsg yaml file from nsg csv files
@@ -367,4 +278,3 @@ echo "End creating NSG yaml configuration file"
 timestamp
 echo "-----------------------------------------------------------------------------"
 
-# read -p "Press enter to continue..."
