@@ -11,7 +11,7 @@ variable "vnet_id" {
 
 variable "vnet_name" {
   type        = string  
-  default = null
+  default = "gcci-vnet-devops"
 }
 
 variable "subnet_id" {

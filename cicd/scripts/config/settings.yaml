@@ -1,0 +1,28 @@
+devops:
+  ContainerInstance: true
+project:
+  SqlServer: true
+  CosmosDB: true
+  MySql: false
+  Postgresql: false
+  StorageAccount: false
+  ServiceBus: false
+  EventHub: false
+  RedisCache: false
+  AKS: false
+  AppService: false
+  ContainerInstance: false
+  APIM: false
+  LinuxFunctionApp: false
+  ContainerApp: false
+  LogicApp: false
+  VM: false
+  IoTHub: false
+  DataExplorer: false
+  StreamAnalytics: false
+  AIFoundary: false
+  SearchService: false
+  ACR: false
+  KeyVault: false
+  NotificationHub: false
+  FrontDoor: false

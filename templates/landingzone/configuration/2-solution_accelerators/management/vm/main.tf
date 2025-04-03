@@ -1,6 +1,6 @@
 module "avm_res_keyvault_vault" {
   source              = "Azure/avm-res-keyvault-vault/azurerm"
-  version             = ">= 0.5.0"
+  version             = "0.6.1"
 
   tenant_id           = data.azurerm_client_config.current.tenant_id
   name                = "${module.naming.key_vault.name}-toolingvm-${random_string.this.result}"   

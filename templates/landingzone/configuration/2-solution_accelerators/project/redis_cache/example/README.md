@@ -14,7 +14,7 @@ echo $PREFIX
 ./launchpad.sh $PREFIX
 
 # goto solution accelerator folder
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/redis_cache
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/redis_cache_avm
 
 # get subscription id
 ACCOUNT_INFO=$(az account show 2> /dev/null)

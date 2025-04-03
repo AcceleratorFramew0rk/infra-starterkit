@@ -1,4 +1,0 @@
-Priority,Name,Port,Protocol,Source,Destination,DestinationPort,Action,Direction
-100,AllowHTTPSVirtualNetwork,*,Tcp,VirtualNetwork,VirtualNetwork,443,Allow,Inbound
-100,AllowHTTPSVirtualNetwork,*,Tcp,VirtualNetwork,VirtualNetwork,443,Allow,Outbound
-

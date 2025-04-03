@@ -1,0 +1,69 @@
+resource_group_name: "gcci-platform" 
+log_analytics_workspace_resource_group_name: "gcci-agency-law"  
+log_analytics_workspace_name: "gcci-agency-workspace"  
+subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f" 
+# # virtual network - leave empty if there is no such virtual network   
+prefix: "he10-dev" 
+is_prefix: true
+is_single_resource_group: false
+location: "southeastasia"
+environment: "dev" 
+app_config:
+  private_dns_zones: # to replace with your application domain name
+    internet_ingress_domain_name: internet.gov.sg 
+    intranet_ingress_domain_name: intranet.gra.gov.sg 
+# virtual networks name configuration - change the below if you are using different vnets name
+vnets:
+  # IMPORTANT: leave empty if there is no such virtual network  
+# -----------------
+  project:  
+    name: "gcci-vnet-project"     
+    cidr: "100.64.0.0/23" 
+# -----------------
+  devops:  
+    name: "gcci-vnet-devops"   
+    cidr: "100.127.4.0/24" 
+# subnets cidr configuration
+subnets:
+  # IMPORTANT ** comment off the below any project subnets if it is not used
+# -----------------   
+  project: 
+# -----------------   
+# mssql pep, postgresql pep, redis cache pep, storage account pep
+# ----------------- 
+    DbSubnet: # DO NOT CHANGE subnet name
+      name: "DbSubnet"    
+      address_prefixes: ["100.64.0.0/27"]
+# IMPORTANT ** comment off the below any devops subnets if it is not used  
+# -----------------           
+  devops:
+# -----------------   
+# -----------------    
+    RunnerSubnet:    
+      name: "RunnerSubnet"
+      address_prefixes: ["100.127.4.0/27"]
+      delegations: [
+        {
+          name: "runner",
+          service_delegation: {
+            name: "Microsoft.ContainerInstance/containerGroups", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
+# -----------------                            
+  hub_internet_ingress: 
+# -----------------     
+# -----------------   
+  hub_internet_egress:
+# -----------------     
+# -----------------   
+  hub_intranet_ingress:
+# -----------------   
+# -----------------   
+  hub_intranet_egress:
+# -----------------   
+# -----------------   
+  management:
+# -----------------   
+

@@ -224,9 +224,9 @@ echo "--------------------------------------------------------------------------
 
 DIRECTORY_PATH="./../../../configuration"               
 
-# configure_project_files "{{resource_group_name}}" "$RG_NAME"
-# configure_project_files "{{storage_account_name}}" "$STG_NAME"
-# configure_project_files "{{prefix}}" "$PROJECT_CODE"
+# configure_project_files "aoaiuat-rg-launchpad" "$RG_NAME"
+# configure_project_files "aoaiuatstgtfstateget" "$STG_NAME"
+# configure_project_files "aoaiuat" "$PROJECT_CODE"
 
 echo "-----------------------------------------------------------------------------"  
 echo "Start terraform import commands"  

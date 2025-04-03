@@ -1,6 +1,6 @@
 module "private_dns_zones" {
   source                = "Azure/avm-res-network-privatednszone/azurerm"   
-  version = "0.1.2" 
+  version = "0.3.0"
 
   enable_telemetry      = true
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -38,51 +38,58 @@ module "private_dns_zones" {
     }
 }
 
-module "private_endpoint" {
-  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/networking/terraform-azurerm-privateendpoint"
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/networking/terraform-azurerm-privateendpoint"
-  
-  name                           = "${module.redis_cache.resource.name}PrivateEndpoint"
-  location                       = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  resource_group_name            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  subnet_id                      = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
-  tags        = merge(
-    local.global_settings.tags,
-    {
-      purpose = "redis cache private endpoint" 
-      project_code = try(local.global_settings.prefix, var.prefix) 
-      env = try(local.global_settings.environment, var.environment) 
-      zone = "project"
-      tier = "db"   
-    }
-  )
-  private_connection_resource_id = module.redis_cache.resource.id
-  is_manual_connection           = false
-  subresource_name               = "redisCache"
-  private_dns_zone_group_name    = "default"
-  private_dns_zone_group_ids     = [module.private_dns_zones.resource.id] 
-  depends_on = [
-    module.private_dns_zones,
-    module.redis_cache
-  ]
-}
-
+# This is the module call
 module "redis_cache" {
-  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/databases/terraform-azurerm-redis-cache"
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/databases/terraform-azurerm-redis-cache"
-  
-  name                         = "${module.naming.redis_cache.name}-${random_string.this.result}" 
-  resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
- 
+  source             = "Azure/avm-res-cache-redis/azurerm"
+  version            = "0.2.0"
+
+  enable_telemetry              = var.enable_telemetry
+  name                          = "${module.naming.redis_cache.name}-${random_string.this.result}"  # module.naming.redis_cache.name_unique
+  resource_group_name           = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
+  location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
+
   # add the variables here
-  capacity                      = 1  
-  family                        = "P"
-  sku_name                      = "Premium"
-  shard_count                   = 1
-  public_network_access_enabled = false  
+  # capacity                      = 1  
+  # family                        = "P"
+  sku_name                      = var.sku_name # "Premium"
+  capacity = var.capacity # 2
+  redis_version = var.redis_version # 6
+  # shard_count                   = 1
+
+  public_network_access_enabled = false
+  private_endpoints = {
+    endpoint1 = {
+      subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id  # azurerm_subnet.endpoint.id
+      private_dns_zone_group_name   = "private-dns-zone-group"
+      private_dns_zone_resource_ids = [module.private_dns_zones.resource.id]  # [azurerm_private_dns_zone.this.id]
+    }
+  }
+
+  diagnostic_settings = {
+    diag_setting_1 = {
+      name                           = "${module.naming.monitor_diagnostic_setting.name_unique}-redis-cache" # "diagSetting1"
+      log_groups                     = ["allLogs"]
+      metric_categories              = ["AllMetrics"]
+      log_analytics_destination_type = null
+      workspace_resource_id          = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id # azurerm_log_analytics_workspace.this_workspace.id
+    }
+  }
+
   redis_configuration = {
+    maxmemory_reserved = 1330
+    maxmemory_delta    = 1330
+    maxmemory_policy   = "allkeys-lru"
     rdb_backup_enabled = false
+  }
+  /*
+  lock = {
+    kind = "CanNotDelete"
+    name = "Delete"
+  }
+  */
+
+  managed_identities = {
+    system_assigned = true
   }
 
   tags        = merge(
@@ -95,7 +102,4 @@ module "redis_cache" {
       tier = "db"   
     }
   ) 
-
 }
-
-

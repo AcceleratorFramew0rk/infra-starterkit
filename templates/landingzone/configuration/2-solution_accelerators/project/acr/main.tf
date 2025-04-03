@@ -1,6 +1,6 @@
 module "private_dns_zones" {
-  source                = "Azure/avm-res-network-privatednszone/azurerm"  
-  version = "0.1.2"
+  source                = "Azure/avm-res-network-privatednszone/azurerm"   
+  version = "0.3.0"
 
   enable_telemetry      = true
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -49,17 +49,30 @@ module "private_dns_zones" {
     }
 }
 
+# This is the module call
 module "container_registry" {
-  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/compute/terraform-azurerm-containerregistry"
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/compute/terraform-azurerm-containerregistry" 
+  source  = "Azure/avm-res-containerregistry-registry/azurerm"
+  version = "0.4.0"
 
-  name = replace("${module.naming.container_registry.name}-${random_string.this.result}", "-", "")
-  resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
+  name                          = replace("${module.naming.container_registry.name}${random_string.this.result}", "-", "") # "${module.naming.container_registry.name_unique}${random_string.this.result}" # module.naming.container_registry.name_unique
+  location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
+  resource_group_name           = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
+  public_network_access_enabled = false
   sku                          = var.sku # "Premium" # ["Basic", "Standard", "Premium"]
   admin_enabled                = true 
-  log_analytics_workspace_id   = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
-  log_analytics_retention_days = 7 
+  
+  diagnostic_settings = {
+    log1 = {
+      workspace_resource_id    = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
+    }
+  }
+
+  private_endpoints = {
+    primary = {
+      private_dns_zone_resource_ids = [module.private_dns_zones.resource.id] 
+      subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
+    }
+  }
 
   tags = merge(
     local.global_settings.tags,
@@ -71,30 +84,5 @@ module "container_registry" {
       tier = "service"   
     }
   ) 
+
 }
-
-module "private_endpoint" {
-  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/networking/terraform-azurerm-privateendpoint"
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/networking/terraform-azurerm-privateendpoint"
-
-  name                           = "${module.container_registry.name}privateendpoint"
-  location                       = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  resource_group_name            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  subnet_id                      = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
-  tags                           = merge(
-    local.global_settings.tags,
-    {
-      purpose = "container registry private endpoint" 
-      project_code = try(local.global_settings.prefix, var.prefix) 
-      env = try(local.global_settings.environment, var.environment) 
-      zone = "project"
-      tier = "service"   
-    }
-  ) 
-  private_connection_resource_id = module.container_registry.id
-  is_manual_connection           = false
-  subresource_name               = "registry"
-  private_dns_zone_group_name    = "AcrPrivateDnsZoneGroup"
-  private_dns_zone_group_ids     = [module.private_dns_zones.resource.id] 
-}
-

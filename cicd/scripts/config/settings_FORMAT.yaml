@@ -1,0 +1,30 @@
+devops:
+  containter_instance_avm: true
+project:
+  acr_avm: true
+  ai_foundry_enterprise: false
+  aks_avm_ptn: false
+  apim: true
+  app_service: true
+  azure_open_ai: false
+  container_app: true
+  container_instance_avm: false
+  cosmos_db_mongo: true
+  cosmos_db_sql: true
+  data_explorer: false
+  event_hubs: false
+  iot_hub: false
+  keyvault: false
+  linux_function_app: false
+  logic_app: false
+  mssql: true
+  notification_hub: false
+  postgresql: false 
+  redis_cache_avm: false
+  search_service: false
+  service_bus: false
+  storage_account: false
+  stream_analytics: false
+  vm: false
+  vmss_linux: false
+  vm_windows: false

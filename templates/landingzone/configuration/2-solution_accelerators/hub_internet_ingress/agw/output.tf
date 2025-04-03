@@ -1,5 +1,9 @@
 output "resource" {
-  value       = module.application_gateway.resource 
+  value       = {
+    id = module.application_gateway.application_gateway_id
+    name = module.application_gateway.application_gateway_name
+  }
+
   description = "The Azure application gateway resource"
 }
 

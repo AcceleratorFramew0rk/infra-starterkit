@@ -1,7 +1,7 @@
 output "resource" {
   value       = {
-    id = module.container_group1.resource.id
-    name = module.container_group1.resource.name
+    id = module.container_group1.resource_id
+    name = module.container_group1.name
   }
   description = "The Azure containter instance resource"
 }

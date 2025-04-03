@@ -80,9 +80,9 @@ exec_terraform() {
   if [[ "$ACTION" == *"apply"* ]]; then
     echo "     "
     echo "Running..."
-    echo "terraform $ACTION ${TF_VARS[@]}"
+    echo "terraform $ACTION  -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
     echo "     "
-    terraform "$ACTION" -auto-approve "${TF_VARS[@]}"
+    terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" 
     
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -96,9 +96,9 @@ exec_terraform() {
   elif [[ "$ACTION" == *"plan"* ]]; then
     echo "     "
     echo "Running..."
-    echo "terraform $ACTION ${TF_VARS[@]}"
+    echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
     echo "     "
-    terraform "$ACTION" "${TF_VARS[@]}"
+    terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}"
     
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -111,6 +111,7 @@ exec_terraform() {
   fi
 
 }
+
 # End Functions
 
 # Check if at least 2 arguments are provided

@@ -14,7 +14,7 @@ echo $PREFIX
 ./launchpad.sh $PREFIX
 
 # goto solution accelerator folder
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/hub_internet_ingress/agw
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/hub_internet_ingress/agw_avm
 
 # get subscription id
 ACCOUNT_INFO=$(az account show 2> /dev/null)
@@ -47,7 +47,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${PROJECT_CODE}-rg-launchpad" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-hub-internet-ingress-agw.tfstate"
+-backend-config="key=solution_accelerators-hub-internet-ingress-agwavm.tfstate"
 
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
