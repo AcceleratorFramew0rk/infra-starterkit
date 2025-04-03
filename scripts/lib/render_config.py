@@ -12,7 +12,7 @@ import json
 def get_config(input, solution_accelerator, landingzone_type):
 
     CONFIGURATION={"services": [
-        {"name": "acr_avm", "subnet": "ServiceSubnet_address_prefixes"},
+        {"name": "acr", "subnet": "ServiceSubnet_address_prefixes"},
         {"name": "ai_foundry_enterprise", "subnet": "AiSubnet_address_prefixes"},
         {"name": "aks_avm_ptn", "subnet": ["SystemNodePoolSubnet_address_prefixes", "UserNodePoolSubnet_address_prefixes", "UserNodePoolIntranetSubnet_address_prefixes"]},
         {"name": "apim", "subnet": "ApiSubnet_address_prefixes"},
@@ -21,9 +21,9 @@ def get_config(input, solution_accelerator, landingzone_type):
         {"name": "app_service_windows", "subnet": ["AppServiceSubnet_address_prefixes", "WebSubnet_address_prefixes"]},
         {"name": "azure_open_ai", "subnet": "AiSubnet_address_prefixes"},
         {"name": "app_service_windows", "subnet": ["ContainerAppSubnet_address_prefixes", "WebSubnet_address_prefixes"]},        
-        {"name": "containter_instance_avm", "subnet": "CiSubnet_address_prefixes"},
-        {"name": "cosmos_db_mongo", "subnet": "DbSubnet_address_prefixes"},
-        {"name": "cosmos_db_sql", "subnet": "DbSubnet_address_prefixes"},
+        {"name": "containter_instance", "subnet": "CiSubnet_address_prefixes"},
+        {"name": "cosmos_db_mongo", "subnet": "CosmosDbSubnet_address_prefixes"},
+        {"name": "cosmos_db_sql", "subnet": "CosmosDbSubnet_address_prefixes"},
         {"name": "data_explorer", "subnet": "ServiceSubnet_address_prefixes"},
         {"name": "event_hubs", "subnet": "ServiceSubnet_address_prefixes"},
         {"name": "iot_hub", "subnet": "WebSubnet_address_prefixes"},
@@ -33,7 +33,7 @@ def get_config(input, solution_accelerator, landingzone_type):
         {"name": "mssql", "subnet": "DbSubnet_address_prefixes"},
         {"name": "notification_hub", "subnet": "ServiceSubnet_address_prefixes"},
         {"name": "postgresql", "subnet": "DbSubnet_address_prefixes"},
-        {"name": "redis_cache_avm", "subnet": "ServiceSubnet_address_prefixes"},
+        {"name": "redis_cache", "subnet": "ServiceSubnet_address_prefixes"},
         {"name": "search_service", "subnet": "AiSubnet_address_prefixes"},
         {"name": "service_bus", "subnet": "ServiceBusSubnet_address_prefixes"},
         {"name": "storage_account", "subnet": "ServiceSubnet_address_prefixes"},
@@ -159,7 +159,7 @@ def get_config(input, solution_accelerator, landingzone_type):
     solution_accelerator_data = solution_accelerator 
 
     # Retrieve the value of ACR
-    count = 1
+    count = 0
 
     # Process each service
     for service in config_data.get("services", []):
