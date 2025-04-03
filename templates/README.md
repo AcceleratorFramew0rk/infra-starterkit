@@ -18,7 +18,7 @@ terraform apply -auto-approve
 
 ### config.yaml
 
-Please use VS Code to edit the config.yaml file located at /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad/. 
+Please use VS Code to edit the config.yaml file located at /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad/scripts. 
 Review and, if necessary, modify the details of the project subnets and cidr ranges.
 
 
