@@ -1,3 +1,24 @@
+AiSubnet:
+  AllowHTTPSVirtualNetwork:
+    name: "AllowHTTPSVirtualNetwork"
+    priority: "100"
+    source_port_range: "*"
+    protocol: "Tcp"
+    source_address_prefix: "VirtualNetwork"
+    destination_address_prefix: "VirtualNetwork"
+    destination_port_range: "443"
+    access: "Allow"
+    direction: "Inbound"
+  AllowHTTPSVirtualNetwork:
+    name: "AllowHTTPSVirtualNetwork"
+    priority: "100"
+    source_port_range: "*"
+    protocol: "Tcp"
+    source_address_prefix: "VirtualNetwork"
+    destination_address_prefix: "VirtualNetwork"
+    destination_port_range: "443"
+    access: "Allow"
+    direction: "Outbound"
 ApiSubnet:
   AllowHTTPSVirtualNetwork:
     name: "AllowHTTPSVirtualNetwork"

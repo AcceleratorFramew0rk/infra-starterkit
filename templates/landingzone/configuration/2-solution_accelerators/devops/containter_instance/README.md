@@ -1,5 +1,5 @@
 # Navigate to the working directory where the Terraform configuration files are located
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/devops/containter_instance_avm
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/devops/containter_instance
 
 # Run the **Custom** Terraform initialization script "terraform-init-custom" at location "/usr/local/bin" to set up the backend and providers
 terraform-init-custom 

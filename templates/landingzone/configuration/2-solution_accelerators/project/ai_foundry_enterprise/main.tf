@@ -3,7 +3,8 @@ resource "random_id" "short_name" {
 }
 
 module "ai_foundry_enterprise" {
-  source = "./../../../../../../modules/terraform-azurerm-aaf/modules/aoai/terraform-azurerm-avm-ptn-ai-foundry-enterprise"
+  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/aoai/terraform-azurerm-avm-ptn-ai-foundry-enterprise"
+  source = "AcceleratorFramew0rk/aaf/azurerm//modules/aoai/terraform-azurerm-avm-ptn-ai-foundry-enterprise"
 
   base_name               = local.base_name
   location                = local.location

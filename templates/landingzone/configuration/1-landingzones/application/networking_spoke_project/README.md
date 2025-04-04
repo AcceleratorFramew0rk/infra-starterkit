@@ -10,3 +10,6 @@ terraform plan
 # Apply the Terraform configuration and automatically approve changes without prompting for confirmation
 terraform apply -auto-approve
 
+
+# OR single line tfexe command - init and then apply
+tfexe apply

@@ -6,7 +6,7 @@ data "terraform_remote_state" "appservice" {
     resource_group_name  = var.resource_group_name
     storage_account_name = var.storage_account_name
     container_name       = "2-solution-accelerators"
-    key                  = "solution_accelerators-project-appservice.tfstate" 
+    key                  = "solution-accelerators-project-appservice.tfstate" 
   }
 }
 

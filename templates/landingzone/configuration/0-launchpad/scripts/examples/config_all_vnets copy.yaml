@@ -6,7 +6,7 @@ prefix: "aoaiuat"
 is_prefix: true
 is_single_resource_group: false
 location: "southeastasia"
-environment: "uat"
+environment: "sandpit"
 app_config:
   private_dns_zones: # to replace with your application domain name
     internet_ingress_domain_name: internet.sandpitlabs.com 
@@ -28,7 +28,7 @@ vnets:
     cidr: "10.20.1.0/25" 
   project:  
     name: "gcci-vnet-project"     
-    cidr: "100.64.0.0/22" 
+    cidr: "100.64.0.0/23" 
   management:  
     name: "gcci-vnet-management"     
     cidr: "100.127.3.0/24" 
@@ -39,27 +39,16 @@ vnets:
 subnets:
   # IMPORTANT ** comment off the below any project subnets if it is not used
   project:
-    WebInternetSubnet: # DO NOT CHANGE subnet name
-      name: "WebInternetSubnet"
-      address_prefixes: ["100.64.0.0/27"]          
-    WebIntranetSubnet: # DO NOT CHANGE subnet name
-      name: "WebIntranetSubnet"    
-      address_prefixes: ["100.64.0.32/27"]       
     WebSubnet: # DO NOT CHANGE subnet name
-     name: "WebSubnet"
-     address_prefixes: ["100.64.0.64/27"]          
+      address_prefixes: ["100.64.0.0/27"]          
     AppSubnet: # DO NOT CHANGE subnet name
-      name: "AppSubnet"    
-      address_prefixes: ["100.64.0.96/27"]       
+      address_prefixes: ["100.64.0.32/27"]       
     DbSubnet: # DO NOT CHANGE subnet name
-      name: "DbSubnet"    
-      address_prefixes: ["100.64.0.128/27"]
+      address_prefixes: ["100.64.0.64/27"]
     ServiceSubnet: # DO NOT CHANGE subnet name
-      name: "ServiceSubnet"
-      address_prefixes: ["100.64.0.160/27"]
+      address_prefixes: ["100.64.0.96/27"]
     FunctionAppSubnet: # DO NOT CHANGE subnet name
-      name: "FunctionAppSubnet"        
-      address_prefixes: ["100.64.0.192/27"]
+      address_prefixes: ["100.64.0.128/27"]
       delegations: [
         {
           name: "functionapp",
@@ -70,26 +59,17 @@ subnets:
         }
       ]                  
     ApiSubnet: # DO NOT CHANGE subnet name
-      name: "ApiSubnet"    
-      address_prefixes: ["100.64.0.224/27"]
+      address_prefixes: ["100.64.0.160/27"]
     SystemNodePoolSubnet: # DO NOT CHANGE subnet name
-      name: "SystemNodePoolSubnet"    
-      address_prefixes: ["100.64.1.0/27"]
+      address_prefixes: ["100.64.0.192/27"]
     UserNodePoolSubnet: # DO NOT CHANGE subnet name
-      name: "UserNodePoolSubnet"    
-      address_prefixes: ["100.64.0.32/27"]
-    UserNodePoolIntranetSubnet: # DO NOT CHANGE subnet name
-      name: "UserNodePoolIntranetSubnet"    
-      address_prefixes: ["100.64.1.64/27"]         
+      address_prefixes: ["100.64.0.224/27"]
     UserNodePoolWindowsSubnet: # DO NOT CHANGE subnet name
-      name: "UserNodePoolWindowsSubnet"    
-      address_prefixes: ["100.64.1.96/27"]      
+      address_prefixes: ["100.64.1.192/27"]      
     AiSubnet: # DO NOT CHANGE subnet name
-      name: "AiSubnet"    
-      address_prefixes: ["100.64.1.128/27"]   
+      address_prefixes: ["100.64.1.0/27"]   
     LogicAppSubnet: # DO NOT CHANGE subnet name
-      name: "LogicAppSubnet"
-      address_prefixes: ["100.64.1.160/27"]   
+      address_prefixes: ["100.64.1.32/27"]   
       delegations: [
         {
           name: "logicapp",
@@ -100,8 +80,7 @@ subnets:
         }
       ]  
     CiSubnet: # DO NOT CHANGE subnet name 
-      name: "CiSubnet"    
-      address_prefixes: ["100.64.1.192/27"]   
+      address_prefixes: ["100.64.1.64/27"]   
       delegations: [
         {
           name: "ci",
@@ -112,14 +91,11 @@ subnets:
         }
       ]  
     ServiceBusSubnet: # DO NOT CHANGE subnet name
-      name: "ServiceBusSubnet"    
-      address_prefixes: ["100.64.1.224/27"]         
+      address_prefixes: ["100.64.1.96/27"]         
     CosmosDbSubnet: # DO NOT CHANGE subnet name 
-      name: "CosmosDbSubnet"
-      address_prefixes: ["100.64.2.0/27"]    
+      address_prefixes: ["100.64.1.128/27"]    
     AppServiceSubnet: # DO NOT CHANGE subnet name
-      name: "AppServiceSubnet"
-      address_prefixes: ["100.64.2.32/27"]
+      address_prefixes: ["100.64.1.160/27"]
       delegations: [ 
         {
           name: "AppServiceSubnet",
@@ -128,23 +104,30 @@ subnets:
             actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
             }
         }
-      ] 
-    AppServiceIntranetSubnet: # DO NOT CHANGE subnet name
-      name: "AppServiceIntranetSubnet"
-      address_prefixes: ["100.64.3.64/27"]
-      delegations: [ 
-        {
-          name: "AppServiceSubnet",
-          service_delegation: {
-            name: "Microsoft.Web/serverFarms", 
-            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
-            }
-        }
-      ]        
-  # IMPORTANT ** comment off the below any devops subnets if it is not used          
+      ]                          
+# ** IMPORTANT - DO NOT CHANGE BELOW
+  hub_internet_ingress: 
+    AzureFirewallSubnet: 
+      address_prefixes: ["100.127.0.0/26"]
+    AgwSubnet: 
+      address_prefixes: ["100.127.0.64/26"]  
+  hub_internet_egress:
+    AzureFirewallSubnet:  
+      address_prefixes: ["100.127.1.0/26"]
+    AzureFirewallManagementSubnet:  
+      address_prefixes: ["100.127.1.64/26"]  
+  hub_intranet_ingress:
+    AzureFirewallSubnet:  
+      address_prefixes: ["10.20.0.0/26"]
+    AgwSubnet:  
+      address_prefixes: ["10.20.0.64/26"]
+  hub_intranet_egress:
+    AzureFirewallSubnet:   
+      address_prefixes: ["10.20.1.0/26"]
+    AzureFirewallManagementSubnet:   
+      address_prefixes: ["10.20.1.64/26"]  
   devops:
     RunnerSubnet:    
-      name: "RunnerSubnet"
       address_prefixes: ["100.127.4.0/25"]
       delegations: [
         {
@@ -155,44 +138,12 @@ subnets:
             }
         }
       ]
-    # VpnSubnet:    
-    #   name: "VpnSubnet"
-    #   address_prefixes: ["100.127.4.128/25"]                             
-  hub_internet_ingress: 
-    AzureFirewallSubnet: 
-      name: "AzureFirewallSubnet"
-      address_prefixes: ["100.127.0.0/26"]
-    AgwSubnet:  
-      name: "AgwSubnet"
-      address_prefixes: ["100.127.0.64/26"]  
-  hub_internet_egress:
-    AzureFirewallSubnet:   
-      name: "AzureFirewallSubnet"
-      address_prefixes: ["100.127.1.0/26"]
-    AzureFirewallManagementSubnet:   
-      name: "AzureFirewallManagementSubnet"
-      address_prefixes: ["100.127.1.64/26"]  
-  hub_intranet_ingress:
-    AzureFirewallSubnet:   
-      name: "AzureFirewallSubnet"
-      address_prefixes: ["10.20.0.0/26"]
-    AgwSubnet:   
-      name: "AgwSubnet"
-      address_prefixes: ["10.20.0.64/26"]
-  hub_intranet_egress:
-    AzureFirewallSubnet:    
-      name: "AzureFirewallSubnet"
-      address_prefixes: ["10.20.1.0/26"]
-    AzureFirewallManagementSubnet:   
-      name: "AzureFirewallManagementSubnet"
-      address_prefixes: ["10.20.1.64/26"]  
+    VpnSubnet:    
+      address_prefixes: ["100.127.4.128/25"]  
   management:
-    InfraSubnet:      
-      name: "InfraSubnet"
+    InfraSubnet:     
       address_prefixes: ["100.127.3.0/26"]
-    SecuritySubnet:      
-      name: "SecuritySubnet"
+    SecuritySubnet:     
       address_prefixes: ["100.127.3.64/26"]
-    AzureBastionSubnet:      
-      name: "AzureBastionSubnet"
+    AzureBastionSubnet:     
       address_prefixes: ["100.127.3.128/26"]  

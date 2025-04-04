@@ -6,7 +6,7 @@ data "terraform_remote_state" "sqlserver" {
     resource_group_name  = var.resource_group_name
     storage_account_name = var.storage_account_name
     container_name       = "2-solution-accelerators"
-    key                  = "solution_accelerators-project-mssql.tfstate" 
+    key                  = "solution-accelerators-project-mssql.tfstate" 
   }
 }
 
@@ -18,7 +18,7 @@ data "terraform_remote_state" "dataexplorer" {
     resource_group_name  = var.resource_group_name
     storage_account_name = var.storage_account_name
     container_name       = "2-solution-accelerators"
-    key                  = "solution_accelerators-project-dataexplorer.tfstate" 
+    key                  = "solution-accelerators-project-dataexplorer.tfstate" 
   }
 }
 
@@ -30,7 +30,7 @@ data "terraform_remote_state" "eventhubs" {
     resource_group_name  = var.resource_group_name
     storage_account_name = var.storage_account_name
     container_name       = "2-solution-accelerators"
-    key                  = "solution_accelerators-project-eventhubs.tfstate" 
+    key                  = "solution-accelerators-project-eventhubs.tfstate" 
   }
 }
 
@@ -42,7 +42,7 @@ data "terraform_remote_state" "iothub" {
     resource_group_name  = var.resource_group_name
     storage_account_name = var.storage_account_name
     container_name       = "2-solution-accelerators"
-    key                  = "solution_accelerators-project-iothub.tfstate" 
+    key                  = "solution-accelerators-project-iothub.tfstate" 
   }
 }
 
