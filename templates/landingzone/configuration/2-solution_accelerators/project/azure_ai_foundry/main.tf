@@ -3,8 +3,8 @@
 # 1. diagnostic settings for all resources
 # 2. Approval for managed private endpoint - 2 for AI Foundry, 2 for AI Search Services
 module "aifoundry" {
-  source = "./../../../../../../modules/terraform-azurerm-aaf/modules/aoai/azure-ai-foundry" 
-  # source = "AcceleratorFramew0rk/aaf/azurerm//modules/aoai/azure-ai-foundry" 
+  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/aoai/azure-ai-foundry" 
+  source = "AcceleratorFramew0rk/aaf/azurerm//modules/aoai/azure-ai-foundry" 
 
   name                         = "${module.naming.cognitive_account.name}-${random_string.this.result}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
   base_name                    = "${module.naming.cognitive_account.name}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
