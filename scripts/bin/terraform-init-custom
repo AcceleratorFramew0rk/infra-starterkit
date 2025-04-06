@@ -13,23 +13,27 @@ echo "Storage Account name: ${STG_NAME}"
 PATH_STRING="$(pwd)"
 
 
+
 if [[ "$PATH_STRING" == *"2-solution_accelerators"* ]]; then
   # solution accelerators
-  PATH_STRING=$(echo "$(pwd)" | tr -d '_')
-  EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $(NF-1) "-" $NF}')
-  CONTAINER_NAME="1-landingzones"
-  KEY="solution_accelerators-${EXTRACTED_NAME}.tfstate"
+  PATH_STRING=$(pwd)
+  EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{gsub("_", "", $NF); print $(NF-1) "-" $NF}')
+  CONTAINER_NAME="2-solution-accelerators"
+  KEY="solution-accelerators-${EXTRACTED_NAME}.tfstate"
   echo "Container name: ${CONTAINER_NAME}"
   echo "Key: ${KEY}"
+
 else 
-  # 1-landingzones
-  PATH_STRING=$(echo "$(pwd)" | tr -d '_')
-  EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $(NF-1) "-" $NF}')
+  # 1-landingzones e.g. network-spoke-project.tfstate
+  PATH_STRING=$(echo "$(pwd)" | tr '_' '-')
+  EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $NF}' | sed 's/networking/network/g')
   CONTAINER_NAME="1-landingzones"
-  KEY="landingzones-${EXTRACTED_NAME}.tfstate"
+  KEY="${EXTRACTED_NAME}.tfstate"
   echo "Container name: ${CONTAINER_NAME}"
   echo "Key: ${KEY}"
+
 fi
+
 
 # Store the command in a variable
 cmdexecute="terraform init -reconfigure \

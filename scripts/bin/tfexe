@@ -31,12 +31,6 @@ exec_terraform() {
 
     if [[ "$PATH_STRING" == *"2-solution_accelerators"* ]]; then
       # solution accelerators
-      # PATH_STRING=$(echo "$(pwd)" | tr -d '_')
-      # EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $(NF-1) "-" $NF}')
-      # CONTAINER_NAME="2-solution-accelerators"
-      # KEY="solution_accelerators-${EXTRACTED_NAME}.tfstate"
-      # echo "Container name: ${CONTAINER_NAME}"
-      # echo "Key: ${KEY}"
 
       PATH_STRING=$(pwd)
       EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{gsub("_", "", $NF); print $(NF-1) "-" $NF}')
@@ -47,13 +41,6 @@ exec_terraform() {
 
     else 
       # 1-landingzones e.g. network-spoke-project.tfstate
-
-      # PATH_STRING=$(echo "$(pwd)" | tr -d '_')
-      # EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $(NF-1) "-" $NF}')
-      # CONTAINER_NAME="1-landingzones"
-      # KEY="landingzones-${EXTRACTED_NAME}.tfstate"
-      # echo "Container name: ${CONTAINER_NAME}"
-      # echo "Key: ${KEY}"
 
       PATH_STRING=$(echo "$(pwd)" | tr '_' '-')
       EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $NF}' | sed 's/networking/network/g')
@@ -195,7 +182,7 @@ while [[ $# -gt 0 ]]; do
         fi
         TF_CONFIG="${1#-config=}"   
 
-    elif [[ "$1" =~ ^-run-all ]]; then
+    elif [[ "$1" =~ ^run-all ]]; then
         if [[ -n "$TF_RUN_ALL" ]]; then
             echo -e "\e[31mError: Only one 'run-all' argument is allowed.\e[0m"
             exit 1
