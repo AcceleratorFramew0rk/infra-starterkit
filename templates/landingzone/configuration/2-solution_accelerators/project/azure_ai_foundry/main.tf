@@ -3,8 +3,8 @@
 # 1. diagnostic settings for all resources
 # 2. Approval for managed private endpoint - 2 for AI Foundry, 2 for AI Search Services
 module "aifoundry" {
-  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/aoai/azure-ai-foundry" 
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/aoai/azure-ai-foundry" 
+  source = "./../../../../../../modules/terraform-azurerm-aaf/modules/aoai/azure-ai-foundry" 
+  # source = "AcceleratorFramew0rk/aaf/azurerm//modules/aoai/azure-ai-foundry" 
 
   name                         = "${module.naming.cognitive_account.name}-${random_string.this.result}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
   base_name                    = "${module.naming.cognitive_account.name}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
@@ -20,6 +20,17 @@ module "aifoundry" {
   vnet_id                    = try(local.remote.networking.virtual_networks.spoke_project.virtual_network.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_network.id : var.vnet_id  
   subnet_id                  = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
   private_endpoint_subnet_id = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.private_endpoint_subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.private_endpoint_subnet_name].resource.id : var.private_endpoint_subnet_id 
+
+
+  diagnostic_settings = {
+    all_diag_setting_1 = {
+      name                           = "${module.naming.monitor_diagnostic_setting.name_unique}-aihub"
+      log_groups                     = ["allLogs"]
+      metric_categories              = ["AllMetrics"]
+      log_analytics_destination_type = "Dedicated"
+      workspace_resource_id          = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id # azurerm_log_analytics_workspace.this_workspace.id
+    }
+  }
 
   tags                = merge(
     local.global_settings.tags,
