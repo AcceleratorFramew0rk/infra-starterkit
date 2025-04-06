@@ -20,7 +20,7 @@ locals {
       indexing_policy_settings = {
         sql_indexing_mode = "consistent"
         sql_included_path = "/*"
-        sql_excluded_path = ""
+        sql_excluded_path = "/\"_etag\"/?"  # ✅ Only valid paths
         composite_indexes = {}
         spatial_indexes   = {}
       }
