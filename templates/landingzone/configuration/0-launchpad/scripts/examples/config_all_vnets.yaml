@@ -87,6 +87,8 @@ subnets:
     AiSubnet: # DO NOT CHANGE subnet name
       name: "AiSubnet"    
       address_prefixes: ["100.64.1.128/27"]   
+      service_endpoints: 
+        - "Microsoft.Storage"      
     LogicAppSubnet: # DO NOT CHANGE subnet name
       name: "LogicAppSubnet"
       address_prefixes: ["100.64.1.160/27"]   

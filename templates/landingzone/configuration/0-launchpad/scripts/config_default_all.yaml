@@ -110,6 +110,8 @@ subnets:
     ApiSubnet: # DO NOT CHANGE subnet name
       name: "ApiSubnet"    
       address_prefixes: ["100.64.0.192/27"]
+      service_endpoints: 
+        - "Microsoft.Storage"            
     # ContainerAppSubnet: # DO NOT CHANGE subnet name
     #   name: "ContainerAppSubnet"    
     #   address_prefixes: ["100.64.0.224/27"]

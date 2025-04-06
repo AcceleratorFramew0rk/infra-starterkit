@@ -130,6 +130,8 @@ subnets:
     # AiSubnet: # DO NOT CHANGE subnet name
     #   name: "AiSubnet"    
     #   address_prefixes: ["100.64.1.0/27"]   
+    #   service_endpoints: 
+    #     - "Microsoft.Storage"      
     # CiSubnet: # DO NOT CHANGE subnet name 
     #   name: "ApiSubnet"    
     #   address_prefixes: ["100.64.1.64/27"]   
