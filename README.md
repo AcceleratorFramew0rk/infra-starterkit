@@ -138,8 +138,8 @@ tfexe apply run-all -include=/tf/avm/AI_Foundry_pattern.hcl
 ```
 
 #### finally, manually approved the below search shared private link for Azure Search Services 
-##### Storage account (Approved via Storage Account UI under  Networking > Private endpoint connections)
-##### AI Services (Approved via AI Services UI under Networking > Private endpoint connections)
+* Storage account (Approved via Storage Account UI under  Networking > Private endpoint connections)
+* AI Services (Approved via AI Services UI under Networking > Private endpoint connections)
 
 
 
