@@ -123,11 +123,7 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
 ## Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
-```bash
 ## 1. Launchpad - create launchpad storage account and containers
-
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 
