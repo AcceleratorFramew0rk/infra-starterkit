@@ -35,7 +35,7 @@ module "aifoundry" {
   tags                = merge(
     local.global_settings.tags,
     {
-      purpose = "ai foundry" 
+      purpose = "ai foundry services" 
       project_code = try(local.global_settings.prefix, var.prefix) 
       env = try(local.global_settings.environment, var.environment) 
       zone = "project"

@@ -1,6 +1,9 @@
 # Navigate to the working directory where the Terraform configuration files are located
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/azure_ai_foundry
 
+tfexe apply
+
+# OR
 
 # Run the Custom Terraform initialization script "terraform-init-custom" at location "/usr/local/bin" to set up the backend and providers
 terraform-init-custom
