@@ -39,6 +39,11 @@ az account show # to show the current login account
 
 SUBSCRIPTION_ID="xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
+
+# ensure min "execute" right to script to avoid permission issue
+sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
+sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
+
 ```
 
 ## ** OPTIONAL: Setup GCC Simulator Environment (required for testing and non gcc environment)
@@ -55,74 +60,67 @@ terraform apply -auto-approve
 
 ### For AKS Architype [[architecture diagram](./docs/aks_archetype.md)], execute the following steps:
 
+- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+
 ```bash
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
-
-## Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 # 1. launchpad
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 ./scripts/import.sh
 
-# 2. application landing zone
-cd /tf/avm/templates/landingzone/configuration/1-landingzones
-./deploy_application_landingzone.sh
+# 2. Infra and Application Landing zone and networking
 
-# 3. solution accelerators
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
-./deploy_pattern_aks_archetype.sh
+tfexe apply run-all -include=/tf/avm/azure_aks_lz.hcl
+
+# 3. Solution Accelerators
+
+tfexe apply run-all -include=/tf/avm/azure_aks_pattern.hcl
 ```
 
 ### For App Service Architype [[architecture diagram](./docs/appservice_archetype.md)], execute the following steps:
+
+- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+
 ```bash
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
-
-## Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 # 1. launchpad
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 ./scripts/import.sh
 
-# 2. application landing zone
-cd /tf/avm/templates/landingzone/configuration/1-landingzones
-./deploy_application_landingzone.sh
+# 2. Infra and Application Landing zone and networking
 
-# 3. solution accelerators
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
-./deploy_pattern_appservice_internet_intranet_archetype.sh
+tfexe apply run-all -include=/tf/avm/azure_appservice_lz.hcl
+
+# 3. Solution Accelerators
+
+tfexe apply run-all -include=/tf/avm/azure_appservice_pattern.hcl
+
 ```
 
 
 ### For IoT Architype [[architecture diagram](./docs/iot_archetype.md)], execute the following steps:
+
+- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+
 ```bash
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
-
-## Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 # 1. launchpad
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 ./scripts/import.sh
 
-# 2. application landing zone
-cd /tf/avm/templates/landingzone/configuration/1-landingzones
-./deploy_application_landingzone.sh
+# 2. Infra and Application Landing zone and networking
 
-# 3. solution accelerators
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
-./deploy_pattern_iot_archetype.sh
+tfexe apply run-all -include=/tf/avm/azure_iot_lz.hcl
+
+# 3. Solution Accelerators
+
+tfexe apply run-all -include=/tf/avm/azure_iot_pattern.hcl
+
 ```
 
 
 ### For AI Foundry Architype [[architecture diagram](./docs/ai_archetype.md)], execute the following steps:
+
+- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+
 ```bash
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
-
-## Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 # 1. Launchpad - create launchpad storage account and containers
 
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad

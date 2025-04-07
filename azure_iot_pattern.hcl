@@ -1,0 +1,11 @@
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/devops/containter_instance
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/keyvault
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/mssql
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/storage_account
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/apim
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/linux_function_app
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/iot_hub
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/data_explorer
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/stream_analytics
+/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/vm
