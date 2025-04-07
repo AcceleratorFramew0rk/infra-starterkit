@@ -13,7 +13,7 @@ def get_config(input, solution_accelerator, landingzone_type):
 
     CONFIGURATION={"services": [
         {"name": "SqlServer", "subnet": "DbSubnet_address_prefixes"},
-        {"name": "CosmosDB", "subnet": "CosmosDbSubnet_address_prefixes"},
+        {"name": "CosmosDB", "subnet": "DbSubnet_address_prefixes"},
         {"name": "MySql", "subnet": "DbSubnet_address_prefixes"},
         {"name": "Postgresql", "subnet": "DbSubnet_address_prefixes"},
         {"name": "StorageAccount", "subnet": "ServiceSubnet_address_prefixes"},
