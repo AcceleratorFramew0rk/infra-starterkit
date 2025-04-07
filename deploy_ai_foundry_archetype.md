@@ -43,6 +43,9 @@ terraform apply -auto-approve
 
 ## 1. Launchpad - create launchpad storage account and containers
 
+- set prefix and configuration
+- modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
+
 ```bash
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
