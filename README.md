@@ -137,6 +137,11 @@ tfexe apply run-all -include=/tf/avm/AI_Foundry_pattern.hcl
 
 ```
 
+#### finally, manually approved the below search shared private link for Azure Search Services 
+-     Storage account
+-     AI Services
+
+
 
 ## To continue with detail of each solution accelerators, goto README.md file /tf/avm/templates/README.md
 ```bash
