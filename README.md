@@ -123,18 +123,17 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
 ## Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
-## 1. Launchpad - create launchpad storage account and containers
+# 1. Launchpad - create launchpad storage account and containers
 
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 
 ./scripts/import.sh
 
-## 2. Infra and Application Landing zone and networking
+# 2. Infra and Application Landing zone and networking
 
 tfexe apply run-all -include=/tf/avm/AI_Foundry_LZ.hcl
 
-
-### 3. Solution Accelerators
+# 3. Solution Accelerators
 
 tfexe apply run-all -include=/tf/avm/AI_Foundry_pattern.hcl
 
