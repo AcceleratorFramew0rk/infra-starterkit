@@ -79,32 +79,26 @@ echo $CONFIG_FILE_PATH
 # generate templates
 #------------------------------------------------------------------------
 
-RESOURCE_GROUP_NAME=$(yq '.resource_group_name' $CONFIG_FILE_PATH)
+RESOURCE_GROUP_NAME=$(yq -r '.resource_group_name' $CONFIG_FILE_PATH)
 echo $RESOURCE_GROUP_NAME
-LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME=$(yq '.log_analytics_workspace_resource_group_name' $CONFIG_FILE_PATH)
+LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME=$(yq -r '.log_analytics_workspace_resource_group_name' $CONFIG_FILE_PATH)
 echo $LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME
-LOG_ANALYTICS_WORKSPACE_NAME=$(yq '.log_analytics_workspace_name' $CONFIG_FILE_PATH)
+LOG_ANALYTICS_WORKSPACE_NAME=$(yq -r '.log_analytics_workspace_name' $CONFIG_FILE_PATH)
 echo $LOG_ANALYTICS_WORKSPACE_NAME
 
 # Define your variables
 
-# PROJECT_CODE="${CONFIG_prefix}" 
-PROJECT_CODE=$(yq '.prefix' $CONFIG_FILE_PATH)
+PROJECT_CODE=$(yq -r '.prefix' $CONFIG_FILE_PATH)
 
 echo $PROJECT_CODE
-SUBSCRIPTION_ID="${SUB_ID}" # "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"
+SUBSCRIPTION_ID="${SUB_ID}" 
 
 # Generate resource group name to store state file
 RG_NAME="${PROJECT_CODE}-rg-launchpad"
 
 # Location
-# LOC="${CONFIG_location}" # "southeastasia"
-LOC=$(yq '.location' $CONFIG_FILE_PATH)
+LOC=$(yq -r '.location' $CONFIG_FILE_PATH)
 echo $LOC
-
-# Generate storage acc name to store state file
-# RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
-# echo $RND_NUM
 
 RND_NUM=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 3)
 echo "Generated Code: $RND_NUM"
@@ -242,8 +236,6 @@ echo "Start creating NSG yaml configuration file"
 timestamp
 echo "-----------------------------------------------------------------------------"
 
-# begin rename templates to folder name
-
 # goto starter kit parent folder
 cd ./../../../../
 
@@ -251,17 +243,6 @@ cd ./../../../../
 FOLDER_NAME=$(basename "$(pwd)")
 echo "Folder Name: ${FOLDER_NAME}"
 
-# Escape slashes in the search variable
-search="templates"
-replace="${FOLDER_NAME}"
-
-echo $search
-echo $replace
-# Perform replace
-find . -name '*.md' -exec sed -i -e "s/$search/$replace/g" {} +
-find . -name '*.sh' -exec sed -i -e "s/$search/$replace/g" {} +
-
-# end rename templates to folder name
 
 # goto nsg configuration folder
 cd ./landingzone/configuration/1-landingzones/scripts
