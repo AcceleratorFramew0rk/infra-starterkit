@@ -15,6 +15,8 @@ STG_NAME=$(az storage account list \
 if [ $? -ne 0 ] || [ -z "$STG_NAME" ]; then
 
   echo "No existing storage account: ${STG_NAME}"
+
+  # ** IMPORTANT: cd to the directory where the script is located
   cd ./starterkit/templates/landingzone/configuration/0-launchpad/launchpad
   echo "Start importing vnet tfstate"            
   ./scripts/import_app_lz.sh
@@ -27,9 +29,10 @@ else
 
   echo "Storage Account name: ${STG_NAME}"
   echo "Using existing Resource group and storage account"
-  echo "Start updating tfstate config info"            
+  echo "Start updating tfstate config info"    
+  # ** IMPORTANT: cd to the directory where the script is located        
   cd ./starterkit/templates/landingzone/configuration/0-launchpad/launchpad
-  ./scripts/import_update.sh
+  ./scripts/import_update_app_lz.sh
   if [ $? -ne 0 ]; then
     echo "Failed to import vnet tfstate. Exiting."
     exit 1
