@@ -41,7 +41,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=wx2devseastgtfstatekvy" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-devops-container-instance.tfstate"
+-backend-config="key=solution-accelerators-devops-container-instance.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 

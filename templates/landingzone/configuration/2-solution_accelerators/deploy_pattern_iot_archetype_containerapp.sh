@@ -42,7 +42,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-keyvault.tfstate"
+-backend-config="key=solution-accelerators-project-keyvault.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -65,7 +65,7 @@ terraform apply -auto-approve \
 # -backend-config="resource_group_name=${RG_NAME}" \
 # -backend-config="storage_account_name=${STG_NAME}" \
 # -backend-config="container_name=2-solution-accelerators" \
-# -backend-config="key=solution_accelerators-project-appservice.tfstate"
+# -backend-config="key=solution-accelerators-project-appservice.tfstate"
 
 # terraform plan \
 # -var="storage_account_name=${STG_NAME}" \
@@ -82,7 +82,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-containerapp.tfstate"
+-backend-config="key=solution-accelerators-project-containerapp.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -105,7 +105,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-mssql.tfstate"
+-backend-config="key=solution-accelerators-project-mssql.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -129,7 +129,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-storageaccount.tfstate"
+-backend-config="key=solution-accelerators-project-storageaccount.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -152,7 +152,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-apim.tfstate"
+-backend-config="key=solution-accelerators-project-apim.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -176,7 +176,7 @@ terraform apply -auto-approve \
 # -backend-config="resource_group_name=${RG_NAME}" \
 # -backend-config="storage_account_name=${STG_NAME}" \
 # -backend-config="container_name=2-solution-accelerators" \
-# -backend-config="key=solution_accelerators-project-linuxfunctionapp.tfstate"
+# -backend-config="key=solution-accelerators-project-linuxfunctionapp.tfstate"
 
 # terraform plan \
 # -var="storage_account_name=${STG_NAME}" \
@@ -194,7 +194,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-iothub.tfstate"
+-backend-config="key=solution-accelerators-project-iothub.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -217,7 +217,7 @@ terraform apply -auto-approve \
 # -backend-config="resource_group_name=${RG_NAME}" \
 # -backend-config="storage_account_name=${STG_NAME}" \
 # -backend-config="container_name=2-solution-accelerators" \
-# -backend-config="key=solution_accelerators-project-eventhubs.tfstate"
+# -backend-config="key=solution-accelerators-project-eventhubs.tfstate"
 
 # terraform plan \
 # -var="storage_account_name=${STG_NAME}" \
@@ -236,7 +236,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-dataexplorer.tfstate"
+-backend-config="key=solution-accelerators-project-dataexplorer.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -262,7 +262,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-vm.tfstate"
+-backend-config="key=solution-accelerators-project-vm.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -288,7 +288,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-streamanalytics.tfstate"
+-backend-config="key=solution-accelerators-project-streamanalytics.tfstate"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
