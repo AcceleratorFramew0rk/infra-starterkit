@@ -41,12 +41,12 @@ variable "private_dns_zones_enabled" {
 
 variable "subnet_name" {
   type        = string  
-  default = "AppServiceSubnet"
+  default = "AppServiceIntranetSubnet"
 }
 
 variable "ingress_subnet_name" {
   type        = string  
-  default = "WebSubnet"
+  default = "WebIntranetSubnet"
 }
 
 variable "linux_fx_version" {
