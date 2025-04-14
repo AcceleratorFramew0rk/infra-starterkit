@@ -4,17 +4,17 @@
 
 # prepare and create launchpad - only run once per subscription
 
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/0-launchpad/scripts
+sudo chmod -R -f 777 /tf/avm/gcc_starter_kit/landingzone/configuration/0-launchpad/scripts
 
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/scripts
+cd /tf/avm/gcc_starter_kit/landingzone/configuration/0-launchpad/scripts
 
-PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+PREFIX="aaf"
 echo $PREFIX
 
 ./launchpad.sh $PREFIX
 
 # goto solution accelerator folder
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service_windows
+cd /tf/avm/gcc_starter_kit/landingzone/configuration/2-solution_accelerators/project/app_service
 
 # get subscription id
 ACCOUNT_INFO=$(az account show 2> /dev/null)
@@ -46,7 +46,7 @@ terraform init  -reconfigure \
 -backend-config="resource_group_name=${PROJECT_CODE}-rg-launchpad" \
 -backend-config="storage_account_name=${STG_NAME}" \
 -backend-config="container_name=2-solution-accelerators" \
--backend-config="key=solution_accelerators-project-appservicewindows.tfstate"
+-backend-config="key=solution_accelerators-project-appservice.tfstate"
 
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
