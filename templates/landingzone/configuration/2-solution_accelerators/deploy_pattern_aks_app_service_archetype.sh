@@ -211,13 +211,17 @@ terraform init  -reconfigure \
 
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
--var="resource_group_name=${RG_NAME}"
+-var="resource_group_name=${RG_NAME}" \
+-var="subnet_name=DbSubnet" 
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
--var="resource_group_name=${RG_NAME}"
+-var="resource_group_name=${RG_NAME}" \
+-var="subnet_name=DbSubnet" 
+
+
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
