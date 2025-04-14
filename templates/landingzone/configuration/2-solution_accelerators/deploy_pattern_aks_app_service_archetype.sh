@@ -161,10 +161,9 @@ terraform apply -auto-approve \
 
 
 # -----------------------------------------------------------------------------------------------------
-# app service - ServiceSubnet (Inbound) + AppServiceSubnet (VNet Integration) 
+# app service - Kind is Windows, ServiceSubnet (Inbound) + AppServiceSubnet (VNet Integration) 
 # -----------------------------------------------------------------------------------------------------
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service_windows
-
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service
 terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
@@ -175,14 +174,24 @@ terraform init  -reconfigure \
 
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
--var="resource_group_name=${RG_NAME}" 
+-var="resource_group_name=${RG_NAME}" \
+-var="kind=Windows" \
+-var="linux_fx_version=null" \
+-var="dotnet_framework_version=v6.0" \
+-var="ingress_subnet_name=ServiceSubnet" 
+
+
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
 
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
--var="resource_group_name=${RG_NAME}" 
+-var="resource_group_name=${RG_NAME}" \
+-var="kind=Windows" \
+-var="linux_fx_version=null" \
+-var="dotnet_framework_version=v6.0" \
+-var="ingress_subnet_name=ServiceSubnet" 
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
