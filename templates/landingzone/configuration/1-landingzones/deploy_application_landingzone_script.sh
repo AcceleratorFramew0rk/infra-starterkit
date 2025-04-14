@@ -42,13 +42,19 @@ terraform init  -reconfigure \
 -backend-config="container_name=1-landingzones" \
 -backend-config="key=network-spoke-project.tfstate"
 
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
+
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}"
 
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
+
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}"
+
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
 # spoke devops 
 cd /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
@@ -59,13 +65,19 @@ terraform init  -reconfigure \
 -backend-config="container_name=1-landingzones" \
 -backend-config="key=network-spoke-devops.tfstate"
 
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
+
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}"
 
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
+
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}"
+
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
 # peering project-devops
 cd /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
@@ -76,10 +88,16 @@ terraform init  -reconfigure \
 -backend-config="container_name=1-landingzones" \
 -backend-config="key=network-peering-project-devops.tfstate"
 
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
+
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}"
 
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
+
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}"
+
+[ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
