@@ -231,16 +231,6 @@ terraform apply -auto-approve \
 # default is deploy to AppSubnet, change the subnet_id to AiSubnet
 cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/vm
 
-# ** IMPORTANT - define subnet_id for the VM deployment
-VNET_NAME=$(yq  -r '.vnets.project.name' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
-echo $VNET_NAME
-SUBNET_NAME="AiSubnet"
-SUBSCRIPTION_ID=$(echo "$(az account show 2> /dev/null)" | jq ".id" -r)
-echo $SUBSCRIPTION_ID
-SUBNET_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_NAME}"
-echo $SUBNET_ID
-
-
 terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
 -backend-config="storage_account_name=${STG_NAME}" \
@@ -252,14 +242,14 @@ terraform init  -reconfigure \
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}" \
--var="subnet_id=${SUBNET_ID}"
+-var="subnet_name=AiSubnet"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}" \
--var="subnet_id=${SUBNET_ID}"
+-var="subnet_name=AiSubnet"
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
 
@@ -270,16 +260,6 @@ terraform apply -auto-approve \
 # default is deploy to AppSubnet, change the subnet_id to AiSubnet
 # virtualmachine_os_type is default to Windows, set this to Linux
 cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/vm
-
-# ** IMPORTANT - define subnet_id for the VM deployment
-VNET_NAME=$(yq  -r '.vnets.project.name' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
-
-SUBNET_NAME="AiSubnet"
-SUBSCRIPTION_ID=$(echo "$(az account show 2> /dev/null)" | jq ".id" -r)
-echo $SUBSCRIPTION_ID
-SUBNET_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${SUBNET_NAME}"
-echo $SUBNET_ID
-
 
 terraform init  -reconfigure \
 -backend-config="resource_group_name=${RG_NAME}" \
@@ -292,7 +272,7 @@ terraform init  -reconfigure \
 terraform plan \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}" \
--var="subnet_id=${SUBNET_ID}" \
+-var="subnet_name=AiSubnet" \
 -var="virtualmachine_os_type=Linux" 
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
@@ -300,7 +280,7 @@ terraform plan \
 terraform apply -auto-approve \
 -var="storage_account_name=${STG_NAME}" \
 -var="resource_group_name=${RG_NAME}" \
--var="subnet_id=${SUBNET_ID}" \
+-var="subnet_name=AiSubnet" \
 -var="virtualmachine_os_type=Linux" 
 
 [ $? -ne 0 ] && echo -e "\e[31mTerraform failed. Exiting.\e[0m" && exit 1
