@@ -3,7 +3,7 @@
 
 cd /tf/avm/cicd/starter_vm
 
-# follow the steps in the below readmen file
+# follow the steps in the below readme file
 ./deploy-runner.md
 
 
