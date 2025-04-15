@@ -11,7 +11,7 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 
 ```
 
-# 0-launchpad 5 mins
+# 0-launchpad ~ 5 mins
 ```bash
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
@@ -22,7 +22,7 @@ cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 
 ```
 
-# 1-landingzone 10 mins
+# 1-landingzone ~ 10 mins
 ```bash
 
 cd /tf/avm/templates/landingzone/configuration/1-landingzones
@@ -32,7 +32,7 @@ cd /tf/avm/templates/landingzone/configuration/1-landingzones
 ```
 
 
-# 2-solution-accelerators 14:19 - 
+# 2-solution-accelerators ~ 2 hrs
 ```bash
 
 cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
