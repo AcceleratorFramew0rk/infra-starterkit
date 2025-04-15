@@ -36,6 +36,7 @@ cd /tf/avm/templates/landingzone/configuration/1-landingzones
 ```bash
 
 cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
+
 ./deploy_pattern_aks_app_service_archetype.sh
 
 ```
