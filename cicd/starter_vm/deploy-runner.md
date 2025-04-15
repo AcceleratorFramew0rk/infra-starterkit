@@ -80,7 +80,7 @@ az vm create \
 
 # === 8. Create container instance with SDE image
 
-SUB_ID="/subscriptions/0b5b13b8-0ad7-4552-936f-8fae87e0633f"
+SUB_ID="/subscriptions/2e3f616d-a0b2-44d6-a88a-20904b484ae0"
 
 az container create \
   --name "aci-runner01" \
