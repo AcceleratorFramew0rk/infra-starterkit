@@ -2,11 +2,11 @@ resource_group_name: "gcci-platform"
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "glassprd"
+prefix: "abcdev"
 is_prefix: true
 is_single_resource_group: false
 location: "southeastasia"
-environment: "prd"
+environment: "dev"
 app_config:
   private_dns_zones: # to replace with your application domain name
     internet_ingress_domain_name: internet.gra.gov.sg 
@@ -30,36 +30,36 @@ vnets:
     name:     
     cidr: 
   project:  
-    name: "glassprd-vnet-internet"     
-    cidr: "100.74.191.0/24" 
+    name: "gcci-vnet-project"     
+    cidr: "100.64.0.0/23" 
   devops:  
-    name: "glassprd-vnet-devops"   
-    cidr: "100.74.192.0/24" 
+    name: "gcci-vnet-devops"   
+    cidr: "100.127.4.0/24" 
 # subnets cidr configuration
 subnets:
   # IMPORTANT ** comment off the below any project subnets if it is not used
   project:
     DbSubnet: # DO NOT CHANGE subnet name
       name: "DbSubnet"    
-      address_prefixes: ["100.74.191.0/27"]
+      address_prefixes: ["100.64.0.0/27"]
     ServiceSubnet: # DO NOT CHANGE subnet name
       name: "ServiceSubnet"
-      address_prefixes: ["100.74.191.32/27"]
+      address_prefixes: ["100.64.0.32/27"]
     SystemNodePoolSubnet: # DO NOT CHANGE subnet name
       name: "SystemNodePoolSubnet"    
-      address_prefixes: ["100.74.191.64/27"]
+      address_prefixes: ["100.64.0.64/27"]
     UserNodePoolSubnet: # DO NOT CHANGE subnet name
       name: "UserNodePoolSubnet"    
-      address_prefixes: ["100.74.191.96/27"]
+      address_prefixes: ["100.64.0.96/27"]
     UserNodePoolIntranetSubnet: # DO NOT CHANGE subnet name
       name: "UserNodePoolIntranetSubnet"    
-      address_prefixes: ["100.74.191.128/27"]     
+      address_prefixes: ["100.64.0.128/27"]     
     AiSubnet: # DO NOT CHANGE subnet name
       name: "AiSubnet"    
-      address_prefixes: ["100.74.191.160/27"]    
+      address_prefixes: ["100.64.0.160/27"]    
     AppServiceSubnet: # DO NOT CHANGE subnet name
       name: "AppServiceSubnet"
-      address_prefixes: ["100.74.191.192/27"]
+      address_prefixes: ["100.64.0.192/27"]
       delegations: [ 
         {
           name: "AppServiceSubnet",
@@ -73,7 +73,7 @@ subnets:
   devops:
     RunnerSubnet:    
       name: "RunnerSubnet"
-      address_prefixes: ["100.74.192.0/25"]
+      address_prefixes: ["100.127.4.0/25"]
       delegations: [
         {
           name: "runner",
