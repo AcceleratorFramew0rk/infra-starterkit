@@ -89,6 +89,7 @@ az container create \
   --assign-identity --scope $SUB_ID \
   --cpu 4 \
   --memory 16 \
+  --os-type "Linux" \
   --command-line '"/bin/sh" "-c" "while sleep 1000; do :; done"'
 
 ```
