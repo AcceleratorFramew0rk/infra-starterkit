@@ -26,10 +26,11 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
 # continue with starter kit.
 
-To sign in, use a web browser to open the page 
-https://microsoft.com/devicelogin 
+# To sign in, use a web browser to open the page 
 
-and enter the code XXXXXXXXXXX to authenticate.
+# https://microsoft.com/devicelogin 
+
+#and enter the code XXXXXXXXXXX to authenticate.
 
 # follow the steps in /tf/avm/deploy_aks_appservice_archetype.md
 
