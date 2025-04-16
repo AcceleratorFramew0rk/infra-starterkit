@@ -9,8 +9,8 @@ location: "southeastasia"
 environment: "dev"
 app_config:
   private_dns_zones: # to replace with your application domain name
-    internet_ingress_domain_name: internet.gra.gov.sg 
-    intranet_ingress_domain_name: intranet.gra.gov.sg 
+    internet_ingress_domain_name: internet.xxx.gov.sg 
+    intranet_ingress_domain_name: intranet.xxx.gov.sg 
 # virtual networks name configuration - change the below if you are using different vnets name
 vnets:
   # IMPORTANT: leave empty if there is no such virtual network   
