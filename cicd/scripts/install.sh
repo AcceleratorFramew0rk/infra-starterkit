@@ -21,16 +21,16 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
             path="$(pwd)/starterkit/templates/landingzone/configuration/2-solution_accelerators/project/$value"
             echo "Value of $key: $path"
 
-            fields=$(jq -r --arg key_value "$value" '.[] | select(.id == $key_value) | .fields' "$data_file_config")
+            fields=$(jq -r --arg key "$key" '.[] | select(.id == $key) | .fields' "$data_file_config")
 
             # Check for empty or null values
             if [ -z "$fields" ] || [ "$fields" == "null" ]; then
-                echo "Error: No fields found for service ID '$key_value'"
+                echo "Error: No fields found for service ID '$value'"
                 exit 1
             fi
 
             # tfString="./tfexe.sh apply -path=$path "
-            config="$(pwd)/config.yaml"
+            config="$(pwd)/starterkit/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 
             # testing
