@@ -1,8 +1,8 @@
 #!/bin/bash
 
-data_file="$(pwd)/cicd/scripts/data.json"
-selected_services_file="$(pwd)/cicd/scripts/config/selectedServices.json"
-data_file_config="$(pwd)/cicd/scripts/config/selectedServicesConfig.json"
+data_file="$(pwd)/starterkit/cicd/scripts/data.json"
+selected_services_file="$(pwd)/starterkit/cicd/scripts/config/selectedServices.json"
+data_file_config="$(pwd)/starterkit/cicd/scripts/config/selectedServicesConfig.json"
 echo "Data file: $data_file"
 echo "Selected services file: $selected_services_file"
 echo "Data file config: $data_file_config" # test
@@ -34,10 +34,10 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
 
 
             # testing
-            # tfString="$(pwd)/cicd/scripts/tfexe init -path=$path -config=$config"
+            # tfString="$(pwd)/starterkit/cicd/scripts/tfexe init -path=$path -config=$config"
 
             # production
-            tfString="$(pwd)/cicd/scripts/tfexe apply -path=$path -config=$config"
+            tfString="$(pwd)/starterkit/cicd/scripts/tfexe apply -path=$path -config=$config"
 
             # retrieve -var for terraform command if available
             while read -r field; do
