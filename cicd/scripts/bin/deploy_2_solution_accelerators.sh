@@ -1,11 +1,25 @@
 #!/bin/bash
 
-data_file="$(pwd)/starterkit/cicd/scripts/data.json"
-selected_services_file="$(pwd)/starterkit/cicd/scripts/config/selectedServices.json"
-data_file_config="$(pwd)/starterkit/cicd/scripts/config/selectedServicesConfig.json"
+# -----------------------------------------------------------------------------------------
+# USAGE:
+# cd $(pwd)/starterkit
+# ./cicd/scripts/bin/deploy_2_solution_accelerators.sh
+# -----------------------------------------------------------------------------------------
+
+# ** IMPORTANT: always start with top level path of starterkit
+
+# location of code
+data_file="./cicd/scripts/data.json"
+
+# location of data: selectedServices and selectedServicesConfig
+selected_services_file="./cicd/scripts/config/selectedServices.json"
+data_file_config="./cicd/scripts/config/selectedServicesConfig.json"
+
 echo "Data file: $data_file"
 echo "Selected services file: $selected_services_file"
-echo "Data file config: $data_file_config" # test
+echo "Data file config: $data_file_config" 
+
+# Key: service name, value: folder name in /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project folder
 # Loop through selectedServices.json
 jq -c '.[]' "$selected_services_file" | while read -r item; do
     key=$(echo "$item" | jq -r 'keys[0]')                # Extract the key (service name)
@@ -18,26 +32,26 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
         
         if [ -n "$value" ] && [ "$value" != "null" ]; then
             echo "Key '$key' exists in JSON."
-            path="$(pwd)/starterkit/templates/landingzone/configuration/2-solution_accelerators/project/$value"
+            path="./templates/landingzone/configuration/2-solution_accelerators/project/$value"
             echo "Value of $key: $path"
 
-            fields=$(jq -r --arg key "$key" '.[] | select(.id == $key) | .fields' "$data_file_config")
+            fields=$(jq -r --arg key_value "$value" '.[] | select(.id == $key_value) | .fields' "$data_file_config")
 
             # Check for empty or null values
             if [ -z "$fields" ] || [ "$fields" == "null" ]; then
-                echo "Error: No fields found for service ID '$value'"
+                echo "Error: No fields found for service ID '$key_value'"
                 exit 1
             fi
 
             # tfString="./tfexe.sh apply -path=$path "
-            config="$(pwd)/starterkit/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+            config="./templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 
-            # testing
-            # tfString="$(pwd)/starterkit/cicd/scripts/tfexe init -path=$path -config=$config"
+            # non-production - testing
+            # tfString="./scripts/bin/tfexe init -path=$path -config=$config"
 
             # production
-            tfString="$(pwd)/starterkit/cicd/scripts/tfexe apply -path=$path -config=$config"
+            tfString="./scripts/bin/tfexe apply -path=$path -config=$config"
 
             # retrieve -var for terraform command if available
             while read -r field; do
@@ -55,7 +69,8 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
 
             done <<< "$(echo "$fields" | jq -c '.[]')"  # Avoids subshell issue
 
-            echo "Executing ...: $tfString"
+            echo "Executing ...:"
+            echo "$tfString"            
 
             # # uncomment when testing completed
             eval "$tfString"
@@ -66,7 +81,8 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
             fi
 
         else
-            echo "Key '$key' does NOT exist in JSON."
+            echo "Key '$key' does NOT exist in JSON."             
+            exit 1
         fi
     fi
 done
