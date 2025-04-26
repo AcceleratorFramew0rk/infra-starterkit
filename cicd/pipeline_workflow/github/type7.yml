@@ -1,0 +1,202 @@
+# This is the name of the workflow, which will appear in the GitHub Actions interface
+name: Developer Portal workflow
+# The "on" keyword defines the event that triggers the workflow
+on:
+  
+  # "workflow_dispatch" allows the workflow to be manually triggered from the Actions tab
+  workflow_dispatch:
+    inputs:
+      config_yaml:
+        description: "config.yaml data"
+        required: true  
+      transaction_id:
+        description: "transaction_id data"
+        required: true 
+      prefix:
+        description: "prefix string"
+        required: true
+        default: "hd10-dev"
+      environment:
+        description: "environment string"
+        required: false 
+        default: "dev"
+      solution_accelerator:
+        description: "solution_accelerator json"
+        required: true 
+      jwt_token:
+        description: "jwt_token"
+        required: false
+      ARM_TENANT_ID:
+        description: "tenant_id"
+        required: false
+      ARM_CLIENT_ID:
+        description: "client_id"
+        required: false
+      ARM_CLIENT_SECRET:
+        description: "client_secret"
+        required: false
+      ARM_SUBSCRIPTION_ID:
+        description: "subscription_id"
+        required: false
+        
+
+# Jobs are individual tasks that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # needs: build-init # No needs define
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    # Steps define the sequence of actions within the job
+    steps:
+      # Step 1: Checks out the code from the repository using the official GitHub action
+      - uses: actions/checkout@v4
+
+      # Step 2: Send RUN_ID to REST API
+      - name: Init job
+        run: |
+
+          echo "Job Started"
+          curl -X POST "https://portal.sandpitlabs.com/api/receive_run_id" \
+            -H "Content-Type: application/json" \
+            -d "{\"run_id\": \"$GITHUB_RUN_ID\", \"transaction_id\": \"${{ github.event.inputs.transaction_id }}\", \"status\": \"Job Started\"}"
+          echo "Send RUN_ID to REST API: $GITHUB_RUN_ID completed successfully" 
+
+
+      # Step 3: Installs `yq`, a tool for parsing and modifying YAML files
+      - name: clone starterkit and install dependencies
+        run: |
+
+          # clone starterkit
+          pwd
+          ls
+          git clone https://github.com/AcceleratorFramew0rk/terraform-azurerm-aaf.git ./modules/terraform-azurerm-aaf
+          git clone https://github.com/AcceleratorFramew0rk/infra-starterkit ./starterkit
+
+          # setup dependencies
+          cd $(pwd)/starterkit
+          ./cicd/scripts/bin/setup_dependencies.sh
+
+
+      # Step 4: Logs into Azure using service principal credentials stored in GitHub Secrets
+      - name: Login to Azure with service principal
+        env:
+          ARM_CLIENT_ID: ${{ github.event.inputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ github.event.inputs.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ github.event.inputs.ARM_TENANT_ID }}
+        run: |
+
+          echo "client id: ${{ github.event.inputs.ARM_CLIENT_ID }}"
+          echo "subscription id: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}"
+          echo "tenant id: ${{ github.event.inputs.ARM_TENANT_ID }}"
+          
+          # Authenticate and set the Azure subscription
+          az login --service-principal -u "${{ github.event.inputs.ARM_CLIENT_ID }}" -p "${{ github.event.inputs.ARM_CLIENT_SECRET }}" --tenant "${{ github.event.inputs.ARM_TENANT_ID }}"
+          az account set --subscription "${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}"
+          az account show
+
+
+      # Step 5: Clone the necessary Terraform module and StarterKit repositories
+      - name: initialize and generate config.yaml
+        env:
+          ARM_CLIENT_ID: ${{ github.event.inputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ github.event.inputs.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ github.event.inputs.ARM_TENANT_ID }}
+        run: |
+
+          pwd
+          ls
+          # setup dependencies
+          cd $(pwd)/starterkit
+          ./cicd/scripts/bin/initialize_data.sh "starterkit" "${{ github.event.inputs.config_yaml }}" "${{ github.event.inputs.solution_accelerator }}"
+
+
+      # Process 0: launchpad
+      - name: 0-launchpad
+        env:
+          # These environment variables are read from GitHub secrets for security
+          ARM_CLIENT_ID: ${{ github.event.inputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ github.event.inputs.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ github.event.inputs.ARM_TENANT_ID }}
+        run: |
+
+          pwd
+          ls
+
+          # Apply launchpad and import yaml configuration to tfstate file
+          sudo chmod -R -f 777 ./starterkit/templates/landingzone/configuration/0-launchpad/launchpad/scripts/import.sh
+          sudo chmod -R -f 777 ./starterkit/templates/landingzone/configuration
+
+          # import will check if there is existing rg, will trigger either import or import_update
+          # deploy level 0 launchpad
+          cd $(pwd)/starterkit
+          ./cicd/scripts/deploy_0_launchpad.sh
+
+
+      # Process 1: applicaiton landing zone
+      - name: 1-application landing zone
+        env:
+          # These environment variables are read from GitHub secrets for security
+          ARM_CLIENT_ID: ${{ github.event.inputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ github.event.inputs.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ github.event.inputs.ARM_TENANT_ID }}
+        run: |
+
+          pwd
+          ls
+
+          # Apply project and devops networking
+          sudo chmod -R 777 ./starterkit/cicd/scripts/
+
+          # production
+          # deploy level 1 landingzones
+          cd $(pwd)/starterkit
+          ./cicd/scripts/bin/deploy_1_landingzones.sh
+          
+
+      # Process 2: solution accelerators
+      - name: 2-solution accelerators
+        env:
+          # These environment variables are read from GitHub secrets for security
+          ARM_CLIENT_ID: ${{ github.event.inputs.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ github.event.inputs.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ github.event.inputs.ARM_TENANT_ID }}
+        run: |
+
+          pwd
+          ls
+
+          # Apply solution accelerators
+          sudo chmod -R 777 ./starterkit/cicd/scripts/
+
+          # production
+          # deploy level 3 solution accelerators
+          cd $(pwd)/starterkit
+          ./cicd/scripts/bin/deploy_2_solution_accelerators.sh
+          
+
+      # Step 99: Run a simple command to update workflow status
+      - name: Post job processing
+        run: |
+          # Send RUN_ID to REST API
+          # TODO: update the config.yaml file back to database (yaml is create at pipeline)
+          curl -X POST "https://portal.sandpitlabs.com/api/receive_run_id" \
+            -H "Content-Type: application/json" \
+            -d "{\"run_id\": \"$GITHUB_RUN_ID\", \"transaction_id\": \"${{ github.event.inputs.transaction_id }}\", \"status\": \"Job Completed\"}"
+          echo "Send RUN_ID to REST API: $GITHUB_RUN_ID completed successfully"        
+          echo "Job Ended"
+          
+        
+
+        
