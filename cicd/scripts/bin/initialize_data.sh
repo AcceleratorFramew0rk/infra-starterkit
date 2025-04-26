@@ -2,8 +2,8 @@
 
 # -----------------------------------------------------------------------------------------
 # USAGE:
-# cd $(pwd)
-# ./cicd/scripts/bin/initialize_data.sh
+# cd $(pwd)/starterkit
+# ./cicd/scripts/bin/initialize_data.sh "starterkit" "${{ github.event.inputs.config_yaml }}" "${{ github.event.inputs.solution_accelerator }}"
 # -----------------------------------------------------------------------------------------
 
 STARTERKIT_FOLDER=$1
