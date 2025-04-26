@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------------------------
+# USAGE:
+# cd $(pwd)/starterkit
+# ./cicd/scripts/bin/setup_dependencies.sh
+# -----------------------------------------------------------------------------------------
+
+# 1- intall yq
+echo "intall yq"          
+npm install yq
+
+# 2- install terraform
+echo "intall terraform"   
+# Define the desired Terraform version
+# TERRAFORM_VERSION="1.5.6"
+TERRAFORM_VERSION="1.9.0"
+
+# Download the Terraform binary
+curl -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+# Unzip the Terraform binary
+sudo apt-get install -y unzip
+unzip terraform.zip
+
+# Move the Terraform binary to a directory in your PATH
+sudo mv terraform /usr/local/bin/
+
+# Verify the installation
+terraform -version
