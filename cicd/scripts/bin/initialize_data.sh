@@ -45,13 +45,15 @@ echo "$selectedServicesConfig" > "./cicd/scripts/config/selectedServicesConfig.j
 sudo chmod -R -f 777 "./cicd/scripts/"
 
 # Read YAML file and extract "prefix"
-PREFIX=$(yq -r '.prefix' './config.yaml')
+PREFIX=$(yq -r '.prefix' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
 
-SUBSCRIPTION_ID=$(yq -r '.subscription_id' './config.yaml')
+SUBSCRIPTION_ID=$(yq -r '.subscription_id' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
 # ENVIRONMENT=$ENVIRONMENT 
 LOCATION=southeastasia 
 VNET_PROJECT_NAME=gcci-vnet-project 
 VNET_DEVOPS_NAME=gcci-vnet-devops
+
+echo "parameters for generate_config.sh:"
 echo $PREFIX
 echo $SUBSCRIPTION_ID
 echo $ENVIRONMENT
