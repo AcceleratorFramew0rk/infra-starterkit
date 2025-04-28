@@ -3,12 +3,13 @@
 # -----------------------------------------------------------------------------------------
 # USAGE:
 # cd $(pwd)/starterkit
-# ./cicd/scripts/bin/initialize_data.sh "starterkit" "${{ github.event.inputs.config_yaml }}" "${{ github.event.inputs.solution_accelerator }}"
+# ./cicd/scripts/bin/initialize_data.sh "starterkit" "${{ github.event.inputs.config_yaml }}" "${{ github.event.inputs.solution_accelerator }}"" "${{ github.event.inputs.environment }}"
 # -----------------------------------------------------------------------------------------
 
 STARTERKIT_FOLDER=$1
 CONFIG_YAML=$2
 SOLUTION_ACCELERATOR=$3
+ENVIRONMENT=${4:-dev} # default value is dev if empty
 
 
 # get config.yaml from input and write to file
@@ -47,7 +48,7 @@ sudo chmod -R -f 777 "./cicd/scripts/"
 PREFIX=$(yq -r '.prefix' './config.yaml')
 
 SUBSCRIPTION_ID=$(yq -r '.subscription_id' './config.yaml')
-ENVIRONMENT="${{ github.event.inputs.environment }}" 
+# ENVIRONMENT=$ENVIRONMENT 
 LOCATION=southeastasia 
 VNET_PROJECT_NAME=gcci-vnet-project 
 VNET_DEVOPS_NAME=gcci-vnet-devops
