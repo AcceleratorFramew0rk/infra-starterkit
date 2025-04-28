@@ -113,7 +113,6 @@ exec_terraform() {
       echo -e "     "
       echo -e "\e[32mTerraform $ACTION succeeded for ${EXTRACTED_NAME}!\e[0m"
     fi
-  fi
 
   elif [[ "$ACTION" == *"import"* ]]; then
     echo "     "
