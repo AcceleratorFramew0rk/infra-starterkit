@@ -5,7 +5,8 @@
 
 # USAGE: 
 # cd to the bin directory, execute the script with the following parameters
-# ./generate_config.sh <prefix> <subscription_id> <environment> <location> <vnet_project_name> <vnet_devops_name> "<setting_file_path>"
+# working direct is ./starterkit or $pwd/starterkit
+# ./cicd/scripts/bin/generate_config.sh <prefix> <subscription_id> <environment> <location> <vnet_project_name> <vnet_devops_name> "<setting_file_path>"
 
 #------------------------------------------------------------------------
 # functions
@@ -110,12 +111,12 @@ echo "Input Config: $INPUT_CONFIG"
     # input_yaml_file_path = './../config/input.yaml' # '/tf/avm/scripts/input.yaml'
     # solution_accelerator_yaml_file_path =  sys.argv[1] # '/tf/avm/scripts/settings.yaml'
 
-echo "$INPUT_CONFIG" > './../config/input.yaml'
+echo "$INPUT_CONFIG" > './cicd/scripts/config/input.yaml'
 
-SOLUTION_ACCELERATOR_CONFIG=$(cat ./../config/selectedServices.json)
+SOLUTION_ACCELERATOR_CONFIG=$(cat ./cicd/scripts/config/selectedServices.json)
 
 # Convert to YAML and write to config.yaml
-cat <<EOF > './../config/settings.yaml'
+cat <<EOF > './cicd/scripts/config/settings.yaml'
 devops:
   ContainerInstance: true
 project:
@@ -123,12 +124,12 @@ EOF
 echo "$SOLUTION_ACCELERATOR_CONFIG" | jq -r '
     map(to_entries[]) | 
     map("  " + .key + ": " + (.value | tostring)) | 
-    join("\n")' >> './../config/settings.yaml'
+    join("\n")' >> './cicd/scripts/config/settings.yaml'
 
 
 
 # "Usage: python3 render_config.py <settings_yaml_file_path>
-python3 ./../lib/render_config.py 
+python3 ./cicd/scripts/lib/render_config.py 
 if [ $? -ne 0 ]; then
   echo -e "\e[31mrender_config execution failed. Exiting.\e[0m"
   exit 1
