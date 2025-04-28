@@ -8,6 +8,10 @@
 
 # ** IMPORTANT: always start with top level path of starterkit
 
+WORKING_DIRECTORY=$(pwd) # pwd should always be ./starterkit or $(pwd)/starterkit
+echo "WORKING_DIRECTORY:"
+echo $WORKING_DIRECTORY
+
 # location of code
 data_file="./cicd/scripts/data.json"
 
@@ -28,11 +32,15 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
     if [ "$selected_value" == "true" ]; then
         # Check if the key exists in data file object
         value=$(jq -r --arg key "$key" '.[] | select(has($key)) | .[$key]' "$data_file")
+        
+        echo "key: $key"        
+        echo "value: $value"
         echo "Value of $key: $value"
         
         if [ -n "$value" ] && [ "$value" != "null" ]; then
             echo "Key '$key' exists in JSON."
-            path="${pwd}/templates/landingzone/configuration/2-solution_accelerators/project/$value"
+            path="$WORKING_DIRECTORY/templates/landingzone/configuration/2-solution_accelerators/project/$value"
+            echo "Path: $path"
             echo "Value of $key: $path"
 
             fields=$(jq -r --arg key_value "$value" '.[] | select(.id == $key_value) | .fields' "$data_file_config")
@@ -44,7 +52,7 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
             fi
 
             # tfString="./tfexe.sh apply -path=$path "
-            config="${pwd}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+            config="$WORKING_DIRECTORY/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 
             # non-production - testing
