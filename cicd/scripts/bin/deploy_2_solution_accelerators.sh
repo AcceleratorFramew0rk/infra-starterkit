@@ -32,7 +32,7 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
         
         if [ -n "$value" ] && [ "$value" != "null" ]; then
             echo "Key '$key' exists in JSON."
-            path="./templates/landingzone/configuration/2-solution_accelerators/project/$value"
+            path="${pwd}/templates/landingzone/configuration/2-solution_accelerators/project/$value"
             echo "Value of $key: $path"
 
             fields=$(jq -r --arg key_value "$value" '.[] | select(.id == $key_value) | .fields' "$data_file_config")
@@ -44,7 +44,7 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
             fi
 
             # tfString="./tfexe.sh apply -path=$path "
-            config="./templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+            config="${pwd}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 
             # non-production - testing
