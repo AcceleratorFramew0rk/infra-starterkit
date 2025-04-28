@@ -9,7 +9,6 @@
 # ** IMPORTANT: always start with top level path of starterkit
 
 # CONFIG_PATH="$(pwd)/config.yaml"
-
 CONFIG_PATH="$(pwd)/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 # project vnet

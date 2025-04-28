@@ -41,9 +41,18 @@ VNET_PROJECT_NAME=${5:-gcci-vnet-project}  # Default to "gcci-vnet-project" if e
 VNET_DEVOPS_NAME=${6:-gcci-vnet-devops}  # Default to "gcci-vnet-devops" if empty
 # SOLUTION_ACCELERATOR_CONFIG=$7
 
+# Output the collected inputs
+echo "Inputs:"
+echo "PREFIX: $PREFIX"
+echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
+echo "LOCATION: $LOCATION"
+echo "ENVIRONMENT: $ENVIRONMENT"
+echo "VNET PROJECT NAME: $VNET_PROJECT_NAME"
+echo "VNET DEVOPS NAME: $VNET_DEVOPS_NAME"
+
+
 # Prompt for settings.yaml path with a default value
 LANDINGZONE_TYPE="1"
-
 
 # Additional installation steps can go here
 echo "Running installation with the above configuration..."
@@ -108,8 +117,8 @@ EOF
 
 echo "Input Config: $INPUT_CONFIG"
 
-    # input_yaml_file_path = './../config/input.yaml' # '/tf/avm/scripts/input.yaml'
-    # solution_accelerator_yaml_file_path =  sys.argv[1] # '/tf/avm/scripts/settings.yaml'
+# input_yaml_file_path = './../config/input.yaml' # '/tf/avm/scripts/input.yaml'
+# solution_accelerator_yaml_file_path =  sys.argv[1] # '/tf/avm/scripts/settings.yaml'
 
 echo "$INPUT_CONFIG" > './cicd/scripts/config/input.yaml'
 

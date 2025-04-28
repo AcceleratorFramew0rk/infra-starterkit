@@ -16,7 +16,7 @@ WORKING_DIRECTORY=$(pwd) # pwd should always be ./starterkit or $(pwd)/starterki
 echo $WORKING_DIRECTORY
 decoded_config_yaml=$(echo "${CONFIG_YAML}" | base64 --decode)
 echo "$decoded_config_yaml" > "./templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-echo "$decoded_config_yaml" > "./config.yaml"
+echo "$decoded_config_yaml" > "./../config.yaml"
 
 # ** IMPORTANT: ensure config.yaml file is available as the path is hardcoded in the terraform code
 
