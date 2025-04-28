@@ -58,8 +58,8 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
             # non-production - testing
             # tfString="./scripts/bin/tfexe init -path=$path -config=$config"
 
-            # production
-            tfString="./scripts/bin/tfexe apply -path=$path -config=$config"
+            # production - ensure space behind $config
+            tfString="./scripts/bin/tfexe apply -path=$path -config=$config "
 
             # retrieve -var for terraform command if available
             while read -r field; do
