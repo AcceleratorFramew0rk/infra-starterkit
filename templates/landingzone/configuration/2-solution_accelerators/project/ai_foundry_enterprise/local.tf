@@ -1,65 +1,51 @@
 
 locals {
-  development_environment = true
-  base_name               = "${random_id.short_name.hex}${random_id.short_name.dec}"
-  location                = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # "swedencentral"
-  tags                    = { "Environment" = "development", "Owner" = "team" }
-
-  search_config = {
-    private_dns_zone_ids       = []
-    tags                       = {}
-    sku_name                   = "standard"
-    disable_local_auth         = true
-    hosting_mode               = "default"
-    public_network_access      = "disabled"
-    partition_count            = 1
-    replica_count              = 1
-    semantic_search            = "disabled"
-    search_identity_provider   = { type = "None" }
-    deploy_shared_private_link = true
-    deploy_private_dns_zones   = true
+  tags = {
+    scenario = "Private AI Foundry Hub"
   }
+  name                         = "${module.naming.cognitive_account.name}-${random_string.this.result}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
+  base_name                    = "${module.naming.cognitive_account.name}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
 
-  network = {
-    base_name                       = "network-base"
-    development_environment         = local.development_environment
-    vnet_address_prefix             = "10.0.0.0/16"
-    app_gateway_subnet_prefix       = "10.0.1.0/24"
-    private_endpoints_subnet_prefix = "10.0.2.0/27"
-    agents_subnet_prefix            = "10.0.2.32/27"
-    bastion_subnet_prefix           = "10.0.2.64/26"
-    jumpbox_subnet_prefix           = "10.0.2.128/28"
-    training_subnet_prefix          = "10.0.3.0/24"
-    scoring_subnet_prefix           = "10.0.4.0/24"
-    app_services_subnet_prefix      = "10.0.5.0/24"
-  }
+}
 
-  aiservice_config = {
-    private_dns_zone_ids     = []
-    aiServiceSkuName         = var.sku # "S0"
-    base_name                = local.base_name
-    disableLocalAuth         = false
-    deploy_private_dns_zones = true
-  }
+locals {
+  # search service shared private link resources
+  base_shared_private_links = [
+    {
+      groupId               = "blob"
+      status                = "Approved"
+      provisioningState     = "Succeeded"
+      requestMessage        = "created using the Terraform template"
+      privateLinkResourceId = module.avm_res_storage_storageaccount.resource.id # lookup(module.ai_foundry_core[0], "ml_storage_id", null)
+    },
+    {
+      groupId               = "cognitiveservices_account"
+      status                = "Approved"
+      provisioningState     = "Succeeded"
+      requestMessage        = "created using the Terraform template"
+      privateLinkResourceId = module.aiservices.resource.id # azurerm_aiservices.this.id # lookup(module.ai_foundry_services[0], "aiServicesId", null)
+    }
+  ]
 
-  core_config = {
-    acr = {
-      private_dns_zone_ids   = []
-      deploy_acr_private_dns = true
-    }
-    storage = {
-      private_dns_zone_ids       = []
-      deploy_storage_private_dns = true
-    }
-    key_vault = {
-      private_dns_zone_ids       = []
-      deploy_storage_private_dns = true
-    }
-    ai_hub = {
-      private_dns_zone_ids = []
-      tags                 = local.tags
-      deploy_private_dns   = true
-      description          = "AI Hub"
+  # ai hub outbound rules
+  base_ai_hub_outbound_rules = {
+    # search = {
+    #   type = "PrivateEndpoint"
+    #   destination = {
+    #     serviceResourceId = module.aisearch.resource.id # lookup(module.ai_foundry_services[0], "search_service_id", null)
+    #     subresourceTarget = "searchService"
+    #     sparkEnabled      = false
+    #     sparkStatus       = "Inactive"
+    #   }
+    # }
+    aiservices = {
+      type = "PrivateEndpoint"
+      destination = {
+        serviceResourceId = module.aiservices.resource.id # azurerm_aiservices.this.id # lookup(module.ai_foundry_services[0], "aiServicesId", null)
+        subresourceTarget = "account"
+        sparkEnabled      = false
+        sparkStatus       = "Inactive"
+      }
     }
   }
 }
