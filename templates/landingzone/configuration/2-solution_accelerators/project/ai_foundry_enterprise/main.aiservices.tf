@@ -7,7 +7,7 @@ module "aiservices" {
   name                               = replace("${module.naming.cognitive_account.name_unique}${random_string.this.result}", "-", "") 
   location                           = azurerm_resource_group.eastus.location # var.location
   enable_telemetry                   = var.enable_telemetry
-  sku_name                           = "S0"
+  sku_name                           = var.sku # "S0"
   public_network_access_enabled      = false # true # required for AI Foundry
   local_auth_enabled                 = true
   outbound_network_access_restricted = false
