@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------------
 
 # Navigate to the working directory where the Terraform configuration files are located
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/containter_instance_avm
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/container_instance
 
 # Run the Custom Terraform initialization script "terraform-init-custom" at location "/usr/local/bin" to set up the backend and providers
 terraform-init-custom
@@ -19,7 +19,7 @@ terraform apply -auto-approve
 # -----------------------------------------------------------------------------------
 
 # Navigate to the working directory where the Terraform configuration files are located
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/containter_instance_avm
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/container_instance
 
 resource_names='["1","2"]'
 
