@@ -18,7 +18,7 @@ module "container_group1" {
     workspace_key = try(local.remote.log_analytics_workspace.resource.primary_shared_key, null) 
   }
 
-  zones            = ["1","2","3"]
+  zones            = ["1"] # ["1","2","3"] - The resource type 'containerGroups' does not support multiple availability zones. The provided zones are '2,3,1'. Please provide a single availability zone.
   priority         = "Regular"
   enable_telemetry = var.enable_telemetry
   containers = {
