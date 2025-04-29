@@ -20,7 +20,7 @@
   { "StreamAnalytics":  "stream_analytics"},
   { "AIFoundary":  "ai_foundry_enterprise"},
   { "SearchService":  "search_service"},
-  { "ACR":  "acr_avm"},
+  { "ACR":  "acr"},
   { "KeyVault":  "keyvault"},
   { "NotificationHub":  "notification_hub"},
   { "FrontDoor":  "frontdoor"}
