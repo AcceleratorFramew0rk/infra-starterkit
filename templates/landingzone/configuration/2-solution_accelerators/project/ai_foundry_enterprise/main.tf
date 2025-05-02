@@ -70,9 +70,14 @@ module "private_dns_keyvault_vault" {
   enable_telemetry = var.enable_telemetry
 }
 
+
+# TODO: double check if there is existing private dns zone for storage account
 module "private_dns_storageaccount_blob" {
   source              = "Azure/avm-res-network-privatednszone/azurerm"
   version             = "~> 0.2"
+
+  count = try(local.storage_account_private_dns_zone, null) != null ? 0 : 1
+
   domain_name         = "privatelink.blob.core.windows.net"
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name  
   virtual_network_links = {
@@ -235,7 +240,7 @@ module "avm_res_storage_storageaccount" {
       subnet_resource_id                      = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
 
       subresource_name              = "blob"
-      private_dns_zone_resource_ids = [module.private_dns_storageaccount_blob.resource_id]
+      private_dns_zone_resource_ids = [(try(local.storage_account_private_dns_zone, null) != null ? local.storage_account_private_dns_zone.id : module.private_dns_storageaccount_blob[0].resource_id)]
       inherit_lock                  = false
     }
     file = {

@@ -1,4 +1,21 @@
 
+# # read current level terraform state - storage_account_private_dns_zone
+data "terraform_remote_state" "storage_account_private_dns_zone" {
+  backend = "azurerm"
+
+  config = {
+    resource_group_name  = var.resource_group_name
+    storage_account_name = var.storage_account_name
+    container_name       = "2-solution-accelerators"
+    key                  = "solution-accelerators-project-storageaccount.tfstate" 
+  }
+}
+
+locals {
+  storage_account_private_dns_zone = try(data.terraform_remote_state.storage_account_private_dns_zone.outputs.private_dns_zone, null)     
+}
+
+
 locals {
   tags = {
     scenario = "Private AI Foundry Hub"
