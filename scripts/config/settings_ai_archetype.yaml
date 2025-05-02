@@ -41,8 +41,8 @@ management:
 devops:
   containter_instance: true
 project:
-  acr: true
-  ai_foundry_enterprise: true
+  storage_account: true
+  acr: false
   aks_avm_ptn: false
   apim: false
   app_service: true
@@ -63,8 +63,8 @@ project:
   redis_cache: false
   search_service: false
   service_bus: false
-  storage_account: true
   stream_analytics: false
   vm: false
   vmss_linux: false
   vm_windows: false
+  ai_foundry_enterprise: true
