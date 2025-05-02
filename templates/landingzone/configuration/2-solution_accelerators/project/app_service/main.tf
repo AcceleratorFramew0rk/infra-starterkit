@@ -2,7 +2,7 @@ resource "azurerm_app_service_plan" "this" {
   name                         = "${module.naming.app_service_plan.name}-${random_string.this.result}" # module.naming.app_service_plan.name
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  kind                         = var.kind # "Linux"
+  kind                         = var.kind # "Linux" or "Windows"
   maximum_elastic_worker_count = 5 
 
   # For kind=Linux must be set to true and for kind=Windows must be set to false
