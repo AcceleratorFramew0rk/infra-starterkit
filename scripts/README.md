@@ -35,6 +35,19 @@ terraform apply -auto-approve
 
 # Deployment - For NEW deployment only.
 
+- Perform login
+
+```bash
+az login --tenant xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # azure tenant id
+
+az account set --subscription xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # subscription id
+
+az account show # to show the current login account
+
+SUBSCRIPTION_ID="xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
+export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
+```
+
 - ** IMPORTANT: Edit the settings.yaml file to select which azure resources you want to deploy
 
 - Execute the install script:
@@ -46,13 +59,7 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 cd /tf/avm/scripts/bin
 ./deploy_ai_foundry.sh
 
-# follow the instruction to enter PREFIX, PROJECT_VNET, DEVOPS VNET, ENVIRONMENT, Landingzone Type (app or infra)
 ```
-
+# follow the instruction to enter PREFIX, PROJECT_VNET, DEVOPS VNET, ENVIRONMENT, Landingzone Type (app or infra)
   - If ran without options, the install script will first perform the infrastructure deployment through terraform using configuration in settings.yaml by default.
 
-
-
-<!-- cd /tf/avm/scripts/bin
-sudo mv terraform-init /usr/local/bin/
-sudo chmod +x /usr/local/bin/terraform-init -->
