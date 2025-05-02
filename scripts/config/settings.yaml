@@ -22,6 +22,7 @@
 # To deploy Application Gateway in the `hub_internet_ingress` section, set `agw` to `true`:
 # hub_internet_ingress:
 #   agw: true
+# ** IMPORTANT: DO NOT CHANGE THE ORDER OF THE KEYS **
 # -------------------------------------------------------------------
 
 hub_internet_ingress:

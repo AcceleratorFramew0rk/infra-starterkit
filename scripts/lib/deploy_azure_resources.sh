@@ -36,13 +36,15 @@ if [[ ! -f "$yaml_file" ]]; then
   exit 1
 fi
 
-# Loop through the top-level keys
-for section in $(yq 'keys | .[]' "$yaml_file" -r); do
+
+# Read the YAML as JSON and preserve key order using yq and jq
+yq '.' "$yaml_file" | jq -c 'to_entries[]' | while read -r section_entry; do
+  section=$(echo "$section_entry" | jq -r '.key')
   echo "Section: $section"
 
-  # Loop through sub-keys for each top-level key
-  for key in $(yq ".${section} | keys | .[]" "$yaml_file" -r); do
-    value=$(yq ".${section}.${key}" "$yaml_file" -r)
+  echo "$section_entry" | jq -c '.value | to_entries[]' | while read -r kv; do
+    key=$(echo "$kv" | jq -r '.key')
+    value=$(echo "$kv" | jq -r '.value')
 
     if [ $value = "true" ]; then
       echo "processing $key: $value"
@@ -90,6 +92,63 @@ for section in $(yq 'keys | .[]' "$yaml_file" -r); do
 
   done
 done
+
+
+
+# # Loop through the top-level keys
+# for section in $(yq 'keys | .[]' "$yaml_file" -r); do
+#   echo "Section: $section"
+
+#   # Loop through sub-keys for each top-level key
+#   for key in $(yq ".${section} | keys | .[]" "$yaml_file" -r); do
+#     value=$(yq ".${section}.${key}" "$yaml_file" -r)
+
+#     if [ $value = "true" ]; then
+#       echo "processing $key: $value"
+
+#       clean_key="${key//_/}"
+#       backend_config_key="solution-accelerators-${section}-${clean_key}"
+#       working_path="/tf/avm/templates/landingzone/configuration/2-solution_accelerators/${section}/${key}"
+#       echo "backend_config_key: $backend_config_key"
+#       echo "working_path: $working_path"
+
+#       # exec_terraform $backend_config_key $working_path $RG_NAME $STG_NAME "2-solution-accelerators" 
+#       if [[ "$landingzone_type" == "application"  || "$landingzone_type" == "1" ]]; then
+#         if [[ "$section" == "project"  || "$section" == "devops" ]]; then
+#           tfexe apply -path=$working_path -config=$config_file
+#           if [ $? -ne 0 ]; then
+#             echo -e "     "
+#             echo -e "\e[31mTerraform apply failed for ${working_path}. Exiting.\e[0m"
+#             exit 1
+#           else
+#             success_items+=("${working_path}")
+#           fi
+
+#         else
+#           echo "Item not configure in application landing zone. skip ${section} ${key}"
+#         fi
+#       else
+#         if [[ "$section" == "hub_internet_ingress"  || "$section" == "hub_internet_egress" || "$section" == "hub_intranet_ingress" || "$section" == "hub_intranet_egress" || "$section" == "management" ]]; then
+#           tfexe apply -path=$working_path -config=$config_file
+#           if [ $? -ne 0 ]; then
+#             echo -e "     "
+#             echo -e "\e[31mTerraform apply failed for ${config_file}. Exiting.\e[0m"
+#             exit 1
+#           else
+#             success_items+=("${working_path}")
+#           fi
+#         else
+#           echo "Item not configure in infra landing zone. skip ${section} ${key}"
+#         fi
+#       fi      
+
+#     else
+#       # echo "skip ${section} ${key}"
+#       echo " "      
+#     fi
+
+#   done
+# done
 
 echo " "
 echo "You have successfully deployed the following items:"

@@ -1,6 +1,6 @@
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f"
-resource_group_name: "gc22-dev-platform"
-prefix: "hc22-dev"
+resource_group_name: "hc24-dev-platform"
+prefix: "hc24-dev"
 is_prefix: true
 is_single_resource_group: true
 environment: "dev"
