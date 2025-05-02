@@ -1,11 +1,11 @@
-resource_group_name: "gcci-platform" 
+resource_group_name: "{{resource_group_name}}" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 subscription_id: "{{subscription_id}}" 
 # # virtual network - leave empty if there is no such virtual network   
 prefix: "{{prefix}}" 
 is_prefix: true
-is_single_resource_group: false
+is_single_resource_group: true
 location: "southeastasia"
 environment: "{{environment}}" 
 app_config:
@@ -48,13 +48,13 @@ vnets:
 {% if project_vnet_cidr | trim != 'None' and project_vnet_cidr | trim != '' -%}
 # -----------------
   project:  
-    name: "gcci-vnet-project"     
+    name: "{{project_vnet_name}}" 
     cidr: "{{project_vnet_cidr}}" 
 {% endif -%}
 {% if devops_vnet_cidr | trim != 'None' and devops_vnet_cidr | trim != '' -%}
 # -----------------
   devops:  
-    name: "gcci-vnet-devops"   
+    name: "{{devops_vnet_name}}"   
     cidr: "{{devops_vnet_cidr}}" 
 {% endif -%}
 # subnets cidr configuration

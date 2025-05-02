@@ -6,12 +6,18 @@
 # Source the prompt.sh file to include its functions and variables
 # source ./prompt.sh
 # source ./prepare_environment.sh
+# USAGE:
+# cd /tf/avm/scripts/bin
+# ./generate_config.sh
+
+echo "You are currently in the directory: $(pwd)"
 
 # Source utility scripts
 source "$(dirname "$0")/../lib/prompt.sh"
 source "$(dirname "$0")/../lib/prepare_environment.sh"
 
 echo "PREFIX: $PREFIX"
+echo "RESOURCE GROUP NAME: $RESOURCE_GROUP_NAME"
 echo "VNET Project Name: $VNET_PROJECT_NAME"
 echo "VNET DevOps Name: $VNET_DEVOPS_NAME"
 echo "The CIDR of the GCCI Project Virtual Network is: $GCCI_VNET_PROJECT_CIDR"
@@ -40,6 +46,7 @@ RG_NAME="${PREFIX}-rg-launchpad"
 STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
 
 echo "PREFIX: ${PREFIX}"
+echo "RESOURCE GROUP NAME: ${RESOURCE_GROUP_NAME}"
 echo "ENVIRONMENT: ${ENVIRONMENT}"
 echo "Subscription Id: ${SUB_ID}"
 echo "Subscription Name: ${SUB_NAME}"
@@ -58,6 +65,7 @@ if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; th
 # Output the variables to a text file (input.yaml)
 cat <<EOF > ./../config/input.yaml
 subscription_id: "${SUB_ID}"
+resource_group_name: "${RESOURCE_GROUP_NAME}"
 prefix: "${PREFIX}"
 is_prefix: false
 is_single_resource_group: false
@@ -90,6 +98,7 @@ else
 # Output the variables to a text file (input.yaml)
 cat <<EOF > ./../config/input.yaml
 subscription_id: "${SUB_ID}"
+resource_group_name: "${RESOURCE_GROUP_NAME}"
 prefix: "${PREFIX}"
 is_prefix: false
 is_single_resource_group: false
@@ -134,4 +143,6 @@ fi
 # perform copy
 echo "copy output_config.yaml to working directory"
 cp "$(dirname "$0")/../config/output_config.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
+echo "  "
+echo "Verify the config.yaml file in this folder: /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+echo "  "

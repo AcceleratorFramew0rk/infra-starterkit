@@ -6,6 +6,9 @@
 # Source the prompt.sh file to include its functions and variables
 # source ./prompt.sh
 # source ./prepare_environment.sh
+# USAGE
+# cd /tf/avm/scripts/bin
+# ./install.sh
 
 # Source utility scripts
 source "$(dirname "$0")/../lib/prompt.sh"

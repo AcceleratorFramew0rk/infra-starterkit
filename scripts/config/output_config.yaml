@@ -1,11 +1,11 @@
-resource_group_name: "gcci-platform" 
+resource_group_name: "hc12-dev-platform" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f" 
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "hello" 
+prefix: "hc12-dev" 
 is_prefix: true
-is_single_resource_group: false
+is_single_resource_group: true
 location: "southeastasia"
 environment: "dev" 
 app_config:
@@ -15,6 +15,14 @@ app_config:
 # virtual networks name configuration - change the below if you are using different vnets name
 vnets:
   # IMPORTANT: leave empty if there is no such virtual network  
+# -----------------
+  project:  
+    name: "gcci-vnet-project" 
+    cidr: "172.1.0.0/23" 
+# -----------------
+  devops:  
+    name: "gcci-vnet-devops"   
+    cidr: "172.2.0.0/24" 
 # subnets cidr configuration
 subnets:
   # IMPORTANT ** comment off the below any project subnets if it is not used
@@ -25,27 +33,27 @@ subnets:
 # -----------------
     WebSubnet: # DO NOT CHANGE subnet name
      name: "WebSubnet"
-     address_prefixes: ["100.64.0.128/27"]
+     address_prefixes: ["172.1.0.96/27"]
 # mssql pep, postgresql pep, redis cache pep, storage account pep
 # ----------------- 
     DbSubnet: # DO NOT CHANGE subnet name
       name: "DbSubnet"    
-      address_prefixes: ["100.64.0.160/27"]
+      address_prefixes: ["172.1.0.128/27"]
 # keyvault pep, acr pep, logic app pep
 # -----------------
     ServiceSubnet: # DO NOT CHANGE subnet name
       name: "ServiceSubnet"
-      address_prefixes: ["100.64.0.32/27"]
-# apim
-# -----------------               
-    ApiSubnet: # DO NOT CHANGE subnet name
-      name: "ApiSubnet"    
-      address_prefixes: ["100.64.0.64/27"]
+      address_prefixes: ["172.1.0.0/27"]
+# ai, search service, ai_foundary
+# -----------------
+    AiSubnet: # DO NOT CHANGE subnet name
+      name: "AiSubnet"    
+      address_prefixes: ["172.1.0.32/27"]   
 # app service vnet integration
 # -----------------
     AppServiceSubnet: # DO NOT CHANGE subnet name
       name: "AppServiceSubnet"
-      address_prefixes: ["100.64.0.96/27"]
+      address_prefixes: ["172.1.0.64/27"]
       delegations: [ 
         {
           name: "AppServiceSubnet",
@@ -59,6 +67,19 @@ subnets:
 # -----------------           
   devops:
 # -----------------   
+# -----------------    
+    RunnerSubnet:    
+      name: "RunnerSubnet"
+      address_prefixes: ["172.2.0.0/27"]
+      delegations: [
+        {
+          name: "runner",
+          service_delegation: {
+            name: "Microsoft.ContainerInstance/containerGroups", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
 # -----------------                            
   hub_internet_ingress: 
 # -----------------     

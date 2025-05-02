@@ -23,14 +23,20 @@ while true; do
   fi
 done
 
+
+# Prompt for VNET Project Name with a default value
+RESOURCE_GROUP_NAME=$(prompt_for_input "Enter the Resource Group Name" "gcci-platform")
+
 # Prompt for VNET Project Name with a default value
 ENVIRONMENT=$(prompt_for_input "Enter the ENVIRONMENT (dev, sit, uat, prd)" "dev")
 
 # Prompt for VNET Project Name with a default value
 VNET_PROJECT_NAME=$(prompt_for_input "Enter the VNET Project Name" "gcci-vnet-project")
+GCCI_VNET_PROJECT_CIDR=$(prompt_for_input "Enter the VNET Project CIDR (Leave empty is using VNET created from CMP)" "")
 
 # Prompt for VNET DevOps Name with a default value
 VNET_DEVOPS_NAME=$(prompt_for_input "Enter the VNET DevOps Name" "gcci-vnet-devops")
+GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the VNET Project CIDR (Leave empty is using VNET created from CMP)" "")
 
 # Prompt for settings.yaml path with a default value
 SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "./../config/settings.yaml")
@@ -41,6 +47,7 @@ LANDINGZONE_TYPE=$(prompt_for_input "Enter the Landing Zone Type (1: application
 # Output the collected inputs
 echo "Configuration:"
 echo "PREFIX: $PREFIX"
+echo "RESOURCE GROUP NAME: $RESOURCE_GROUP_NAME"
 echo "ENVIRONMENT: $ENVIRONMENT"
 echo "VNET PROJECT NAME: $VNET_PROJECT_NAME"
 echo "VNET DEVOPS NAME: $VNET_DEVOPS_NAME"

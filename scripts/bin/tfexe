@@ -8,6 +8,7 @@
 # tfexe apply run-all -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project"
 # tfexe apply run-all -include=/tf/avm/config/path.hcl"
 # tfexe import # import existing vnet into state file
+# tfexe generate-config # generate config.yaml file based on inputs
 
 # Begin Functions
 exec_terraform() {
@@ -15,7 +16,7 @@ exec_terraform() {
   local ACTION=$1
   local TF_CONFIG=$2
 
-  if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"* ]]; then
+  if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"*  || "$ACTION" == *"generate-config"* ]]; then
     # alway exec terraform init
 
     # PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
@@ -52,31 +53,33 @@ exec_terraform() {
 
     fi
 
-    # Store the command in a variable
-    cmdexecute="terraform init -reconfigure \
-      -backend-config=\"resource_group_name=${RG_NAME}\" \
-      -backend-config=\"storage_account_name=${STG_NAME}\" \
-      -backend-config=\"container_name=${CONTAINER_NAME}\" \
-      -backend-config=\"key=${KEY}\""
+    if [[ "$ACTION" != *"import"* && "$ACTION" != *"generate-config"* ]]; then
+      # Store the command in a variable
+      cmdexecute="terraform init -reconfigure \
+        -backend-config=\"resource_group_name=${RG_NAME}\" \
+        -backend-config=\"storage_account_name=${STG_NAME}\" \
+        -backend-config=\"container_name=${CONTAINER_NAME}\" \
+        -backend-config=\"key=${KEY}\""
 
-    # Print the command (for debugging)
-    echo "Running..."
-    echo $cmdexecute
+      # Print the command (for debugging)
+      echo "Running..."
+      echo $cmdexecute
 
-    # deploy the solution accelerator
-    terraform init  -reconfigure \
-    -backend-config="resource_group_name=${RG_NAME}" \
-    -backend-config="storage_account_name=${STG_NAME}" \
-    -backend-config="container_name=${CONTAINER_NAME}" \
-    -backend-config="key=${KEY}"
+      # deploy the solution accelerator
+      terraform init  -reconfigure \
+      -backend-config="resource_group_name=${RG_NAME}" \
+      -backend-config="storage_account_name=${STG_NAME}" \
+      -backend-config="container_name=${CONTAINER_NAME}" \
+      -backend-config="key=${KEY}"
 
-    if [ $? -ne 0 ]; then
-      echo -e "     "
-      echo -e "\e[31mTerraform init failed for ${EXTRACTED_NAME}. Exiting.\e[0m"
-      exit 1
-    else
-      echo -e "     "
-      echo -e "\e[32mTerraform init succeeded for ${EXTRACTED_NAME}!\e[0m"
+      if [ $? -ne 0 ]; then
+        echo -e "     "
+        echo -e "\e[31mTerraform init failed for ${EXTRACTED_NAME}. Exiting.\e[0m"
+        exit 1
+      else
+        echo -e "     "
+        echo -e "\e[32mTerraform init succeeded for ${EXTRACTED_NAME}!\e[0m"
+      fi
     fi
 
   fi
@@ -117,10 +120,26 @@ exec_terraform() {
   elif [[ "$ACTION" == *"import"* ]]; then
     echo "     "
     echo "Running..."
-    echo "./scripts/import_app_lz.sh"
+    echo "./scripts/import.sh"
     echo "     "
-    cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-    ./scripts/import_app_lz.sh  # Check if the command was successful
+    # execute from current folder or -path parameter if exists
+    ./scripts/import.sh  # Check if the command was successful
+    if [ $? -ne 0 ]; then
+      echo -e "     "
+      echo -e "\e[31mTerraform $ACTION failed. Exiting.\e[0m"
+      exit 1
+    else
+      echo -e "     "
+      echo -e "\e[32mTerraform $ACTION succeeded!\e[0m"
+    fi    
+
+  elif [[ "$ACTION" == *"generate-config"* ]]; then
+    echo "     "
+    echo "Running..."
+    echo "./generate_config.sh"
+    echo "     "
+    # execute from current folder or -path parameter if exists
+    ./generate_config.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
       echo -e "\e[31mTerraform $ACTION failed. Exiting.\e[0m"
@@ -165,15 +184,16 @@ if [[ $# -lt 1 ]]; then
     echo "tfexe apply run-all -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project"
     echo "tfexe apply run-all -include=/tf/avm/config/path.hcl"
     echo "tfexe import"
+    echo "tfexe generate-config"
     exit 1
 fi
 
-# Extract first argument (apply or plan)
+# Extract first argument (apply or plan or init or import)
 ACTION=$1
 shift
 
-if [[ "$ACTION" != "apply" && "$ACTION" != "plan" && "$ACTION" != "init"  && "$ACTION" != "import" ]]; then
-    echo -e "\e[31mError: First parameter must be 'int' or 'apply' or 'plan'\e[0m"
+if [[ "$ACTION" != "apply" && "$ACTION" != "plan" && "$ACTION" != "init"  && "$ACTION" != "import"  && "$ACTION" != "generate-config" ]]; then
+    echo -e "\e[31mError: First parameter must be 'init' or 'apply' or 'plan' or 'import' or 'generate-config'\e[0m"
     exit 1
 fi
 

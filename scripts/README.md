@@ -16,6 +16,23 @@ Download the repo as a zip file.
 * Add a zsh terminal from VS Code
 * Follow the steps in README.md file
   
+
+## ** OPTIONAL: Setup GCC Simulator Environment (required for testing and non gcc environment)
+```bash
+cd /tf/avm/templates/0-setup_gcc_dev_env
+terraform init -reconfigure
+terraform plan
+terraform apply -auto-approve
+```
+## ** Ensure the below azure resources are created in <your subscription>
+### Resource Group: GCCI-Platform
+###  - VNETs: 
+###      - gcci-vnet-project
+###      - gcci-vnet-devops
+### Resource Group: gcci-agency-law
+###  - Log Analytics Workspace:
+###      - gcci-agency-workspace
+
 # Deployment - For NEW deployment only.
 
 - ** IMPORTANT: Edit the settings.yaml file to select which azure resources you want to deploy
@@ -25,8 +42,10 @@ Download the repo as a zip file.
 sudo chmod -R -f 777 /tf/avm/scripts
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 # 0-1-2: 0-launchpad, landing zone and solution accelerator
+
 cd /tf/avm/scripts/bin
-./install.sh
+./deploy_ai_foundry.sh
+
 # follow the instruction to enter PREFIX, PROJECT_VNET, DEVOPS VNET, ENVIRONMENT, Landingzone Type (app or infra)
 ```
 
@@ -34,6 +53,6 @@ cd /tf/avm/scripts/bin
 
 
 
-cd /tf/avm/scripts/bin
+<!-- cd /tf/avm/scripts/bin
 sudo mv terraform-init /usr/local/bin/
-sudo chmod +x /usr/local/bin/terraform-init
+sudo chmod +x /usr/local/bin/terraform-init -->

@@ -52,8 +52,11 @@ def get_config(input, solution_accelerator, landingzone_type):
         "subscription_id": "",
         "tenant_id": "",
         "prefix": "",
+        "resource_group_name": "",
         "environment": "",
         # application landign zone
+        "project_vnet_name": "",
+        "devops_vnet_name": "",
         "project_vnet_cidr": "",
         "devops_vnet_cidr": "",
         # infra landing zone
@@ -103,6 +106,7 @@ def get_config(input, solution_accelerator, landingzone_type):
     subscription_id = input.get("subscription_id")
     tenant_id = "00000000-0000-0000-0000-000000000000"
     prefix = input.get("prefix")
+    resource_group_name = input.get("resource_group_name")
     environment = input.get("environment")
 
     project_vnet_cidr = input.get("vnets").get("project").get("cidr")
@@ -123,6 +127,7 @@ def get_config(input, solution_accelerator, landingzone_type):
 
     subnet_vars["prefix"] = prefix
     subnet_vars["subscription_id"] = subscription_id
+    subnet_vars["resource_group_name"] = resource_group_name
     subnet_vars["environment"] = environment
 
         
@@ -141,6 +146,12 @@ def get_config(input, solution_accelerator, landingzone_type):
     project_vnet = validate_cidr(project_vnet_cidr, "project_vnet_cidr")
     devops_vnet = validate_cidr(devops_vnet_cidr, "devops_vnet_cidr")
 
+    subnet_vars["project_vnet_cidr"] = project_vnet_cidr
+    subnet_vars["devops_vnet_cidr"] = devops_vnet_cidr
+    subnet_vars["project_vnet_name"] = project_vnet_name
+    subnet_vars["devops_vnet_name"] = devops_vnet_name
+
+    
     # Split the project VNet into subnets of the desired size
     subnets = list(project_vnet.subnets(new_prefix=subnet_prefix_length))
     devops_subnets = list(devops_vnet.subnets(new_prefix=devops_subnet_prefix_length))
@@ -192,6 +203,7 @@ def get_config(input, solution_accelerator, landingzone_type):
     # devops
     RunnerSubnet_address_prefixes = str(devops_subnets[0]) 
     
+    subnet_vars["RunnerSubnet_address_prefixes"] = RunnerSubnet_address_prefixes
 
     # updated subnet assignments
     print(json.dumps(subnet_vars, indent=2))
