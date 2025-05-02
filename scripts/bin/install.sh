@@ -260,6 +260,14 @@ cd /tf/avm/scripts/bin
 
 ./../lib/deploy_azure_resources.sh $SETTINGS_YAML_FILE_PATH $CONFIG_YAML_FILE_PATH $LANDINGZONE_TYPE
 
-echo "all azure resources deployed"
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mDeploy azure_resources failed. Exiting.\e[0m"
+  exit 1
+else
+  echo -e "\e[32mall azure resources deployed successfully!\e[0m"  
+fi
+
+
 
 

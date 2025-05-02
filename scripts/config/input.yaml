@@ -1,8 +1,8 @@
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f"
-resource_group_name: "hc21-dev-platform"
+resource_group_name: "hc21-dev-portal"
 prefix: "hc21-dev"
-is_prefix: false
-is_single_resource_group: false
+is_prefix: true
+is_single_resource_group: true
 environment: "dev"
 vnets:
   hub_ingress_internet: 

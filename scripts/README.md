@@ -54,7 +54,6 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 ```bash
 sudo chmod -R -f 777 /tf/avm/scripts
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
-# 0-1-2: 0-launchpad, landing zone and solution accelerator
 
 cd /tf/avm/scripts/bin
 ./install.sh
