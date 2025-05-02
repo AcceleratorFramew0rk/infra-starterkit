@@ -57,7 +57,7 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 # 0-1-2: 0-launchpad, landing zone and solution accelerator
 
 cd /tf/avm/scripts/bin
-./deploy_ai_foundry.sh
+./install.sh
 
 ```
 # follow the instruction to enter PREFIX, PROJECT_VNET, DEVOPS VNET, ENVIRONMENT, Landingzone Type (app or infra)

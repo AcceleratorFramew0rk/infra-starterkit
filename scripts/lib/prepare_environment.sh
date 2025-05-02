@@ -45,7 +45,7 @@ get_vnet_cidr() {
 RESOURCE_GROUP="GCCI-Platform"
 
 
-if [[ "$GCCI_VNET_PROJECT_CIDR" == "" && "$GCCI_VNET_DEVOPS_CIDR" == "" ]]; then
+if [[ "$GCCI_VNET_PROJECT_CIDR" == "na" && "$GCCI_VNET_DEVOPS_CIDR" == "na" ]]; then
 
   if [[ "$LANDINGZONE_TYPE" == "application" || "$LANDINGZONE_TYPE" == "1" ]]; then
     

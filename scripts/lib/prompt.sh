@@ -32,14 +32,14 @@ ENVIRONMENT=$(prompt_for_input "Enter the ENVIRONMENT (dev, sit, uat, prd)" "dev
 
 # Prompt for VNET Project Name with a default value
 VNET_PROJECT_NAME=$(prompt_for_input "Enter the VNET Project Name" "gcci-vnet-project")
-GCCI_VNET_PROJECT_CIDR=$(prompt_for_input "Enter the VNET Project CIDR (Leave empty is using VNET created from CMP)" "")
+GCCI_VNET_PROJECT_CIDR=$(prompt_for_input "Enter the Agency Managed VNET Project CIDR (Enter 'na' if not using Agency Managed VNET)" "192.168.0.0/23")
 
 # Prompt for VNET DevOps Name with a default value
 VNET_DEVOPS_NAME=$(prompt_for_input "Enter the VNET DevOps Name" "gcci-vnet-devops")
-GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the VNET Project CIDR (Leave empty is using VNET created from CMP)" "")
+GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the Agency Managed VNET DevOps CIDR (Enter 'na' if not using Agency Managed VNET)" "192.168.10.0/24")
 
 # Prompt for settings.yaml path with a default value
-SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "./../config/settings.yaml")
+SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings.yaml")
 
 # Prompt for settings.yaml path with a default value
 LANDINGZONE_TYPE=$(prompt_for_input "Enter the Landing Zone Type (1: application or 2: infrastructure)" "1")
