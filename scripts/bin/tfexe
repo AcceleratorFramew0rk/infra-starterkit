@@ -176,20 +176,27 @@ exec_terraform() {
 
 # Check if at least 2 arguments are provided
 if [[ $# -lt 1 ]]; then
-    echo "Usage: tfexe <init|apply|plan> [-var=key=value | -path=path | -config=configpath]..."
+    echo "Usage: tfexe <init|apply|plan|import|generate-config|deploy> [-var=key=value | -path=path | -config=configpath]..."
     echo " "
     echo "The available commands for execution are listed below."
     echo "The primary workflow commands are given first, followed by"
     echo "less common or more advanced commands."
     echo " "
     echo "Main commands:"
-    echo "  init          Prepare your working directory for other commands"
-    echo "  plan          Execute init and then show changes required by the current configuration"
-    echo "  apply         Execute init and then create or update infrastructure"
-    echo "  import        Import existing VNET infrastructure into your Terraform state"
+    echo "  init            Prepare your working directory for other commands"
+    echo "  plan            Execute init and then show changes required by the current configuration"
+    echo "  apply           Execute init and then create or update infrastructure"
+    echo "  import          Import existing VNET infrastructure into your Terraform state"
+    echo "  generate-config Generate config.yaml file based on inputs"
+    echo "  deploy          Deploy azure resource based on settings.yaml file and prompt inputs"
+
+
+# tfexe generate-config # generate config.yaml file based on inputs
+# tfexe deploy # deploy azure resource based on settings.yaml file and inputs
+
     echo " "
     echo "All other commands:"
-    echo "  run-all    Execute all the solution accelerators of all sub-folders under this parent folder"
+    echo "  run-all     Execute all the solution accelerators of all sub-folders under this parent folder"
     echo "  -include    Execute all the solution accelerators under the folders listed in the file"
     echo "  -path       The path to the Terraform configuration (if not the current directory)"
     echo "  -config     The path and filename to the Terraform configuration file - config.yaml"
