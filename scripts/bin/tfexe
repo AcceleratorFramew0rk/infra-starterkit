@@ -20,41 +20,41 @@ exec_terraform() {
   if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"*  || "$ACTION" == *"generate-config"* || "$ACTION" == *"deploy"*  ]]; then
     # alway exec terraform init
 
-    # PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
-    echo "Using config file: $TF_CONFIG"
-    PREFIX=$(yq  -r '.prefix' $TF_CONFIG)
-    RG_NAME="${PREFIX}-rg-launchpad"
-    STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
-    echo "Resource Group name: ${RG_NAME}"
-    echo "Storage Account name: ${STG_NAME}"
-
-    # Get the folder name from the current directory
-
-    PATH_STRING="$(pwd)"
-
-    if [[ "$PATH_STRING" == *"2-solution_accelerators"* ]]; then
-      # solution accelerators
-
-      PATH_STRING=$(pwd)
-      EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{gsub("_", "", $NF); print $(NF-1) "-" $NF}')
-      CONTAINER_NAME="2-solution-accelerators"
-      KEY="solution-accelerators-${EXTRACTED_NAME}.tfstate"
-      echo "Container name: ${CONTAINER_NAME}"
-      echo "Key: ${KEY}"
-
-    else 
-      # 1-landingzones e.g. network-spoke-project.tfstate
-
-      PATH_STRING=$(echo "$(pwd)" | tr '_' '-')
-      EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $NF}' | sed 's/networking/network/g')
-      CONTAINER_NAME="1-landingzones"
-      KEY="${EXTRACTED_NAME}.tfstate"
-      echo "Container name: ${CONTAINER_NAME}"
-      echo "Key: ${KEY}"
-
-    fi
-
     if [[ "$ACTION" != *"import"* && "$ACTION" != *"generate-config"* && "$ACTION" != *"deploy"* ]]; then
+
+      echo "Using config file: $TF_CONFIG"
+      PREFIX=$(yq  -r '.prefix' $TF_CONFIG)
+      RG_NAME="${PREFIX}-rg-launchpad"
+      STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
+      echo "Resource Group name: ${RG_NAME}"
+      echo "Storage Account name: ${STG_NAME}"
+
+      # Get the folder name from the current directory
+
+      PATH_STRING="$(pwd)"
+
+      if [[ "$PATH_STRING" == *"2-solution_accelerators"* ]]; then
+        # solution accelerators
+
+        PATH_STRING=$(pwd)
+        EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{gsub("_", "", $NF); print $(NF-1) "-" $NF}')
+        CONTAINER_NAME="2-solution-accelerators"
+        KEY="solution-accelerators-${EXTRACTED_NAME}.tfstate"
+        echo "Container name: ${CONTAINER_NAME}"
+        echo "Key: ${KEY}"
+
+      else 
+        # 1-landingzones e.g. network-spoke-project.tfstate
+
+        PATH_STRING=$(echo "$(pwd)" | tr '_' '-')
+        EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $NF}' | sed 's/networking/network/g')
+        CONTAINER_NAME="1-landingzones"
+        KEY="${EXTRACTED_NAME}.tfstate"
+        echo "Container name: ${CONTAINER_NAME}"
+        echo "Key: ${KEY}"
+
+      fi
+
       # Store the command in a variable
       cmdexecute="terraform init -reconfigure \
         -backend-config=\"resource_group_name=${RG_NAME}\" \
@@ -135,7 +135,7 @@ exec_terraform() {
     fi    
 
   elif [[ "$ACTION" == *"generate-config"* ]]; then
-    echo "     "
+    echo "Go to working directory /tf/avm/scripts/bin"
     echo "Running..."
     echo "./generate_config.sh"
     echo "     "
@@ -152,7 +152,7 @@ exec_terraform() {
     fi    
 
   elif [[ "$ACTION" == *"deploy"* ]]; then
-    echo "     "
+    echo "Go to working directory /tf/avm/scripts/bin"
     echo "Running..."
     echo "./deploy.sh"
     echo "     "
@@ -269,7 +269,7 @@ fi
 
 # Ensure at least one -path is provided
 if [[ -z "$TF_PATH" ]]; then
-    echo "using current directory as path"
+    echo "Using current directory as path"
     echo "$(pwd)"
 else
   if [[ ! -d "$TF_PATH" ]]; then
@@ -284,7 +284,7 @@ fi
 
 if [[ -z "$TF_RUN_ALL" ]]; then
 
-    echo "execute only the solution accelerator under this folder"
+    echo "Execute <$ACTION> action in the current directory"
     exec_terraform "$ACTION" "$TF_CONFIG"
 
 else
