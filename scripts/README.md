@@ -55,8 +55,8 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 sudo chmod -R -f 777 /tf/avm/scripts
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
-cd /tf/avm/scripts/bin
-./install.sh
+# deploy azure resources based on settings.yaml and prompt inputs
+tfexe deploy
 
 ```
 # follow the instruction to enter PREFIX, PROJECT_VNET, DEVOPS VNET, ENVIRONMENT, Landingzone Type (app or infra)
