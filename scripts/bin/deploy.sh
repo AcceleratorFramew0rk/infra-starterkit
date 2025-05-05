@@ -120,19 +120,20 @@ prefix: "${PREFIX}"
 is_prefix: true
 is_single_resource_group: true
 environment: "${ENVIRONMENT}"
+settings_yaml_file_path: "${SETTINGS_YAML_FILE_PATH}"
 vnets:
   hub_ingress_internet: 
     name: "$VNET_HUB_INGRESS_INTERNET_NAME" 
     cidr: "$VNET_HUB_INGRESS_INTERNET_CIDR"
   hub_egress_internet:  
-    name: "$VNET_HUB_EGRESS_INTERNET_NAME"  
-    cidr: "$VNET_HUB_EGRESS_INTERNET_CIDR"
+    name: 
+    cidr: 
   hub_ingress_intranet:  
     name: "$VNET_HUB_INGRESS_INTRANET_NAME"
     cidr: "$VNET_HUB_INGRESS_INTRANET_CIDR"
   hub_egress_intranet:  
-    name: "$VNET_HUB_EGRESS_INTRANET_NAME" 
-    cidr: "$VNET_HUB_EGRESS_INTRANET_CIDR"
+    name: 
+    cidr: 
   management:  
     name: "$VNET_MANAGEMENT_NAME"    
     cidr: "$VNET_MANAGEMENT_CIDR" 
