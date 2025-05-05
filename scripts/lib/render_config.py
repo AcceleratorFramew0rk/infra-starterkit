@@ -134,76 +134,118 @@ def get_config(input, solution_accelerator, landingzone_type):
     # Define the desired subnet prefix length
     # Adjust the prefix length as needed (e.g., /24 for 256 IPs per subnet)
     subnet_prefix_length = 27
-    devops_subnet_prefix_length = 27
 
-    # init the ingress/egress, management vnets to nothing
-    internet_ingress_vnet_cidr = ""
-    internet_egress_vnet_cidr = ""
-    intranet_ingress_vnet_cidr = ""
-    intranet_egress_vnet_cidr = ""
-    management_vnet_cidr = ""
+    # # init the ingress/egress, management vnets to nothing
+    # internet_ingress_vnet_cidr = ""
+    # internet_egress_vnet_cidr = ""
+    # intranet_ingress_vnet_cidr = ""
+    # intranet_egress_vnet_cidr = ""
+    # management_vnet_cidr = ""
 
-    project_vnet = validate_cidr(project_vnet_cidr, "project_vnet_cidr")
-    devops_vnet = validate_cidr(devops_vnet_cidr, "devops_vnet_cidr")
-
-    subnet_vars["project_vnet_cidr"] = project_vnet_cidr
-    subnet_vars["devops_vnet_cidr"] = devops_vnet_cidr
-    subnet_vars["project_vnet_name"] = project_vnet_name
-    subnet_vars["devops_vnet_name"] = devops_vnet_name
-
+    if landingzone_type == "application":
     
-    # Split the project VNet into subnets of the desired size
-    subnets = list(project_vnet.subnets(new_prefix=subnet_prefix_length))
-    devops_subnets = list(devops_vnet.subnets(new_prefix=devops_subnet_prefix_length))
+        # project vnet
+        if project_vnet_cidr != "":
+            project_vnet = validate_cidr(project_vnet_cidr, "project_vnet_cidr")
+            subnet_vars["project_vnet_cidr"] = project_vnet_cidr
+            subnet_vars["project_vnet_name"] = project_vnet_name
+            # Split the project VNet into subnets of the desired size
+            subnets = list(project_vnet.subnets(new_prefix=subnet_prefix_length))
+            # Ensure there are enough subnets available
+            required_subnets = 8  # As per your requirements
+            if len(subnets) < required_subnets:
+                raise ValueError(f"Not enough subnets available in {project_vnet_cidr} to allocate {required_subnets} subnets with prefix /{subnet_prefix_length}")
+            # Load settings YAML content
+            solution_accelerator_data = solution_accelerator 
+            # Retrieve the value of ACR
+            count = 0
+            # Process each service
+            for service in config_data.get("services", []):
+                service_name = service["name"]
+                subnet_keys = service["subnet"]
+                print("service_name" + service_name)
+                # print("subnet_keys" + subnet_keys)
+                # Convert single value to list
+                if isinstance(subnet_keys, str):
+                    subnet_keys = [subnet_keys]
+                # Check if the service is enabled
+                current_value = solution_accelerator_data["project"].get(service_name)
+                print("current_value" + str(current_value))
+                if str(current_value).lower() == "true":
+                    
+                    print("value is true")
 
-    # Ensure there are enough subnets available
-    required_subnets = 8  # As per your requirements
-    required_devops_subnets = 2  # As per your requirements
-    if len(subnets) < required_subnets:
-        raise ValueError(f"Not enough subnets available in {project_vnet_cidr} to allocate {required_subnets} subnets with prefix /{subnet_prefix_length}")
+                    for key in subnet_keys:
+                        print("key" + key)
+                        
+                        if subnet_vars[key] == "":
+                            subnet_vars[key] = str(subnets[count])
+                            print("key" + key)
+                            print("subnet_vars[key]" + subnet_vars[key])
+                            count += 1
 
-    if len(devops_subnets) < required_devops_subnets:
-        raise ValueError(f"Not enough subnets available in {devops_vnet_cidr} to allocate {required_devops_subnets} subnets with prefix /{devops_subnet_prefix_length}")
-
-
-    # Load settings YAML content
-    solution_accelerator_data = solution_accelerator 
-
-    # Retrieve the value of ACR
-    count = 0
-
-    # Process each service
-    for service in config_data.get("services", []):
-        service_name = service["name"]
-        subnet_keys = service["subnet"]
-        print("service_name" + service_name)
-        # print("subnet_keys" + subnet_keys)
-
-        # Convert single value to list
-        if isinstance(subnet_keys, str):
-            subnet_keys = [subnet_keys]
-
-        # Check if the service is enabled
-        current_value = solution_accelerator_data["project"].get(service_name)
-        print("current_value" + str(current_value))
-        if str(current_value).lower() == "true":
+        # devops vent
+        if devops_vnet_cidr != "":
+            devops_vnet = validate_cidr(devops_vnet_cidr, "devops_vnet_cidr")
+            subnet_vars["devops_vnet_cidr"] = devops_vnet_cidr
+            subnet_vars["devops_vnet_name"] = devops_vnet_name       
+            devops_subnet_prefix_length = 27
+            required_devops_subnets = 2  # As per your requirements
+            devops_subnets = list(devops_vnet.subnets(new_prefix=devops_subnet_prefix_length))
+            if len(devops_subnets) < required_devops_subnets:
+                raise ValueError(f"Not enough subnets available in {devops_vnet_cidr} to allocate {required_devops_subnets} subnets with prefix /{devops_subnet_prefix_length}")
+            RunnerSubnet_address_prefixes = str(devops_subnets[0]) 
+            subnet_vars["RunnerSubnet_address_prefixes"] = RunnerSubnet_address_prefixes
+    
+    else:
             
-            print("value is true")
+        # management vent
+        if management_vnet_cidr != "":
+            management_vnet = validate_cidr(management_vnet_cidr, "management_vnet_cidr")
+            subnet_vars["management_vnet_cidr"] = management_vnet_cidr
+            subnet_vars["management_vnet_name"] = management_vnet_name       
+            management_subnet_prefix_length = 26
+            required_management_subnets = 3  # As per your requirements
+            management_subnets = list(management_vnet.subnets(new_prefix=management_subnet_prefix_length))
+            if len(management_subnets) < required_management_subnets:
+                raise ValueError(f"Not enough subnets available in {management_vnet_cidr} to allocate {required_management_subnets} subnets with prefix /{management_subnet_prefix_length}")
+            management_AzureBastionSubnet_address_prefixes = str(management_subnets[0]) 
+            management_InfraSubnet_address_prefixes = str(management_subnets[1]) 
+            management_SecuritySubnet_address_prefixes = str(management_subnets[2])       
+            subnet_vars["management_AzureBastionSubnet_address_prefixes"] = management_AzureBastionSubnet_address_prefixes             
+            subnet_vars["management_InfraSubnet_address_prefixes"] = management_InfraSubnet_address_prefixes             
+            subnet_vars["management_SecuritySubnet_address_prefixes"] = management_SecuritySubnet_address_prefixes
 
-            for key in subnet_keys:
-                print("key" + key)
-                
-                if subnet_vars[key] == "":
-                    subnet_vars[key] = str(subnets[count])
-                    print("key" + key)
-                    print("subnet_vars[key]" + subnet_vars[key])
-                    count += 1
+        # internet ingress vent
+        if internet_ingress_vnet_cidr != "":
+            internet_ingress_vnet = validate_cidr(internet_ingress_vnet_cidr, "internet_ingress_vnet_cidr")
+            subnet_vars["internet_ingress_vnet_cidr"] = internet_ingress_vnet_cidr
+            subnet_vars["internet_ingress_vnet_name"] = internet_ingress_vnet_name       
+            internet_ingress_subnet_prefix_length = 26
+            required_internet_ingress_subnets = 2  # As per your requirements
+            internet_ingress_subnets = list(internet_ingress_vnet.subnets(new_prefix=internet_ingress_subnet_prefix_length))
+            if len(internet_ingress_subnets) < required_internet_ingress_subnets:
+                raise ValueError(f"Not enough subnets available in {internet_ingress_vnet_cidr} to allocate {required_internet_ingress_subnets} subnets with prefix /{internet_ingress_subnet_prefix_length}")
+            hub_internet_ingress_AgwSubnet_address_prefixes = str(internet_ingress_subnets[0]) 
+            hub_internet_ingress_AzureFirewallSubnet_address_prefixes = str(internet_ingress_subnets[1])     
+            subnet_vars["hub_internet_ingress_AgwSubnet_address_prefixes"] = hub_internet_ingress_AgwSubnet_address_prefixes             
+            subnet_vars["hub_internet_ingress_AzureFirewallSubnet_address_prefixes"] = hub_internet_ingress_AzureFirewallSubnet_address_prefixes     
 
+        # intranet ingress vent
+        if intranet_ingress_vnet_cidr != "":
+            intranet_ingress_vnet = validate_cidr(intranet_ingress_vnet_cidr, "intranet_ingress_vnet_cidr")
+            subnet_vars["intranet_ingress_vnet_cidr"] = intranet_ingress_vnet_cidr
+            subnet_vars["intranet_ingress_vnet_name"] = intranet_ingress_vnet_name       
+            intranet_ingress_subnet_prefix_length = 26
+            required_intranet_ingress_subnets = 2  # As per your requirements
+            intranet_ingress_subnets = list(intranet_ingress_vnet.subnets(new_prefix=intranet_ingress_subnet_prefix_length))
+            if len(intranet_ingress_subnets) < required_intranet_ingress_subnets:
+                raise ValueError(f"Not enough subnets available in {intranet_ingress_vnet_cidr} to allocate {required_intranet_ingress_subnets} subnets with prefix /{intranet_ingress_subnet_prefix_length}")
+            hub_intranet_ingress_AgwSubnet_address_prefixes = str(intranet_ingress_subnets[0]) 
+            hub_intranet_ingress_AzureFirewallSubnet_address_prefixes = str(intranet_ingress_subnets[1])     
+            subnet_vars["hub_intranet_ingress_AgwSubnet_address_prefixes"] = hub_intranet_ingress_AgwSubnet_address_prefixes             
+            subnet_vars["hub_intranet_ingress_AzureFirewallSubnet_address_prefixes"] = hub_intranet_ingress_AzureFirewallSubnet_address_prefixes     
 
-    # devops
-    RunnerSubnet_address_prefixes = str(devops_subnets[0]) 
-    
-    subnet_vars["RunnerSubnet_address_prefixes"] = RunnerSubnet_address_prefixes
 
     # updated subnet assignments
     print(json.dumps(subnet_vars, indent=2))

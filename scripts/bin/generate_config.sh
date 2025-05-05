@@ -60,7 +60,7 @@ echo "RESOURCE GROUP NAME: ${RESOURCE_GROUP_NAME}"
 echo "ENVIRONMENT: ${ENVIRONMENT}"
 echo "Subscription Id: ${SUB_ID}"
 echo "Subscription Name: ${SUB_NAME}"
-echo "Storage Account Name: ${STG_NAME}"
+# echo "Storage Account Name: ${STG_NAME}"
 echo "Resource Group Name: ${RG_NAME}"
 echo "Config Yaml File Path: ${CONFIG_YAML_FILE_PATH}"
 
@@ -81,6 +81,7 @@ prefix: "${PREFIX}"
 is_prefix: true
 is_single_resource_group: true
 environment: "${ENVIRONMENT}"
+settings_yaml_file_path: "${SETTINGS_YAML_FILE_PATH}"
 vnets:
   hub_ingress_internet: 
     name:   
@@ -120,19 +121,20 @@ prefix: "${PREFIX}"
 is_prefix: true
 is_single_resource_group: true
 environment: "${ENVIRONMENT}"
+settings_yaml_file_path: "${SETTINGS_YAML_FILE_PATH}"
 vnets:
   hub_ingress_internet: 
     name: "$VNET_HUB_INGRESS_INTERNET_NAME" 
     cidr: "$VNET_HUB_INGRESS_INTERNET_CIDR"
   hub_egress_internet:  
-    name: "$VNET_HUB_EGRESS_INTERNET_NAME"  
-    cidr: "$VNET_HUB_EGRESS_INTERNET_CIDR"
+    name: 
+    cidr: 
   hub_ingress_intranet:  
     name: "$VNET_HUB_INGRESS_INTRANET_NAME"
     cidr: "$VNET_HUB_INGRESS_INTRANET_CIDR"
   hub_egress_intranet:  
-    name: "$VNET_HUB_EGRESS_INTRANET_NAME" 
-    cidr: "$VNET_HUB_EGRESS_INTRANET_CIDR"
+    name: 
+    cidr: 
   management:  
     name: "$VNET_MANAGEMENT_NAME"    
     cidr: "$VNET_MANAGEMENT_CIDR" 
@@ -144,6 +146,39 @@ vnets:
     cidr: 
 EOF
 
+
+
+# cat <<EOF > ./../config/input.yaml
+# subscription_id: "${SUB_ID}"
+# resource_group_name: "${RESOURCE_GROUP_NAME}"
+# prefix: "${PREFIX}"
+# is_prefix: true
+# is_single_resource_group: true
+# environment: "${ENVIRONMENT}"
+# vnets:
+#   hub_ingress_internet: 
+#     name: "$VNET_HUB_INGRESS_INTERNET_NAME" 
+#     cidr: "$VNET_HUB_INGRESS_INTERNET_CIDR"
+#   hub_egress_internet:  
+#     name: "$VNET_HUB_EGRESS_INTERNET_NAME"  
+#     cidr: "$VNET_HUB_EGRESS_INTERNET_CIDR"
+#   hub_ingress_intranet:  
+#     name: "$VNET_HUB_INGRESS_INTRANET_NAME"
+#     cidr: "$VNET_HUB_INGRESS_INTRANET_CIDR"
+#   hub_egress_intranet:  
+#     name: "$VNET_HUB_EGRESS_INTRANET_NAME"
+#     cidr: "$VNET_HUB_EGRESS_INTRANET_CIDR"
+#   management:  
+#     name: "$VNET_MANAGEMENT_NAME"    
+#     cidr: "$VNET_MANAGEMENT_CIDR" 
+#   project:  
+#     name: 
+#     cidr: 
+#   devops:  
+#     name: 
+#     cidr: 
+# EOF
+
 fi
 
 
@@ -153,17 +188,21 @@ fi
 
 echo "render config.yaml"
 
-# "Usage: python3 render_config.py <settings_yaml_file_path>
+# "Usage: python3 render_config.py <settings_yaml_file_path> <landingzone_type>
 python3 ./../lib/render_config.py $SETTINGS_YAML_FILE_PATH $LANDINGZONE_TYPE
 if [ $? -ne 0 ]; then
-  echo "Terraform init failed. Exiting."
+  echo "Generate Config failed. Exiting."
   echo -e "\e[31mrender_config execution failed. Exiting.\e[0m"
   exit 1
+else
+  echo "Generate Config completed successfully."
+  echo -e "\e[32mrender_config execution completed successfully.\e[0m"
+  # perform copy
+  echo "copy output_config.yaml to working directory"
+  cp "$(dirname "$0")/../config/output_config.yaml" "$CONFIG_YAML_FILE_PATH"
+  echo "  "
+  echo "\e[32mVerify the config.yaml file in this folder: $CONFIG_YAML_FILE_PATH.\e[0m"
+  echo "  "  
 fi
-# perform copy
-echo "copy output_config.yaml to working directory"
-cp "$(dirname "$0")/../config/output_config.yaml" "$CONFIG_YAML_FILE_PATH"
-echo "  "
-echo "Verify the config.yaml file in this folder: $CONFIG_YAML_FILE_PATH"
-echo "  "
+
 

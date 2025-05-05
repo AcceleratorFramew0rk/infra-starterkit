@@ -60,7 +60,7 @@ echo "RESOURCE GROUP NAME: ${RESOURCE_GROUP_NAME}"
 echo "ENVIRONMENT: ${ENVIRONMENT}"
 echo "Subscription Id: ${SUB_ID}"
 echo "Subscription Name: ${SUB_NAME}"
-echo "Storage Account Name: ${STG_NAME}"
+# echo "Storage Account Name: ${STG_NAME}"
 echo "Resource Group Name: ${RG_NAME}"
 echo "Config Yaml File Path: ${CONFIG_YAML_FILE_PATH}"
 

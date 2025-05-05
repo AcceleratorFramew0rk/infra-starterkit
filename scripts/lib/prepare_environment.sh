@@ -45,11 +45,12 @@ get_vnet_cidr() {
 RESOURCE_GROUP="GCCI-Platform"
 
 
-if [[ "$GCCI_VNET_PROJECT_CIDR" == "na" && "$GCCI_VNET_DEVOPS_CIDR" == "na" ]]; then
+if [[ "$LANDINGZONE_TYPE" == "application" || "$LANDINGZONE_TYPE" == "1" ]]; then
+  
+  echo "LANDINGZONE_TYPE is equal to 'application'."
 
-  if [[ "$LANDINGZONE_TYPE" == "application" || "$LANDINGZONE_TYPE" == "1" ]]; then
-    
-    echo "LANDINGZONE_TYPE is equal to 'application'."
+
+  if [[ "$GCCI_VNET_PROJECT_CIDR" == "na" && "$GCCI_VNET_DEVOPS_CIDR" == "na" ]]; then
 
     # Variables for GCCI Project VNet
 
@@ -70,29 +71,30 @@ if [[ "$GCCI_VNET_PROJECT_CIDR" == "na" && "$GCCI_VNET_DEVOPS_CIDR" == "na" ]]; 
     # Output the retrieved CIDR
     echo "The CIDR of the GCCI DevOps Virtual Network is: $GCCI_VNET_DEVOPS_CIDR"
 
-  else
-    
-    echo "LANDINGZONE_TYPE is not equal to 'application'."
-
-    # hard coded values for the virtual networks for hub and management
-    VNET_HUB_INGRESS_INTERNET_NAME="gcci-vnet-ingress-internet"
-    VNET_HUB_EGRESS_INTERNET_NAME="gcci-vnet-egress-internet"
-    VNET_HUB_INGRESS_INTRANET_NAME="gcci-vnet-ingress-intranet"
-    VNET_HUB_EGRESS_INTRANET_NAME="gcci-vnet-egress-intranet"
-    VNET_MANAGEMENT_NAME="gcci-vnet-management"
-
-    VNET_HUB_INGRESS_INTERNET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_INGRESS_INTERNET_NAME")
-    VNET_HUB_EGRESS_INTERNET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_EGRESS_INTERNET_NAME")
-    VNET_HUB_INGRESS_INTRANET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_INGRESS_INTRANET_NAME")
-    VNET_HUB_EGRESS_INTRANET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_EGRESS_INTRANET_NAME")
-    VNET_MANAGEMENT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_MANAGEMENT_NAME")
-
-    echo "The CIDR of the GCCI VNET HUB_INGRESS INTERNET Virtual Network is: $VNET_HUB_INGRESS_INTERNET_CIDR"
-    echo "The CIDR of the GCCI VNET HUB EGRESS INTERNET Virtual Network is: $VNET_HUB_EGRESS_INTERNET_CIDR"
-    echo "The CIDR of the GCCI VNET HUB INGRESS INTRANET Virtual Network is: $VNET_HUB_INGRESS_INTRANET_CIDR"
-    echo "The CIDR of the GCCI VNET HUB EGRESS INTERNET Virtual Network is: $VNET_HUB_EGRESS_INTRANET_CIDR"
-    echo "The CIDR of the GCCI VNET MANAGEMENT Virtual Network is: $VNET_MANAGEMENT_CIDR"
-
   fi
 
+else
+  
+  echo "LANDINGZONE_TYPE is not equal to 'application'."
+
+  # hard coded values for the virtual networks for hub and management
+  VNET_HUB_INGRESS_INTERNET_NAME="gcci-vnet-ingress-internet"
+  # VNET_HUB_EGRESS_INTERNET_NAME="gcci-vnet-egress-internet"
+  VNET_HUB_INGRESS_INTRANET_NAME="gcci-vnet-ingress-intranet"
+  # VNET_HUB_EGRESS_INTRANET_NAME="gcci-vnet-egress-intranet"
+  VNET_MANAGEMENT_NAME="gcci-vnet-management"
+
+  VNET_HUB_INGRESS_INTERNET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_INGRESS_INTERNET_NAME")
+  # VNET_HUB_EGRESS_INTERNET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_EGRESS_INTERNET_NAME")
+  VNET_HUB_INGRESS_INTRANET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_INGRESS_INTRANET_NAME")
+  # VNET_HUB_EGRESS_INTRANET_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_HUB_EGRESS_INTRANET_NAME")
+  VNET_MANAGEMENT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_MANAGEMENT_NAME")
+
+  echo "The CIDR of the GCCI VNET HUB_INGRESS INTERNET Virtual Network is: $VNET_HUB_INGRESS_INTERNET_CIDR"
+  # echo "The CIDR of the GCCI VNET HUB EGRESS INTERNET Virtual Network is: $VNET_HUB_EGRESS_INTERNET_CIDR"
+  echo "The CIDR of the GCCI VNET HUB INGRESS INTRANET Virtual Network is: $VNET_HUB_INGRESS_INTRANET_CIDR"
+  # echo "The CIDR of the GCCI VNET HUB EGRESS INTERNET Virtual Network is: $VNET_HUB_EGRESS_INTRANET_CIDR"
+  echo "The CIDR of the GCCI VNET MANAGEMENT Virtual Network is: $VNET_MANAGEMENT_CIDR"
+
 fi
+
