@@ -55,7 +55,7 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 sudo chmod -R -f 777 /tf/avm/scripts
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
-# deploy azure resources based on settings.yaml and prompt inputs
+# deploy azure resources based on </tf/avm/scripts/config/settings.yaml> and prompt inputs
 tfexe deploy
 
 ```

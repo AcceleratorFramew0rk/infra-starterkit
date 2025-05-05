@@ -151,7 +151,6 @@ done
 # done
 
 echo " "
-echo "You have successfully deployed the following items:"
 echo -e "\e[32mYou have successfully deployed the following items:\e[0m"  
 for item in "${success_items[@]}"; do
   echo -e "\e[32m${item}\e[0m"  
