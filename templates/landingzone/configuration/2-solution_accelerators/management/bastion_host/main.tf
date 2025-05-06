@@ -4,7 +4,7 @@ module "public_ip" {
 
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  name                = "${module.naming.public_ip.name}-bastion-${random_string.this.result}" # module.naming.public_ip.name_unique
+  name                = "${module.naming.public_ip.name}-bastion" # The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes.
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location 
   sku = "Standard"
 }
