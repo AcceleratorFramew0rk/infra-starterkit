@@ -29,12 +29,24 @@ source "$(dirname "$0")/../lib/generate_config.sh"
 ### ** Follow the instruction to enter the below information
 ### Prefix, Resource Group Name, VNet Project Name and CIDR, VNet DevOps Name and CIDR, Landing Zone Type, <Your Settings File>
 #------------------------------------------------------------------------
+if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
-tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-if [ $? -ne 0 ]; then
-  echo -e "     "
-  echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
-  exit 1
+  tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
+    exit 1
+  fi
+
+else
+
+  tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
+    exit 1
+  fi
+
 fi
 
 #------------------------------------------------------------------------
@@ -44,7 +56,6 @@ fi
 # /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
 # /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
 #------------------------------------------------------------------------
-# tfexe apply run-all -include=/tf/avm/AI_Foundry_LZ_single_resource_group.hcl
 
 if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 

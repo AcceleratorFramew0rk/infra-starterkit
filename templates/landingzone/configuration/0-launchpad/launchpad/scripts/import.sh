@@ -1,58 +1,39 @@
 #!/bin/bash
 
 #------------------------------------------------------------------------
+# USAGE:
+# cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
+# ./scripts/import.sh
+#------------------------------------------------------------------------
+
+#------------------------------------------------------------------------
 # functions
 #------------------------------------------------------------------------
-parse_yaml() {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\)\($w\)$s:$s\"\(.*\)\"$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
+
+get_vnet_cidr() {
+  local resourcegroup=$1
+  local vnetname=$2
+
+  # Query the CIDR (address prefixes) of the virtual network
+  vnet_cidr=$(az network vnet show \
+    --resource-group "$resourcegroup" \
+    --name "$vnetname" \
+    --query "addressSpace.addressPrefixes[0]" \
+    --output tsv)
+
+  # Output the retrieved CIDR
+  echo "$vnet_cidr"
 }
 
 generate_random_string() {
     echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 3 | head -n 1 | tr '[:upper:]' '[:lower:]')
 }
 
-# Define the function for configuring project files
-configure_project_files() {
-  local search_word="$1"
-  local replace_word="$2"
-  local exclude_file="import.sh" # The file to exclude from the search and replace
-
-  echo " "
-  echo "-----------------------------------------------------------------------------"  
-  echo "Configure files for project with search word $search_word"  
-  timestamp
-  echo "-----------------------------------------------------------------------------"  
-
-  # Check if the directory exists
-  if [[ -d "$DIRECTORY_PATH" ]]; then
-      # Perform the search and replace, excluding the specified file
-      # find only terraform.tf files
-      # find "$DIRECTORY_PATH" -name 'terraform.tf' -exec grep -Iq . {} \; -print | while read file; do
-      find "$DIRECTORY_PATH" -type f ! -name "$exclude_file" -exec grep -Iq . {} \; -print | while read file; do
-          sed -i -e "s/$search_word/$replace_word/g" "$file"
-      done
-      echo "Replacement complete in directory: $DIRECTORY_PATH"
-  else
-      echo "Directory not found."
-  fi
-}
-
 # Define a timestamp function
 timestamp() {
   date +"%T" # current time
 }
+
 #------------------------------------------------------------------------
 # end functions
 #------------------------------------------------------------------------
@@ -70,7 +51,7 @@ echo "init files"
 ACCOUNT_INFO=$(az account show 2> /dev/null)
 if [[ $? -ne 0 ]]; then
     echo "no subscription"
-    exit
+    exit 1
 fi
 
 SUB_ID=$(echo "$ACCOUNT_INFO" | jq ".id" -r)
@@ -95,37 +76,43 @@ echo "${STATUS_LINE}"
 # read config.yaml file data
 #------------------------------------------------------------------------
 
-# will put CONFIG_ in front of each variable finded in config.yml (it is the $2 and $prefix in function parse_yaml) line 4 and 15.
 echo "working directory:"
 CWD=$(pwd)
 echo $CWD
-# CONFIG_FILE_PATH="${CWD}/../scripts/config.yaml"
 CONFIG_FILE_PATH="./../scripts/config.yaml"
 echo $CONFIG_FILE_PATH
-eval $(parse_yaml $CONFIG_FILE_PATH "CONFIG_")
 
 #------------------------------------------------------------------------
 # generate templates
 #------------------------------------------------------------------------
 
-RESOURCE_GROUP_NAME="${CONFIG_resource_group_name}"
-LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME="${CONFIG_log_analytics_workspace_resource_group_name}"
-LOG_ANALYTICS_WORKSPACE_NAME="${CONFIG_log_analytics_workspace_name}"
+RESOURCE_GROUP_NAME=$(yq -r '.resource_group_name' $CONFIG_FILE_PATH)
+echo $RESOURCE_GROUP_NAME
+LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME=$(yq -r '.log_analytics_workspace_resource_group_name' $CONFIG_FILE_PATH)
+echo $LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME
+LOG_ANALYTICS_WORKSPACE_NAME=$(yq -r '.log_analytics_workspace_name' $CONFIG_FILE_PATH)
+echo $LOG_ANALYTICS_WORKSPACE_NAME
 
 # Define your variables
-PROJECT_CODE="${CONFIG_prefix}" 
-SUBSCRIPTION_ID="${SUB_ID}" # "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx"
+
+PROJECT_CODE=$(yq -r '.prefix' $CONFIG_FILE_PATH)
+
+echo $PROJECT_CODE
+SUBSCRIPTION_ID="${SUB_ID}" 
 
 # Generate resource group name to store state file
 RG_NAME="${PROJECT_CODE}-rg-launchpad"
 
 # Location
-LOC="${CONFIG_location}" # "southeastasia"
+LOC=$(yq -r '.location' $CONFIG_FILE_PATH)
+echo $LOC
 
-# Generate storage acc name to store state file
-RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
+RND_NUM=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 3)
+echo "Generated Code: $RND_NUM"
 STG_NAME="${PROJECT_CODE}stgtfstate${RND_NUM}"
+echo $STG_NAME
 STG_NAME="${STG_NAME//-/}"
+echo $STG_NAME
 CONTAINER1="0-launchpad"
 CONTAINER2="1-landingzones"
 CONTAINER3="2-solution-accelerators"
@@ -142,7 +129,6 @@ echo "--------------------------------------------------------------------------
 
 # Check if the resource group already exists
 az group show --name $RG_NAME > /dev/null 2>&1
-
 if [ $? -eq 0 ]; then
     echo "ERROR: Resource group $RG_NAME already exists. Exiting."
     exit 1
@@ -159,16 +145,52 @@ fi
 # Create Storage account and containers for storing state files
 if [ $? -eq 0 ]; then
   az storage account create --name $STG_NAME --resource-group $RG_NAME --location $LOC --sku Standard_LRS --kind StorageV2 --allow-blob-public-access true --min-tls-version TLS1_2
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mStorage account create failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 if [ $? -eq 0 ]; then
   az storage container create --account-name $STG_NAME --name $CONTAINER1 --public-access blob --fail-on-exist
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mStorage container create failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 if [ $? -eq 0 ]; then
   az storage container create --account-name $STG_NAME --name $CONTAINER2 --public-access blob --fail-on-exist
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mStorage container create failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 if [ $? -eq 0 ]; then
   az storage container create --account-name $STG_NAME --name $CONTAINER3 --public-access blob --fail-on-exist
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mStorage container create failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
+
+
+RESOURCE_GROUP_NAME
+
+# custom resource group - single resoruce group feature
+if [[ "$RESOURCE_GROUP_NAME" != "gcci-platform" ]]; then
+  # If the resource group does not exist, attempt to create it
+  az group create --name $RESOURCE_GROUP_NAME --location $LOC
+  if [ $? -eq 0 ]; then
+      echo "Resource group $RESOURCE_GROUP_NAME created successfully."
+  else
+      echo "ERROR: Failed to create resource group $RESOURCE_GROUP_NAME. Exiting."
+      exit 1
+  fi
+fi
+
 
 echo "-----------------------------------------------------------------------------"  
 echo "End launchpad storage account"  
@@ -179,14 +201,6 @@ echo "--------------------------------------------------------------------------
 echo "Start replacing variables"  
 timestamp
 echo "-----------------------------------------------------------------------------"  
-
-# Call the function with different search and replace terms
-# Update this path based on your environment (Git Bash/Cygwin or WSL)
-# DIRECTORY_PATH="/tf/avm/templates/landingzone"      
-DIRECTORY_PATH="./../../../configuration"               
-configure_project_files "{{resource_group_name}}" "$RG_NAME"
-configure_project_files "{{storage_account_name}}" "$STG_NAME"
-configure_project_files "{{prefix}}" "$PROJECT_CODE"
 
 echo "-----------------------------------------------------------------------------"  
 echo "Start terraform import commands"  
@@ -199,71 +213,140 @@ MSYS_NO_PATHCONV=1 terraform init  -reconfigure \
 -backend-config="container_name=0-launchpad" \
 -backend-config="key=gcci-platform.tfstate"
 
+# Variables for VNET Name
+CONFIG_vnets_project_name=""
+CONFIG_vnets_devops_name=""
+CONFIG_vnets_hub_ingress_internet_name=""
+CONFIG_vnets_hub_egress_internet_name=""
+CONFIG_vnets_hub_ingress_intranet_name=""
+CONFIG_vnets_hub_egress_intranet_name=""
+CONFIG_vnets_management_name=""
 
-# vnets:
-#   # IMPORTANT: leave empty if there is no such virtual network   
-#   ingress_internet: "gcci-vnet-ingress-internet"   
-#   egress_internet: "gcci-vnet-egress-internet"  
-#   ingress_intranet: "gcci-vnet-ingress-intranet" 
-#   egress_intranet: "gcci-vnet-egress-intranet"  
-#   project: "gcci-vnet-project"   
-#   management: "gcci-vnet-management"   
-#   devops: "gcci-vnet-devops" 
+CONFIG_vnets_project_name=$(yq -r '.vnets.project.name' $CONFIG_FILE_PATH)
+CONFIG_vnets_devops_name=$(yq -r '.vnets.devops.name' $CONFIG_FILE_PATH)
+CONFIG_vnets_hub_ingress_internet_name=$(yq -r '.vnets.hub_ingress_internet.name' $CONFIG_FILE_PATH)
+CONFIG_vnets_hub_egress_internet_name=$(yq -r '.vnets.hub_egress_internet.name' $CONFIG_FILE_PATH)
+CONFIG_vnets_hub_ingress_intranet_name=$(yq -r '.vnets.hub_ingress_intranet.name' $CONFIG_FILE_PATH)
+CONFIG_vnets_hub_egress_intranet_name=$(yq -r '.vnets.hub_egress_intranet.name' $CONFIG_FILE_PATH)
+CONFIG_vnets_management_name=$(yq -r '.vnets.management.name' $CONFIG_FILE_PATH)
+VNET_RESOURCE_GROUP_NAME="gcci-platform"
 
+if [[ "$CONFIG_vnets_hub_ingress_internet_name" == null ]]; then
+  CONFIG_vnets_hub_ingress_internet_name=""
+fi
+if [[ "$CONFIG_vnets_hub_egress_internet_name" == null ]]; then
+  CONFIG_vnets_hub_egress_internet_name=""
+fi
+if [[ "$CONFIG_vnets_hub_ingress_intranet_name" == null ]]; then
+  CONFIG_vnets_hub_ingress_intranet_name=""
+fi
+if [[ "$CONFIG_vnets_hub_egress_intranet_name" == null ]]; then
+  CONFIG_vnets_hub_egress_intranet_name=""
+fi
+if [[ "$CONFIG_vnets_management_name" == null ]]; then
+  CONFIG_vnets_management_name=""
+fi
+if [[ "$CONFIG_vnets_project_name" == null ]]; then
+  CONFIG_vnets_project_name=""
+fi
+if [[ "$CONFIG_vnets_devops_name" == null ]]; then
+  CONFIG_vnets_devops_name=""
+fi
 
 echo "vnets:" 
-echo $CONFIG_vnets_hub_ingress_internet_name
-echo $CONFIG_vnets_hub_egress_internet_name
-echo $CONFIG_vnets_hub_ingress_intranet_name
-echo $CONFIG_vnets_hub_egress_intranet_name
-echo $CONFIG_vnets_project_name
-echo $CONFIG_vnets_management_name
-echo $CONFIG_vnets_devops_name
+echo "CONFIG_vnets_hub_ingress_internet_name: ${CONFIG_vnets_hub_ingress_internet_name}"
+echo "CONFIG_vnets_hub_egress_internet_name: ${CONFIG_vnets_hub_egress_internet_name}"
+echo "CONFIG_vnets_hub_ingress_intranet_name: ${CONFIG_vnets_hub_ingress_intranet_name}"
+echo "CONFIG_vnets_hub_egress_intranet_name: ${CONFIG_vnets_hub_egress_intranet_name}"
+echo "CONFIG_vnets_management_name: ${CONFIG_vnets_management_name}"
+echo "CONFIG_vnets_project_name: ${CONFIG_vnets_project_name}"
+echo "CONFIG_vnets_devops_name: ${CONFIG_vnets_devops_name}"
 
-# Replace the hardcoded subscription ID with the $SUBSCRIPTION_ID variable
 # resource group
-MSYS_NO_PATHCONV=1 terraform import "azurerm_resource_group.gcci_platform" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}" 
-MSYS_NO_PATHCONV=1 terraform import "azurerm_resource_group.gcci_agency_law" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}" 
+terraform import "azurerm_resource_group.gcci_platform" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}" 
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+  exit 1
+fi 
+terraform import "azurerm_resource_group.gcci_agency_law" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}" 
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+  exit 1
+fi 
 
 # virtual networks
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_ingress_internet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-ingress-internet" 
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_egress_internet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-egress-internet" 
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-ingress-intranet" 
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_egress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-egress-intranet" 
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_project" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-project" 
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_management" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-management" 
-# MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_devops" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/gcci-vnet-devops" 
-
 if [[ "$CONFIG_vnets_hub_ingress_internet_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_ingress_internet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_ingress_internet_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_ingress_internet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_ingress_internet_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 
 if [[ "$CONFIG_vnets_hub_egress_internet_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_egress_internet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_egress_internet_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_egress_internet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_egress_internet_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 
 if [[ "$CONFIG_vnets_hub_ingress_intranet_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_ingress_intranet_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_ingress_intranet_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 
 if [[ "$CONFIG_vnets_hub_egress_intranet_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_egress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_egress_intranet_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_egress_intranet_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 
 if [[ "$CONFIG_vnets_project_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_project" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_project_name" 
-fi
-
-if [[ "$CONFIG_vnets_management_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_management" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_management_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_project_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 
 if [[ "$CONFIG_vnets_devops_name" != "" ]]; then
-  MSYS_NO_PATHCONV=1 terraform import "azurerm_virtual_network.gcci_vnet_devops" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_devops_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_devops_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
+fi
+
+if [[ "$CONFIG_vnets_devops_name" != "" ]]; then
+  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_devops_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
 fi
 
 # log analytics workspace
-MSYS_NO_PATHCONV=1 terraform import "azurerm_log_analytics_workspace.gcci_agency_workspace" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}/providers/Microsoft.OperationalInsights/workspaces/${LOG_ANALYTICS_WORKSPACE_NAME}" 
+terraform import "azurerm_log_analytics_workspace.gcci_agency_workspace" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}/providers/Microsoft.OperationalInsights/workspaces/${LOG_ANALYTICS_WORKSPACE_NAME}" 
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+  exit 1
+fi 
 
 echo "-----------------------------------------------------------------------------"  
 echo "End import gcci resources"  
@@ -281,8 +364,6 @@ echo "Start creating NSG yaml configuration file"
 timestamp
 echo "-----------------------------------------------------------------------------"
 
-# begin rename templates to folder name
-
 # goto starter kit parent folder
 cd ./../../../../
 
@@ -290,21 +371,7 @@ cd ./../../../../
 FOLDER_NAME=$(basename "$(pwd)")
 echo "Folder Name: ${FOLDER_NAME}"
 
-# Escape slashes in the search variable
-search="templates"
-replace="${FOLDER_NAME}"
-
-echo $search
-echo $replace
-# Perform replace
-find . -name '*.md' -exec sed -i -e "s/$search/$replace/g" {} +
-find . -name '*.sh' -exec sed -i -e "s/$search/$replace/g" {} +
-
-# end rename templates to folder name
-
 # goto nsg configuration folder
-# goto nsg configuration folder
-# cd /tf/avm/${replace}/landingzone/configuration/1-landingzones/scripts
 cd ./landingzone/configuration/1-landingzones/scripts
 
 # create nsg yaml file from nsg csv files
@@ -319,4 +386,3 @@ echo "End creating NSG yaml configuration file"
 timestamp
 echo "-----------------------------------------------------------------------------"
 
-# read -p "Press enter to continue..."
