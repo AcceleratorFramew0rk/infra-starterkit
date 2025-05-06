@@ -305,7 +305,16 @@ if [[ "$CONFIG_vnets_hub_ingress_intranet_name" != "" ]]; then
 fi
 
 if [[ "$CONFIG_vnets_hub_egress_intranet_name" != "" ]]; then
-  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_egress_intranet_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_egress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_hub_egress_intranet_name" 
+  if [ $? -ne 0 ]; then
+    echo -e "     "
+    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
+    exit 1
+  fi 
+fi
+
+if [[ "$CONFIG_vnets_management_name" != "" ]]; then
+  terraform import "azurerm_virtual_network.gcci_vnet_management" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_management_name" 
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
@@ -314,7 +323,7 @@ if [[ "$CONFIG_vnets_hub_egress_intranet_name" != "" ]]; then
 fi
 
 if [[ "$CONFIG_vnets_project_name" != "" ]]; then
-  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_project_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_project" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_project_name" 
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
@@ -323,7 +332,7 @@ if [[ "$CONFIG_vnets_project_name" != "" ]]; then
 fi
 
 if [[ "$CONFIG_vnets_devops_name" != "" ]]; then
-  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_devops_name" 
+  terraform import "azurerm_virtual_network.gcci_vnet_devops" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_devops_name" 
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
@@ -331,14 +340,6 @@ if [[ "$CONFIG_vnets_devops_name" != "" ]]; then
   fi 
 fi
 
-if [[ "$CONFIG_vnets_devops_name" != "" ]]; then
-  terraform import "azurerm_virtual_network.gcci_vnet_ingress_intranet" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${VNET_RESOURCE_GROUP_NAME}/providers/Microsoft.Network/virtualNetworks/$CONFIG_vnets_devops_name" 
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mTerraform import failed. Exiting.\e[0m"
-    exit 1
-  fi 
-fi
 
 # log analytics workspace
 terraform import "azurerm_log_analytics_workspace.gcci_agency_workspace" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}/providers/Microsoft.OperationalInsights/workspaces/${LOG_ANALYTICS_WORKSPACE_NAME}" 
