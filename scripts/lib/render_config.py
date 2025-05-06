@@ -219,8 +219,8 @@ def get_config(input, solution_accelerator, landingzone_type):
         # internet ingress vent
         if internet_ingress_vnet_cidr != "":
             internet_ingress_vnet = validate_cidr(internet_ingress_vnet_cidr, "internet_ingress_vnet_cidr")
-            subnet_vars["internet_ingress_vnet_cidr"] = internet_ingress_vnet_cidr
-            subnet_vars["internet_ingress_vnet_name"] = internet_ingress_vnet_name       
+            subnet_vars["hub_ingress_internet_vnet_cidr"] = internet_ingress_vnet_cidr
+            subnet_vars["hub_ingress_internet_vnet_name"] = internet_ingress_vnet_name       
             internet_ingress_subnet_prefix_length = 26
             required_internet_ingress_subnets = 2  # As per your requirements
             internet_ingress_subnets = list(internet_ingress_vnet.subnets(new_prefix=internet_ingress_subnet_prefix_length))
@@ -234,8 +234,8 @@ def get_config(input, solution_accelerator, landingzone_type):
         # intranet ingress vent
         if intranet_ingress_vnet_cidr != "":
             intranet_ingress_vnet = validate_cidr(intranet_ingress_vnet_cidr, "intranet_ingress_vnet_cidr")
-            subnet_vars["intranet_ingress_vnet_cidr"] = intranet_ingress_vnet_cidr
-            subnet_vars["intranet_ingress_vnet_name"] = intranet_ingress_vnet_name       
+            subnet_vars["hub_ingress_intranet_vnet_cidr"] = intranet_ingress_vnet_cidr
+            subnet_vars["hub_ingress_intranet_vnet_name"] = intranet_ingress_vnet_name       
             intranet_ingress_subnet_prefix_length = 26
             required_intranet_ingress_subnets = 2  # As per your requirements
             intranet_ingress_subnets = list(intranet_ingress_vnet.subnets(new_prefix=intranet_ingress_subnet_prefix_length))

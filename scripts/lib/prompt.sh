@@ -23,7 +23,6 @@ while true; do
   fi
 done
 
-
 # Prompt for VNET Project Name with a default value
 RESOURCE_GROUP_NAME=$(prompt_for_input "Enter the Resource Group Name" "gcci-platform")
 
@@ -49,8 +48,13 @@ if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; the
   GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the Agency Managed VNET DevOps CIDR (Enter 'na' if not using Agency Managed VNET)" "192.168.10.0/24")
 fi
 
-# Prompt for settings.yaml path with a default value
-SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings.yaml")
+if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; then
+  # Prompt for settings.yaml path with a default value
+  SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings.yaml")
+else
+  # Prompt for settings.yaml path with a default value
+  SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings_platform_landing_zone.yaml")
+fi
 
 # Output the collected inputs
 echo "Configuration:"
