@@ -4,7 +4,7 @@ module "diagnosticsetting1" {
 
   # for_each = try(var.subnets.hub_internet_ingress, null) == null ? local.global_settings.subnets.hub_internet_ingress : var.subnets.hub_internet_ingress
 
-  name                = lower("${module.naming.monitor_diagnostic_setting.name_unique}-agw")
+  name                = lower("${module.naming.monitor_diagnostic_setting.name_unique}-agwez")
   target_resource_id = module.network_security_groups.resource.id
   log_analytics_workspace_id = local.remote.log_analytics_workspace.id
   diagnostics = {
