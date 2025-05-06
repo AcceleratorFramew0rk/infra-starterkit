@@ -4,7 +4,7 @@ module "public_ip" {
 
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  name                = module.naming.public_ip.name_unique
+  name                = "${module.naming.public_ip.name}-agwez" # module.naming.public_ip.name_unique
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location 
   sku = "Standard"
   diagnostic_settings = {
@@ -18,7 +18,7 @@ module "application_gateway" {
   source  = "Azure/avm-res-network-applicationgateway/azurerm"
   version = "0.3.0"
 
-  name = "${module.naming.application_gateway.name}${random_string.this.result}" 
+  name = "${module.naming.application_gateway.name}${random_string.this.result}ez" 
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   enable_telemetry    = var.enable_telemetry
@@ -83,7 +83,7 @@ module "application_gateway" {
   # WAF : Monitor and Log the configurations and traffic
   diagnostic_settings = {
     example_setting = {
-      name                           = "${module.naming.application_gateway.name_unique}-diagnostic-setting"
+      name                           = "${module.naming.application_gateway.name_unique}-ez-diagnostic-setting"
       workspace_resource_id          = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id # azurerm_log_analytics_workspace.log_analytics_workspace.id
       log_analytics_destination_type = "Dedicated" # Or "AzureDiagnostics"
       # log_categories                 = ["Application Gateway Access Log", "Application Gateway Performance Log", "Application Gateway Firewall Log"]
