@@ -7,6 +7,11 @@ module "public_ip" {
   name                = "${module.naming.public_ip.name}-bastion" # The name must be between 3 and 24 characters long and can only contain lowercase letters, numbers and dashes.
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location 
   sku = "Standard"
+  diagnostic_settings = {
+    log1 = {
+      workspace_resource_id    = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
+    }
+  }  
 }
 
 module "azure_bastion" {
