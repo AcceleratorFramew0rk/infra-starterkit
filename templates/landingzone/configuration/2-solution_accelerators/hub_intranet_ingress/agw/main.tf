@@ -4,7 +4,7 @@ module "public_ip" {
 
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  name                = "${module.naming.public_ip.name}-agwez" # module.naming.public_ip.name_unique
+  name                = "${module.naming.public_ip.name}-agwiz" # module.naming.public_ip.name_unique
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location 
   sku = "Standard"
   diagnostic_settings = {
