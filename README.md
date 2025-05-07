@@ -2,8 +2,6 @@
 Starter kit based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
 This is customized to install in a specific environment setup. 
 
-Certainly! Here's an expanded and more readable version of the **Archetypes** section:
-
 ---
 
 ## Archetypes
