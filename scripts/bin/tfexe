@@ -39,6 +39,7 @@ exec_terraform() {
         PATH_STRING=$(pwd)
         EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{gsub("_", "", $NF); print $(NF-1) "-" $NF}')
         CONTAINER_NAME="2-solution-accelerators"
+        EXTRACTED_NAME="${EXTRACTED_NAME//_/-}"
         KEY="solution-accelerators-${EXTRACTED_NAME}.tfstate"
         echo "Container name: ${CONTAINER_NAME}"
         echo "Key: ${KEY}"
@@ -90,7 +91,7 @@ exec_terraform() {
   if [[ "$ACTION" == *"apply"* ]]; then
     echo "     "
     echo "Running..."
-    echo "terraform $ACTION  -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
+    echo "terraform $ACTION  -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]} ${TF_VAR_FILE}"
     echo "     "
     terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
     
@@ -106,7 +107,7 @@ exec_terraform() {
   elif [[ "$ACTION" == *"plan"* ]]; then
     echo "     "
     echo "Running..."
-    echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
+    echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]} ${TF_VAR_FILE}"
     echo "     "
     terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
     
