@@ -71,7 +71,7 @@ tfexe deploy
 ```
 ---
 
-#### How to Provide Inputs for Deployment (AKS archetype)
+#### How to Provide Inputs for Deployment of the Archetypes
 
 * **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
@@ -83,6 +83,8 @@ tfexe deploy
   - (Enter `3` = App Service archetype)
   - (Enter `4` = IoT archetype)
 
+#### EXAMPLE:
+![tfexe example](./images/tfexe-screen.png "This is an image example of 'tfexe deploy'")
 ---
 
 #### If you select '1' for AI Foundry archtetype, manually approved the below search shared private link for Azure Search Services 
