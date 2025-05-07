@@ -28,7 +28,7 @@ echo "SETTINGS YAML FILE PATH: $SETTINGS_YAML_FILE_PATH"
 # get current subscription id and name
 ACCOUNT_INFO=$(az account show 2> /dev/null)
 if [[ $? -ne 0 ]]; then
-    echo "no subscription"
+    echo -e "\e[31mNo subscription available. Please check your login. Exiting.\e[0m"    
     exit
 fi
 SUB_ID=$(echo "$ACCOUNT_INFO" | jq ".id" -r)
