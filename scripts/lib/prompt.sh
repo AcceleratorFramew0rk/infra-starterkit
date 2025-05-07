@@ -50,7 +50,23 @@ fi
 
 if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; then
   # Prompt for settings.yaml path with a default value
-  SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings.yaml")
+  ARCHETYPE=$(prompt_for_input "Enter the Archetype to deploy (1: AKS or 2: App Service or 3: IoT or 4: AI Foundry or 5: custom setting)" "1")
+
+  if [[ "$ARCHETYPE" == "1" ]]; then
+    SETTINGS_YAML_FILE_PATH="/tf/avm/scripts/config/settings_aks_archetype.yaml"
+  elif [[ "$ARCHETYPE" == "2" ]]; then
+    SETTINGS_YAML_FILE_PATH="/tf/avm/scripts/config/settings_appservice_archetype.yaml"
+  elif [[ "$ARCHETYPE" == "3" ]]; then
+    SETTINGS_YAML_FILE_PATH="/tf/avm/scripts/config/settings_iot_archetype.yaml"
+  elif [[ "$ARCHETYPE" == "4" ]]; then
+    SETTINGS_YAML_FILE_PATH="/tf/avm/scripts/config/settings_ai_archetype.yaml"
+  elif [[ "$ARCHETYPE" == "5" ]]; then
+    SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings.yaml")
+  else
+    echo "Invalid Archetype selected. Exiting."
+    exit 1
+  fi
+
 else
   # Prompt for settings.yaml path with a default value
   SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "/tf/avm/scripts/config/settings_platform_landing_zone.yaml")

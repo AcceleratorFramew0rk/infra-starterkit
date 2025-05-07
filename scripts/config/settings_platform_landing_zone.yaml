@@ -26,27 +26,27 @@
 # -------------------------------------------------------------------
 
 hub_internet_ingress:
-  agw: false
-  firewall_ingress: false
+  agw: true
+  firewall_ingress: true
   frontdoor: false
 hub_internet_egress:
   firewall_egress: false
 hub_intranet_ingress:
-  agw: false
-  firewall_ingress: false
+  agw: true
+  firewall_ingress: true
 hub_intranet_egress:
   firewall_egress: false
 management:
-  bastion_host: false
-  vm: false
+  bastion_host: true
+  vm: true
 devops:
-  containter_instance: true
+  containter_instance: false
 project:
-  storage_account: true
+  storage_account: false
   acr: false
   aks_avm_ptn: false
   apim: false
-  app_service: true
+  app_service: false
   azure_open_ai: false
   container_app: false
   container_instance: false
@@ -58,7 +58,7 @@ project:
   keyvault: false
   linux_function_app: false
   logic_app: false
-  mssql: true
+  mssql: false
   notification_hub: false
   postgresql: false 
   redis_cache: false
@@ -68,4 +68,4 @@ project:
   vm: false
   vmss_linux: false
   vm_windows: false
-  ai_foundry_enterprise: true
+  ai_foundry_enterprise: false

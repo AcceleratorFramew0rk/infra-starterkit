@@ -1,28 +1,29 @@
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f"
-resource_group_name: "hc24-dev-platform"
-prefix: "hc24-dev"
+resource_group_name: "hc102-dev-platform"
+prefix: "hc102-dev"
 is_prefix: true
 is_single_resource_group: true
 environment: "dev"
+settings_yaml_file_path: "/tf/avm/scripts/config/settings_platform_landing_zone.yaml"
 vnets:
   hub_ingress_internet: 
-    name:   
-    cidr: 
+    name: "gcci-vnet-ingress-internet" 
+    cidr: "100.127.0.0/24"
   hub_egress_internet:  
-    name:   
+    name: 
     cidr: 
   hub_ingress_intranet:  
-    name:  
-    cidr: 
+    name: "gcci-vnet-ingress-intranet"
+    cidr: "10.20.0.0/25"
   hub_egress_intranet:  
-    name:    
+    name: 
     cidr: 
   management:  
-    name:     
-    cidr: 
+    name: "gcci-vnet-management"    
+    cidr: "100.127.3.0/24" 
   project:  
-    name: "gcci-vnet-project"
-    cidr: "192.168.0.0/23"
+    name: 
+    cidr: 
   devops:  
-    name: "gcci-vnet-devops"  
-    cidr: "192.168.10.0/24"  
+    name: 
+    cidr: 
