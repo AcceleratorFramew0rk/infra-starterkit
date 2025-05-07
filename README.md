@@ -32,16 +32,14 @@ Download the repo as a zip file.
 ## Login to Azure
 ```bash
 az login --tenant xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # azure tenant id
-
 az account set --subscription xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # subscription id
-
 az account show # to show the current login account
 
 SUBSCRIPTION_ID="xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 
 # ensure min "execute" right to script to avoid permission issue
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
+sudo chmod -R -f 777 /tf/avm/scripts
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
 ```
@@ -60,91 +58,134 @@ terraform apply -auto-approve
 
 ### For AKS Architype [[architecture diagram](./docs/aks_archetype.md)], execute the following steps:
 
-- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 ```bash
-# 1. launchpad
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-./scripts/import.sh
 
-# 2. Infra and Application Landing zone and networking
+tfexe deploy
 
-tfexe apply run-all -include=/tf/avm/azure_aks_lz.hcl
-
-# 3. Solution Accelerators
-
-tfexe apply run-all -include=/tf/avm/azure_aks_pattern.hcl
 ```
+---
+
+### How to Provide Inputs for Deployment
+
+* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
+* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
+* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
+* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
+* **ARCHETYPE**: Deployment archetype (Enter `2` = AKS archetype)
+
+---
+
 
 ### For App Service Architype [[architecture diagram](./docs/appservice_archetype.md)], execute the following steps:
 
-- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 ```bash
-# 1. launchpad
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-./scripts/import.sh
 
-# 2. Infra and Application Landing zone and networking
-
-tfexe apply run-all -include=/tf/avm/azure_appservice_lz.hcl
-
-# 3. Solution Accelerators
-
-tfexe apply run-all -include=/tf/avm/azure_appservice_pattern.hcl
+tfexe deploy
 
 ```
+---
+
+### How to Provide Inputs for Deployment
+
+* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
+* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
+* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
+* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
+* **ARCHETYPE**: Deployment archetype (Enter `3` = App Service archetype)
+
+---
 
 
 ### For IoT Architype [[architecture diagram](./docs/iot_archetype.md)], execute the following steps:
 
-- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 ```bash
-# 1. launchpad
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-./scripts/import.sh
 
-# 2. Infra and Application Landing zone and networking
-
-tfexe apply run-all -include=/tf/avm/azure_iot_lz.hcl
-
-# 3. Solution Accelerators
-
-tfexe apply run-all -include=/tf/avm/azure_iot_pattern.hcl
+tfexe deploy
 
 ```
+---
+
+### How to Provide Inputs for Deployment
+
+* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
+* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
+* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
+* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
+* **ARCHETYPE**: Deployment archetype (Enter `4` = IoT archetype)
+
+---
 
 
 ### For AI Foundry Architype [[architecture diagram](./docs/ai_archetype.md)], execute the following steps:
 
-- Edit your configuration in **config.yaml** file "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-
 ```bash
-# 1. Launchpad - create launchpad storage account and containers
 
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-
-./scripts/import.sh
-
-# 2. Infra and Application Landing zone and networking
-
-tfexe apply run-all -include=/tf/avm/AI_Foundry_LZ.hcl
-
-# 3. Solution Accelerators
-
-tfexe apply run-all -include=/tf/avm/AI_Foundry_pattern.hcl
+tfexe deploy
 
 ```
+---
+
+### How to Provide Inputs for Deployment
+
+* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
+* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
+* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
+* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
+* **ARCHETYPE**: Deployment archetype (Enter `1` = AI Foundry archetype)
+
+---
+
 
 #### finally, manually approved the below search shared private link for Azure Search Services 
 * Storage account (Approved via Storage Account UI under  Networking > Private endpoint connections)
 * AI Services (Approved via AI Services UI under Networking > Private endpoint connections)
 
+---
 
+### Guidelines for Providing Input Values in Bash Script Prompts
 
-## To continue with detail of each solution accelerators, goto README.md file /tf/avm/templates/README.md
-```bash
-cd /tf/avm/gcc_starter_kit
-```
-* Follow the steps in README.md file
+* **PREFEX**
+
+  * Enter your project prefix.
+  * Example: `hc01-dev`
+
+* **RESOURCE GROUP NAME**
+
+  * Specify the name of the Azure Resource Group that will host all your resources.
+  * Default: `gcci-platform`
+  * Example: `hc01-dev-platform`
+
+* **ENVIRONMENT**
+
+  * Specify the project environment.
+  * Valid values: `dev`, `sit`, `uat`, `stg`, `prd`
+  * Default: `dev`
+
+* **LANDINGZONE TYPE**
+
+  * Choose the type of landing zone.
+  * Valid values:
+
+    * `1`: application
+    * `2`: platform
+  * Default: `1`
+
+* **ARCHETYPE**
+
+  * Choose the type of archetype to deploy.
+  * Valid values:
+
+    * `1`: AI Foundry Archetype
+    * `2`: AKS Archetype
+    * `3`: App Service Archetype
+    * `4`: IoT Archetype
+    * `4`: Custom Archetype (you define your own settings.yaml file in "/tf/avm/scripts/config/settings.yaml")
+  * Default: `1`
+
+* **SETTINGS_YAML_FILE_PATH**
+
+  * Enter the path of the settings.yaml file.
+  * Default: `/tf/avm/scripts/config/settings.yaml` 
+
+---
+
