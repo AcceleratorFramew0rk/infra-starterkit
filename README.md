@@ -2,6 +2,34 @@
 Starter kit based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
 This is customized to install in a specific environment setup. 
 
+Certainly! Here's an expanded and more readable version of the **Archetypes** section:
+
+---
+
+## Archetypes
+
+Archetypes represent standardized deployment patterns that define the structure, components, and best practices for specific types of Azure workloads. Each archetype provides a consistent foundation to accelerate deployment, ensure compliance, and promote reusability across projects.
+
+Below are the supported archetypes, along with links to their respective architecture diagrams for further reference:
+
+* **AI Foundry Archetype**
+  Designed for machine learning and AI workloads, this archetype includes components such as Azure Machine Learning, storage accounts, and supporting infrastructure.
+  ➤ [View architecture diagram](./docs/ai_archetype.md)
+
+* **AKS Archetype**
+  Tailored for containerized applications running on Azure Kubernetes Service (AKS). It includes AKS clusters, networking, and monitoring tools.
+  ➤ [View architecture diagram](./docs/aks_archetype.md)
+
+* **App Service Archetype**
+  Intended for web applications hosted on Azure App Service. It includes App Service plans, application gateways, and related resources.
+  ➤ [View architecture diagram](./docs/appservice_archetype.md)
+
+* **IoT Archetype**
+  Focused on Internet of Things solutions. This archetype includes Azure IoT Hub, Stream Analytics, and associated device and data processing components.
+  ➤ [View architecture diagram](./docs/iot_archetype.md)
+
+---
+
 # Prerequisites
 In order to start deploying your landing zones, you need an Azure subscription (Trial, MSDN, etc.) and you need to install the following components on your machine:
 
@@ -51,14 +79,6 @@ terraform init -reconfigure
 terraform plan
 terraform apply -auto-approve
 ```
-
-## Archetypes
-
-  - AI Foundry Architype [[architecture diagram](./docs/ai_archetype.md)]
-  - AKS Architype [[architecture diagram](./docs/aks_archetype.md)]
-  - App Service Architype [[architecture diagram](./docs/appservice_archetype.md)]
-  - IoT Architype [[architecture diagram](./docs/iot_archetype.md)]
-
 
 ## Deploy Archetype via script
 
