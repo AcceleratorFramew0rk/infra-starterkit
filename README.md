@@ -65,7 +65,7 @@ tfexe deploy
 ```
 ---
 
-### How to Provide Inputs for Deployment
+#### How to Provide Inputs for Deployment (AKS archetype)
 
 * **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
@@ -85,7 +85,7 @@ tfexe deploy
 ```
 ---
 
-### How to Provide Inputs for Deployment
+#### How to Provide Inputs for Deployment (App Service archetype)
 
 * **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
@@ -105,7 +105,7 @@ tfexe deploy
 ```
 ---
 
-### How to Provide Inputs for Deployment
+#### How to Provide Inputs for Deployment (IoT archetype)
 
 * **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
@@ -125,7 +125,7 @@ tfexe deploy
 ```
 ---
 
-### How to Provide Inputs for Deployment
+#### How to Provide Inputs for Deployment (AI Foundry archetype)
 
 * **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
