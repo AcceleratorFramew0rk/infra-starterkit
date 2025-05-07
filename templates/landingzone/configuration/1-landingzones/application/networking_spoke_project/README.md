@@ -2,14 +2,4 @@
 cd /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
 
 # Run the **Custom** Terraform initialization script "terraform-init-custom" at location "/usr/local/bin" to set up the backend and providers
-terraform-init-custom 
-
-# Generate an execution plan to preview the changes Terraform will make
-terraform plan
-
-# Apply the Terraform configuration and automatically approve changes without prompting for confirmation
-terraform apply -auto-approve
-
-
-# OR single line tfexe command - init and then apply
 tfexe apply
