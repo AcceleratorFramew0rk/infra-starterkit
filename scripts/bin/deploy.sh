@@ -116,7 +116,10 @@ fi
 # 2- solution accelerators
 # deploy azure resources based on the settings.yaml file
 # USAGE:
-# exec_solution_accelerators.sh <path_to_settings_yaml_file> <path_to_config_yaml_file> <landingzone_type>
+# ./../lib/deploy_azure_resources.sh <path_to_settings_yaml_file> <path_to_config_yaml_file> <landingzone_type>
+# EXAMPLE: 
+# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml" "1"
+# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings_platform_landing_zone.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml" "2"
 #------------------------------------------------------------------------
 echo "deploy azure resources - 2-solution accelerators"
 

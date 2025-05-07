@@ -92,7 +92,7 @@ exec_terraform() {
     echo "Running..."
     echo "terraform $ACTION  -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
     echo "     "
-    terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" 
+    terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
     
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -108,7 +108,7 @@ exec_terraform() {
     echo "Running..."
     echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
     echo "     "
-    terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}"
+    terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
     
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -202,6 +202,7 @@ if [[ $# -lt 1 ]]; then
     echo "  -path       The path to the Terraform configuration (if not the current directory)"
     echo "  -config     The path and filename to the Terraform configuration file - config.yaml"
     echo "  -var        Set a variable in the Terraform configuration"
+    echo "  -var-file   Specify a variable file to use"
     echo " "
     echo "Example: "
     echo "tfexe init -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr"  
@@ -211,6 +212,7 @@ if [[ $# -lt 1 ]]; then
     echo "tfexe apply" 
     echo "tfexe apply run-all -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project"
     echo "tfexe apply run-all -include=/tf/avm/config/path.hcl"
+    echo "tfexe apply -var-file=/tf/avm/config/terraform.tfvars"
     echo "tfexe import"
     echo "tfexe generate-config"
     echo "tfexe deploy"
@@ -232,17 +234,20 @@ TF_PATH=""
 TF_CONFIG=""
 TF_RUN_ALL=""
 TF_INCLUDE=""
+TF_VAR_FILE=""
 
 while [[ $# -gt 0 ]]; do
     # echo "Processing argument: $1"
     if [[ "$1" =~ ^-var= ]]; then
         TF_VARS+=("$1")
+
     elif [[ "$1" =~ ^-path= ]]; then
         if [[ -n "$TF_PATH" ]]; then
             echo -e "\e[31mError: Only one '-path' argument is allowed.\e[0m"
             exit 1
         fi
         TF_PATH="${1#-path=}"
+
     elif [[ "$1" =~ ^-config= ]]; then
         if [[ -n "$TF_CONFIG" ]]; then
             echo -e "\e[31mError: Only one '-path' argument is allowed.\e[0m"
@@ -262,7 +267,16 @@ while [[ $# -gt 0 ]]; do
             echo -e "\e[31mError: Only one '-include' argument is allowed.\e[0m"
             exit 1
         fi
-        TF_INCLUDE="${1#-include=}"                             
+        TF_INCLUDE="${1#-include=}"      
+
+    elif [[ "$1" =~ ^-var-file ]]; then
+        if [[ -n "$TF_VAR_FILE" ]]; then
+            echo -e "\e[31mError: Only one '-var-file' argument is allowed.\e[0m"
+            exit 1
+        fi
+        # e.g. -var-file=./tfvars.tfvars
+        TF_VAR_FILE="${1}"     
+
     else
         echo -e "\e[31mError: invalid argument '$1'\e[0m"
         exit 1
