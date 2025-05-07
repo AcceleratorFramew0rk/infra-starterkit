@@ -84,7 +84,7 @@ tfexe deploy
   - (Enter `4` = IoT archetype)
 
 #### EXAMPLE:
-![tfexe example](./images/tfexe-screen.png "This is an image example of 'tfexe deploy'")
+![tfexe example](./docs/images/tfexe-screen.png "This is an image example of 'tfexe deploy'")
 ---
 
 #### If you select '1' for AI Foundry archtetype, manually approved the below search shared private link for Azure Search Services 
