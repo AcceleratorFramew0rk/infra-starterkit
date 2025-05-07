@@ -291,6 +291,27 @@ subnets:
         }
       ] 
 {% endif -%}
+# -----------------   
+  management:
+# -----------------   
+{% if management_InfraSubnet_address_prefixes | trim != 'None' and management_InfraSubnet_address_prefixes | trim != '' -%}   
+# -----------------    
+    InfraSubnet:      
+      name: "InfraSubnet"
+      address_prefixes: ["{{management_InfraSubnet_address_prefixes}}"]
+{% endif -%}
+{% if management_SecuritySubnet_address_prefixes | trim != 'None' and management_SecuritySubnet_address_prefixes | trim != '' -%}   
+# -----------------    
+    SecuritySubnet:      
+      name: "SecuritySubnet"
+      address_prefixes: ["{{management_SecuritySubnet_address_prefixes}}"]
+{% endif -%}
+{% if management_AzureBastionSubnet_address_prefixes | trim != 'None' and management_AzureBastionSubnet_address_prefixes | trim != '' -%}   
+# -----------------    
+    AzureBastionSubnet:      
+      name: "AzureBastionSubnet"
+      address_prefixes: ["{{management_AzureBastionSubnet_address_prefixes}}"]
+{% endif -%}
 # -----------------                            
   hub_internet_ingress: 
 # -----------------     
@@ -351,25 +372,5 @@ subnets:
       name: "AzureFirewallManagementSubnet"
       address_prefixes: ["{{hub_intranet_egress_AzureFirewallManagementSubnet_address_prefixes}}"]
 {% endif -%}
-# -----------------   
-  management:
-# -----------------   
-{% if management_InfraSubnet_address_prefixes | trim != 'None' and management_InfraSubnet_address_prefixes | trim != '' -%}   
-# -----------------    
-    InfraSubnet:      
-      name: "InfraSubnet"
-      address_prefixes: ["{{management_InfraSubnet_address_prefixes}}"]
-{% endif -%}
-{% if management_SecuritySubnet_address_prefixes | trim != 'None' and management_SecuritySubnet_address_prefixes | trim != '' -%}   
-# -----------------    
-    SecuritySubnet:      
-      name: "SecuritySubnet"
-      address_prefixes: ["{{management_SecuritySubnet_address_prefixes}}"]
-{% endif -%}
-{% if management_AzureBastionSubnet_address_prefixes | trim != 'None' and management_AzureBastionSubnet_address_prefixes | trim != '' -%}   
-# -----------------    
-    AzureBastionSubnet:      
-      name: "AzureBastionSubnet"
-      address_prefixes: ["{{management_AzureBastionSubnet_address_prefixes}}"]
-{% endif -%}
+
 
