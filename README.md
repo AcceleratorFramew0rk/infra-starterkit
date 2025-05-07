@@ -52,11 +52,17 @@ terraform plan
 terraform apply -auto-approve
 ```
 
+## Archetypes
+
+  - AI Foundry Architype [[architecture diagram](./docs/ai_archetype.md)]
+  - AKS Architype [[architecture diagram](./docs/aks_archetype.md)]
+  - App Service Architype [[architecture diagram](./docs/appservice_archetype.md)]
+  - IoT Architype [[architecture diagram](./docs/iot_archetype.md)]
+
+
 ## Deploy Archetype via script
 
 - Open an **zsh** terminal from your visual studio code.
-
-### For AKS Architype [[architecture diagram](./docs/aks_archetype.md)], execute the following steps:
 
 ```bash
 
@@ -71,72 +77,15 @@ tfexe deploy
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
 * **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
 * **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
-* **ARCHETYPE**: Deployment archetype (Enter `2` = AKS archetype)
+* **ARCHETYPE**: Deployment archetype 
+  - (Enter `1` = AI Foundry archetype)
+  - (Enter `2` = AKS archetype)
+  - (Enter `3` = App Service archetype)
+  - (Enter `4` = IoT archetype)
 
 ---
 
-
-### For App Service Architype [[architecture diagram](./docs/appservice_archetype.md)], execute the following steps:
-
-```bash
-
-tfexe deploy
-
-```
----
-
-#### How to Provide Inputs for Deployment (App Service archetype)
-
-* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
-* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
-* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
-* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
-* **ARCHETYPE**: Deployment archetype (Enter `3` = App Service archetype)
-
----
-
-
-### For IoT Architype [[architecture diagram](./docs/iot_archetype.md)], execute the following steps:
-
-```bash
-
-tfexe deploy
-
-```
----
-
-#### How to Provide Inputs for Deployment (IoT archetype)
-
-* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
-* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
-* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
-* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
-* **ARCHETYPE**: Deployment archetype (Enter `4` = IoT archetype)
-
----
-
-
-### For AI Foundry Architype [[architecture diagram](./docs/ai_archetype.md)], execute the following steps:
-
-```bash
-
-tfexe deploy
-
-```
----
-
-#### How to Provide Inputs for Deployment (AI Foundry archetype)
-
-* **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
-* **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
-* **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
-* **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
-* **ARCHETYPE**: Deployment archetype (Enter `1` = AI Foundry archetype)
-
----
-
-
-#### finally, manually approved the below search shared private link for Azure Search Services 
+#### If you select '1' for AI Foundry archtetype, manually approved the below search shared private link for Azure Search Services 
 * Storage account (Approved via Storage Account UI under  Networking > Private endpoint connections)
 * AI Services (Approved via AI Services UI under Networking > Private endpoint connections)
 
@@ -182,7 +131,27 @@ tfexe deploy
     * `4`: Custom Archetype (you define your own settings.yaml file in "/tf/avm/scripts/config/settings.yaml")
   * Default: `1`
 
-* **SETTINGS_YAML_FILE_PATH**
+* **VNET PROJECT NAME**
+
+  * Enter the name of the Project virtual network.
+  * Default: `gcci-vnet-project` 
+
+* **VNET PROJECT CIDR**
+
+  * Enter the CIDR of the Project virtual network.
+  * Default: `192.168.0.0/23` 
+
+* **VNET DEVOPS NAME**
+
+  * Enter the name of the DevOps virtual network.
+  * Default: `gcci-vnet-project` 
+
+* **VNET DEVOPS CIDR**
+
+  * Enter the CIDR of the DevOps virtual network.
+  * Default: `192.168.10.0/24` 
+
+* **SETTINGS YAML FILE PATH**
 
   * Enter the path of the settings.yaml file.
   * Default: `/tf/avm/scripts/config/settings.yaml` 
