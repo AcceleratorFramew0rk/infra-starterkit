@@ -2,8 +2,6 @@
 Starter kit based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
 This is customized to install in a specific environment setup. 
 
----
-
 ## Archetypes
 
 Archetypes represent standardized deployment patterns that define the structure, components, and best practices for specific types of Azure workloads. Each archetype provides a consistent foundation to accelerate deployment, ensure compliance, and promote reusability across projects.
@@ -53,7 +51,9 @@ Download the repo as a zip file.
   * (if required) Install VS Code Extension - Dev Containers
 * Add a zsh terminal from VS Code
 * Follow the steps in README.md file
-  
+
+---
+
 # Deploy the starter kit
 ## Login to Azure
 ```bash
@@ -87,7 +87,6 @@ terraform apply -auto-approve
 tfexe deploy
 
 ```
----
 
 #### How to Provide Inputs for Deployment of the Archetypes
 
@@ -103,7 +102,7 @@ tfexe deploy
 
 #### EXAMPLE:
 ![tfexe example](./docs/images/tfexe-screen.png "This is an image example of 'tfexe deploy'")
----
+
 
 #### If you select '1' for AI Foundry archtetype, manually approved the below search shared private link for Azure Search Services 
 * Storage account (Approved via Storage Account UI under  Networking > Private endpoint connections)
