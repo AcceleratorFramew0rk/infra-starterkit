@@ -49,6 +49,7 @@ exec_terraform() {
         PATH_STRING=$(echo "$(pwd)" | tr '_' '-')
         EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $NF}' | sed 's/networking/network/g')
         CONTAINER_NAME="1-landingzones"
+        EXTRACTED_NAME="${EXTRACTED_NAME//_/-}"
         KEY="${EXTRACTED_NAME}.tfstate"
         echo "Container name: ${CONTAINER_NAME}"
         echo "Key: ${KEY}"

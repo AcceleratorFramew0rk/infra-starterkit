@@ -21,9 +21,9 @@ module "rule_collection_group" {
       priority = 400
       rule = [
         {
-          name                  = "OutboundToInternet"
-          description           = "Allow traffic outbound to the Internet"
-          destination_addresses = ["0.0.0.0/0"]
+          name                  = "OutboundToIntranet"
+          description           = "Allow traffic outbound to the Intranet"
+          destination_addresses = ["10.0.0.0/16"] # define the cidr ip - to change according to the intranet address space
           destination_ports     = ["443"]
           source_addresses      = ["*"] # define the cidr ip
           protocols             = ["TCP"]

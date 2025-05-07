@@ -24,7 +24,7 @@ module "application_gateway" {
   enable_telemetry    = var.enable_telemetry
 
   gateway_ip_configuration = {
-    subnet_id = try(local.remote.networking.virtual_networks.hub_internet_ingress.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.hub_internet_ingress.virtual_subnets[var.subnet_name].resource.id : var.subnet_id  # azurerm_subnet.backend.id
+    subnet_id = try(local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets[var.subnet_name].resource.id : var.subnet_id  # azurerm_subnet.backend.id
   }
 
   # WAF : Azure Application Gateways v2 are always deployed in a highly available fashion with multiple instances by default. Enabling autoscale ensures the service is not reliant on manual intervention for scaling.
@@ -71,7 +71,7 @@ module "application_gateway" {
   # Mandatory Input
   http_listeners = var.http_listeners
 
-  # WAF : Use Application Gateway with Web Application Firewall (WAF) in an application virtual network to safeguard inbound HTTP/S internet traffic. WAF offers centralized defense against potential exploits through OWASP core rule sets-based rules.
+  # WAF : Use Application Gateway with Web Application Firewall (WAF) in an application virtual network to safeguard inbound HTTP/S intranet traffic. WAF offers centralized defense against potential exploits through OWASP core rule sets-based rules.
   # Ensure that you have a WAF policy created before enabling WAF on the Application Gateway
   # The use of an external WAF policy is recommended rather than using the classic WAF via the waf_configuration block.
   app_gateway_waf_policy_resource_id = azurerm_web_application_firewall_policy.azure_waf.id
