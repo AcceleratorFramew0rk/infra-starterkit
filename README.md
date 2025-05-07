@@ -130,7 +130,7 @@ tfexe deploy
     * `2`: AKS Archetype
     * `3`: App Service Archetype
     * `4`: IoT Archetype
-    * `4`: Custom Archetype (you define your own settings.yaml file in "/tf/avm/scripts/config/settings.yaml")
+    * `5`: Custom Archetype (you define your own settings.yaml file in "/tf/avm/scripts/config/settings.yaml")
   * Default: `1`
 
 * **VNET PROJECT NAME**
@@ -146,7 +146,7 @@ tfexe deploy
 * **VNET DEVOPS NAME**
 
   * Enter the name of the DevOps virtual network.
-  * Default: `gcci-vnet-project` 
+  * Default: `gcci-vnet-devops` 
 
 * **VNET DEVOPS CIDR**
 
