@@ -95,6 +95,10 @@ tfexe deploy
 * **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
 * **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
 * **COMPARTMENT TYPE**: Type of VNET compartment (Enter `3` = agency managed)
+* **VNET PROJECT NAME**: Name of Project VNET (default: `gcci-vnet-project`)
+* **VNET PROJECT CIDR**: CIDR of Project Agency Managed VNET (default: `192.168.0.0/23`)
+* **VNET DEVOPS NAME**: Name of DevOps VNET (default: `gcci-vnet-devops`)
+* **VNET DEVOPS CIDR**: CIDR of DevOps Agency Managed VNET (default: `192.168.10.0/24`)
 * **ARCHETYPE**: Deployment archetype 
   - (Enter `1` = AI Foundry archetype)
   - (Enter `2` = AKS archetype)
