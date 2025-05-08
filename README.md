@@ -14,7 +14,7 @@ The platform team owns and maintains these centralized resources. This architect
 ## Workload team-owned resources
 The following archetypes are own by the Workload team:
 
-## Archetypes
+### Archetypes
 
 Archetypes represent standardized deployment patterns that define the structure, components, and best practices for specific types of Azure workloads. Each archetype provides a consistent foundation to accelerate deployment, ensure compliance, and promote reusability across projects.
 
