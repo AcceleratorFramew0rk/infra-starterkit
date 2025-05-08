@@ -49,9 +49,8 @@ if [[ "$LANDINGZONE_TYPE" == "application" || "$LANDINGZONE_TYPE" == "1" ]]; the
   
   echo "LANDINGZONE_TYPE is equal to 'application'."
 
-
-  if [[ "$GCCI_VNET_PROJECT_CIDR" == "na" && "$GCCI_VNET_DEVOPS_CIDR" == "na" ]]; then
-
+  # if [[ "$GCCI_VNET_PROJECT_CIDR" == "" && "$GCCI_VNET_DEVOPS_CIDR" == "" ]]; then
+  if [[ "$COMPARTMENT_TYPE" != "3" ]]; then
     # Variables for GCCI Project VNet
 
     VNET_NAME=$VNET_PROJECT_NAME
@@ -75,7 +74,7 @@ if [[ "$LANDINGZONE_TYPE" == "application" || "$LANDINGZONE_TYPE" == "1" ]]; the
 
 else
   
-  echo "LANDINGZONE_TYPE is not equal to 'application'."
+  echo "LANDINGZONE_TYPE is equal to 'platform'."
 
   # hard coded values for the virtual networks for hub and management
   VNET_HUB_INGRESS_INTERNET_NAME="gcci-vnet-ingress-internet"

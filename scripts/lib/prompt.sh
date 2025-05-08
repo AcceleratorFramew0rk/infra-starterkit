@@ -32,21 +32,29 @@ ENVIRONMENT=$(prompt_for_input "Enter the ENVIRONMENT (dev, sit, uat, prd)" "dev
 # Prompt for settings.yaml path with a default value
 LANDINGZONE_TYPE=$(prompt_for_input "Enter the Landing Zone Type (1: application or 2: platform)" "1")
 
+
 # initialize VNET variables for application type = 1
 VNET_PROJECT_NAME=""
 GCCI_VNET_PROJECT_CIDR=""
 VNET_DEVOPS_NAME=""
 GCCI_VNET_DEVOPS_CIDR=""
 SETTINGS_YAML_FILE_PATH=""
+COMPARTMENT_TYPE=""
 
 if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; then
+  # Prompt for VNET Compartment Type with a default value
+  COMPARTMENT_TYPE=$(prompt_for_input "Enter the Compartment Type (1: Internet or 2: Intranet or 3: Agency Managed)" "3")
+
   # Prompt for VNET Project Name with a default value
   VNET_PROJECT_NAME=$(prompt_for_input "Enter the VNET Project Name" "gcci-vnet-project")
-  GCCI_VNET_PROJECT_CIDR=$(prompt_for_input "Enter the Agency Managed VNET Project CIDR (Enter 'na' if not using Agency Managed VNET)" "192.168.0.0/23")
-
+  if [[ "$COMPARTMENT_TYPE" == "3" ]]; then
+    GCCI_VNET_PROJECT_CIDR=$(prompt_for_input "Enter the Agency Managed VNET Project CIDR" "192.168.0.0/23")
+  fi
   # Prompt for VNET DevOps Name with a default value
   VNET_DEVOPS_NAME=$(prompt_for_input "Enter the VNET DevOps Name" "gcci-vnet-devops")
-  GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the Agency Managed VNET DevOps CIDR (Enter 'na' if not using Agency Managed VNET)" "192.168.10.0/24")
+  if [[ "$COMPARTMENT_TYPE" == "3" ]]; then
+    GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the Agency Managed VNET DevOps CIDR" "192.168.10.0/24")
+  fi
 fi
 
 if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; then
