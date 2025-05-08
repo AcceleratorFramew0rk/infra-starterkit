@@ -2,6 +2,11 @@
 Starter kit based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
 This is customized to install in a specific environment setup. 
 
+## Components
+All Azure landing zone architectures have a separation of ownership between the platform team and the workload team, referred to as subscription democratization. Application architects, data scientists, and DevOps teams need to have a strong understanding of this responsibility split to know what's under their direct influence or control and what's not.
+
+Like most application landing zone implementations, the workload team is mostly responsible for the configuration, management, and deployment of the workload components, including all AI/AKS/AppServices/IoT services that are used in the reference architecture.
+
 ## Platform team-owned resources
 The platform team owns and maintains these centralized resources. This architecture assumes that these resources are pre-provisioned and considers them dependencies.
 * **Internet Ingress Firewall**
@@ -12,7 +17,7 @@ The platform team owns and maintains these centralized resources. This architect
 * **Tooling Server**
 
 ## Workload team-owned resources
-The following archetypes are own by the Workload team:
+This repository takes that reference implementation and deploys it within an application landing zone. The following archetypes are own by the Workload team:
 
 ### Archetypes
 
