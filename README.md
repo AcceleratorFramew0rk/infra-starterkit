@@ -2,6 +2,18 @@
 Starter kit based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
 This is customized to install in a specific environment setup. 
 
+## Platform team-owned resources
+The platform team owns and maintains these centralized resources. This architecture assumes that these resources are pre-provisioned and considers them dependencies.
+* **Internet Ingress Firewall**
+* **Internet AGW+WAF**
+* **Intranet Ingress Firewall**
+* **Intranet AGW+WAF**
+* **Bastion Host**
+* **Tooling Server**
+
+## Workload team-owned resources
+The following archetypes are own by the Workload team:
+
 ## Archetypes
 
 Archetypes represent standardized deployment patterns that define the structure, components, and best practices for specific types of Azure workloads. Each archetype provides a consistent foundation to accelerate deployment, ensure compliance, and promote reusability across projects.
@@ -23,6 +35,7 @@ Below are the supported archetypes, along with links to their respective archite
 * **IoT Archetype**
   Focused on Internet of Things solutions. This archetype includes Azure IoT Hub, Stream Analytics, and associated device and data processing components.
   ➤ [View architecture diagram](./docs/iot_archetype.md)
+
 
 ---
 
