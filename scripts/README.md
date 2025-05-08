@@ -5,7 +5,7 @@ The starter repository contains the basic configuration files and scenarios. It 
 Clone the repository using the following command:
 
 ```bash
-git clone https://github.com/AcceleratorFramew0rk/starterkit.git
+git clone https://github.com/AcceleratorFramew0rk/infra-starterkit.git
 ```
 OR
 
