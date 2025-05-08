@@ -94,6 +94,7 @@ tfexe deploy
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
 * **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
 * **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
+* **COMPARTMENT TYPE**: Type of VNET compartment (Enter `3` = agency managed)
 * **ARCHETYPE**: Deployment archetype 
   - (Enter `1` = AI Foundry archetype)
   - (Enter `2` = AKS archetype)
@@ -138,17 +139,15 @@ tfexe deploy
     * `2`: platform
   * Default: `1`
 
-* **ARCHETYPE**
+* **COMPARTMENT TYPE**
 
-  * Choose the type of archetype to deploy.
+  * Choose the type of VNET Compartment Type.
   * Valid values:
 
-    * `1`: AI Foundry Archetype
-    * `2`: AKS Archetype
-    * `3`: App Service Archetype
-    * `4`: IoT Archetype
-    * `5`: Custom Archetype (you define your own settings.yaml file in "/tf/avm/scripts/config/settings.yaml")
-  * Default: `1`
+    * `1`: Internet
+    * `2`: Intranet
+    * `3`: Agency Managed
+  * Default: `3`
 
 * **VNET PROJECT NAME**
 
@@ -169,6 +168,18 @@ tfexe deploy
 
   * Enter the CIDR of the DevOps virtual network.
   * Default: `192.168.10.0/24` 
+
+* **ARCHETYPE**
+
+  * Choose the type of archetype to deploy.
+  * Valid values:
+
+    * `1`: AI Foundry Archetype
+    * `2`: AKS Archetype
+    * `3`: App Service Archetype
+    * `4`: IoT Archetype
+    * `5`: Custom Archetype (you define your own settings.yaml file in "/tf/avm/scripts/config/settings.yaml")
+  * Default: `1`
 
 * **SETTINGS YAML FILE PATH**
 
