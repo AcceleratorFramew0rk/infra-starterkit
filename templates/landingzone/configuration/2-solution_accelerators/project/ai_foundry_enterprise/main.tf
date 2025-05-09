@@ -1,3 +1,27 @@
+# # Azure AI services (Microsoft.CognitiveServices/accounts)	account	
+# # privatelink.cognitiveservices.azure.com
+# # privatelink.openai.azure.com
+# # privatelink.services.ai.azure.com
+# # -------------------------------------------------------------------------------------
+# resource "azurerm_private_dns_zone" "cognitive_services" {
+#   name                = "privatelink.cognitiveservices.azure.com"
+#   resource_group_name           = var.resource_group_name
+#   tags = var.tags
+# }
+
+# resource "azurerm_private_dns_zone" "openai" {
+#   name                = "privatelink.openai.azure.com"
+#   resource_group_name           = var.resource_group_name
+#   tags = var.tags
+# }
+
+# resource "azurerm_private_dns_zone" "services_ai" {
+#   name                = "privatelink.services.ai.azure.com"
+#   resource_group_name           = var.resource_group_name
+#   tags = var.tags
+# }
+
+
 module "private_dns_aml_api" {
   source              = "Azure/avm-res-network-privatednszone/azurerm"
   version             = "~> 0.2"

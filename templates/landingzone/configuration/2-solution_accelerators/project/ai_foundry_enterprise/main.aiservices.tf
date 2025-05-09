@@ -12,6 +12,11 @@ module "aiservices" {
   local_auth_enabled                 = true
   outbound_network_access_restricted = false
   custom_subdomain_name = "aiservices-${local.base_name}-${random_string.this.result}" # ramdom
+
+  # identity
+  managed_identities = {
+    system_assigned = true
+  }   
   tags        = merge(
     local.global_settings.tags,
     {
