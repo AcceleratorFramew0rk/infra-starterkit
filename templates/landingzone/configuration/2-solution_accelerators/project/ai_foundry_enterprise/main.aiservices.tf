@@ -2,10 +2,10 @@
 module "aiservices" {
   source                             = "Azure/avm-res-cognitiveservices-account/azurerm"
   version                            = "0.6.0"
-  resource_group_name                = azurerm_resource_group.eastus.name
+  resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   kind                               = "AIServices"
   name                               = replace("${module.naming.cognitive_account.name_unique}${random_string.this.result}", "-", "") 
-  location                           = azurerm_resource_group.eastus.location # var.location
+  location                           = var.ai_services_location # eastus 
   enable_telemetry                   = var.enable_telemetry
   sku_name                           = var.sku # "S0"
   public_network_access_enabled      = false # true # required for AI Foundry

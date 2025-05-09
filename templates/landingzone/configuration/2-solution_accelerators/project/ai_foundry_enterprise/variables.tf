@@ -4,6 +4,11 @@ variable "location" {
   default = "southeastasia"
 }
 
+variable "ai_services_location" {
+  type        = string  
+  default = "eastus"
+}
+
 variable "vnet_id" {
   type        = string  
   default = null
