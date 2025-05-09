@@ -176,7 +176,7 @@ module "avm_res_containerregistry_registry" {
 
   version = "~> 0.4"
 
-  name                          = replace("${module.naming.container_registry.name}${random_string.this.result}", "-", "")
+  name                          = replace("${module.naming.container_registry.name}${random_string.this.result}aihub", "-", "")
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name  
   public_network_access_enabled = false
@@ -210,7 +210,7 @@ module "avm_res_keyvault_vault" {
 
   tenant_id           = data.azurerm_client_config.current.tenant_id
   enable_telemetry    = var.enable_telemetry
-  name                = "${module.naming.key_vault.name}${random_string.this.result}" 
+  name                = "${module.naming.key_vault.name}${random_string.this.result}aihub" 
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
 
@@ -248,7 +248,7 @@ module "avm_res_storage_storageaccount" {
   version = "~> 0.4"
 
   enable_telemetry              = var.enable_telemetry
-  name                          = replace("${module.naming.storage_account.name}${random_string.this.result}", "-", "") 
+  name                          = replace("${module.naming.storage_account.name}${random_string.this.result}aihub", "-", "") 
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   shared_access_key_enabled     = true
@@ -405,6 +405,17 @@ module "aihub" {
   }
 
   # # aihub outbound service connection - TODO: not working - use resource "azapi_update_resource" "ai_hub_update"
+
+#   │ Error: Invalid configuration
+# │ 
+# │   with module.aihub.azapi_resource.aiserviceconnection[0],
+# │   on /home/vscode/.terraform.cache/modules/aihub/main.tf line 155, in resource "azapi_resource" "aiserviceconnection":
+# │  155: resource "azapi_resource" "aiserviceconnection" {
+# │ 
+# │ embedded schema validation failed: the argument "body" is invalid:
+# │ `name` is invalid, string does not match pattern ^[a-zA-Z0-9][a-zA-Z0-9_-]{2,32}$
+# │  You can try to update `azapi` provider to the latest version or disable the validation using the feature flag `schema_validation_enabled = false` within the resource block
+
   # aiservices = {
   #   # resource_group_id         = azurerm_resource_group.this.id
   #   resource_group_id   = azurerm_resource_group.eastus.id # try(local.global_settings.resource_group_id, null) == null ? azurerm_resource_group.this.0.id : local.global_settings.resource_group_id
@@ -457,6 +468,16 @@ module "aihub" {
     }
   ) 
   enable_telemetry = var.enable_telemetry
+
+  depends_on = [
+    module.avm_res_storage_storageaccount,
+    module.avm_res_keyvault_vault,
+    module.avm_res_containerregistry_registry,
+    module.private_dns_aml_api,
+    module.private_dns_aml_notebooks,
+    azurerm_application_insights.this,
+    module.aiservices
+  ]
 }
 
 module "aihub_project" {
