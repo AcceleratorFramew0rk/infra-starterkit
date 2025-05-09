@@ -488,8 +488,8 @@ module "aihub_project" {
   name                    = local.base_name
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   kind                    = "Project"
-  workspace_description = "aihub project 1"
-  workspace_friendly_name = "${local.base_name} AI Project"
+  workspace_description = "ai hub project 1"
+  workspace_friendly_name = "${local.base_name}-ai-project"
   ai_studio_hub_id = module.aihub.resource.id
   tags        = merge(
     local.global_settings.tags,
