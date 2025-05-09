@@ -6,7 +6,7 @@ variable "location" {
 
 variable "ai_services_location" {
   type        = string  
-  default = "eastus"
+  default = "southeastasia"
 }
 
 variable "vnet_id" {
