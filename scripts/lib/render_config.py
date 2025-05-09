@@ -330,9 +330,13 @@ def main():
 
     print(config_yaml)
 
-    # Open the file in write mode ('w') and print to it
-    with open('./../config/output_config.yaml', 'w') as file:
+    # # Open the file "config/output_config.yaml" in write mode ('w') and print to it
+    # with open('./../config/output_config.yaml', 'w') as file:
+    #     print(config_yaml, file=file)
+
+    # Open the file "output/output_config.yaml" in write mode ('w') and print to it
+    with open('./../output/output_config.yaml', 'w') as file:
         print(config_yaml, file=file)
-  
+
 if __name__ == '__main__':
     main()

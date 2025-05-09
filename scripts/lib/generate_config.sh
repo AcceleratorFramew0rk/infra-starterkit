@@ -187,7 +187,8 @@ else
   echo -e "\e[32mrender_config execution completed successfully.\e[0m"
   # perform copy
   echo "copy output_config.yaml to working directory"
-  cp "$(dirname "$0")/../config/output_config.yaml" "$CONFIG_YAML_FILE_PATH"
+  # cp "$(dirname "$0")/../config/output_config.yaml" "$CONFIG_YAML_FILE_PATH"
+  cp "$(dirname "$0")/../output/output_config.yaml" "$CONFIG_YAML_FILE_PATH"
   echo "  "
   echo "Verify the config.yaml file in this folder: $CONFIG_YAML_FILE_PATH"
   echo "  "  
