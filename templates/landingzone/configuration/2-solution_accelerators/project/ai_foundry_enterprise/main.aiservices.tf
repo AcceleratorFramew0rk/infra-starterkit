@@ -100,6 +100,13 @@ module "aiservices" {
     }
   }
 
+  diagnostic_settings = {
+    diag = {
+      name                  = "aml${module.naming.monitor_diagnostic_setting.name_unique}-aiservices"
+      workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
+    }
+  }
+
   tags        = merge(
     local.global_settings.tags,
     {

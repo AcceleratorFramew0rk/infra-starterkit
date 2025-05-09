@@ -49,9 +49,7 @@ module "aisearch" {
   diagnostic_settings = {
     diag = {
       name                  = "aml${module.naming.monitor_diagnostic_setting.name_unique}-aisearch"
-      # workspace_resource_id = azurerm_log_analytics_workspace.diag.id
       workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
-
     }
   }
 

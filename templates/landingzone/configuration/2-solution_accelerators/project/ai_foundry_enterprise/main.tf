@@ -192,6 +192,13 @@ module "avm_res_containerregistry_registry" {
     }
   }
 
+  diagnostic_settings = {
+    diag = {
+      name                  = "aml${module.naming.monitor_diagnostic_setting.name_unique}-aihubacr"
+      workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
+    }
+  }
+
   tags        = merge(
     local.global_settings.tags,
     {
@@ -228,6 +235,13 @@ module "avm_res_keyvault_vault" {
 
       private_dns_zone_resource_ids = [module.private_dns_keyvault_vault.resource_id]
       inherit_lock                  = false
+    }
+  }
+
+  diagnostic_settings = {
+    diag = {
+      name                  = "aml${module.naming.monitor_diagnostic_setting.name_unique}-aihubkeyvault"
+      workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
     }
   }
 
@@ -491,6 +505,14 @@ module "aihub_project" {
   workspace_description = "ai hub project 1"
   workspace_friendly_name = "${local.base_name}-ai-project"
   ai_studio_hub_id = module.aihub.resource.id
+
+  diagnostic_settings = {
+    diag = {
+      name                  = "aml${module.naming.monitor_diagnostic_setting.name_unique}-aihubproject"
+      workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
+    }
+  }
+
   tags        = merge(
     local.global_settings.tags,
     {
