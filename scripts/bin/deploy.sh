@@ -103,7 +103,7 @@ else
     exit 1
   fi
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering
+  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_peering
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mCreate 1-Landing Zone networking_peering failed. Exiting.\e[0m"
