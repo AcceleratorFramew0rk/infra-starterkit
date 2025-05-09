@@ -16,6 +16,8 @@ exec_terraform() {
 
   local ACTION=$1
   local TF_CONFIG=$2
+  local TF_VAR_FILE=$3
+  local TF_VARS=("${@:4}")
 
   if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"*  || "$ACTION" == *"generate-config"* || "$ACTION" == *"deploy"*  ]]; then
     # alway exec terraform init
@@ -91,9 +93,15 @@ exec_terraform() {
   if [[ "$ACTION" == *"apply"* ]]; then
     echo "     "
     echo "Running..."
-    echo "terraform $ACTION  -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]} ${TF_VAR_FILE}"
-    echo "     "
-    terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
+    if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then
+      echo "terraform $ACTION  -auto-approve -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
+      echo "     "
+      terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}"
+    else
+      echo "terraform $ACTION -auto-approve -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]} ${TF_VAR_FILE}"
+      echo "     "
+      terraform "$ACTION" -auto-approve -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
+    fi    
     
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -107,9 +115,15 @@ exec_terraform() {
   elif [[ "$ACTION" == *"plan"* ]]; then
     echo "     "
     echo "Running..."
-    echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]} ${TF_VAR_FILE}"
-    echo "     "
-    terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
+    if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then
+      echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]}"
+      echo "     "
+      terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}"
+    else
+      echo "terraform $ACTION -var=storage_account_name=${STG_NAME} -var=resource_group_name=${RG_NAME} ${TF_VARS[@]} ${TF_VAR_FILE}"
+      echo "     "
+      terraform "$ACTION"  -var="storage_account_name=${STG_NAME}" -var="resource_group_name=${RG_NAME}" "${TF_VARS[@]}" "${TF_VAR_FILE}"
+    fi
     
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -308,7 +322,10 @@ fi
 if [[ -z "$TF_RUN_ALL" ]]; then
 
     echo "Execute <$ACTION> action in the current directory"
-    exec_terraform "$ACTION" "$TF_CONFIG"
+    if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
+      TF_VAR_FILE="null"
+    fi
+    exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
 
 else
 
@@ -325,7 +342,10 @@ else
       if [ -d "$dir" ]; then
         echo "$dir"
         cd "$dir"
-        exec_terraform "$ACTION" "$TF_CONFIG"
+        if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
+          TF_VAR_FILE="null"
+        fi
+        exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
       fi
     done
 
@@ -345,7 +365,10 @@ else
     while IFS= read -r line || [[ -n "$line" ]]; do
       echo "$line"
       cd "$line"
-      exec_terraform "$ACTION" "$TF_CONFIG"
+      if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
+        TF_VAR_FILE="null"
+      fi
+      exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
 
     done < "$FILE"
 
