@@ -6,7 +6,7 @@ variable "location" {
 
 variable "ai_services_location" {
   type        = string  
-  default = "southeastasia"
+  default = "eastus2" # "southeastasia" - many model not availble in southeastasia
 }
 
 variable "vnet_id" {
@@ -48,6 +48,18 @@ variable "private_endpoint_subnet_name" {
   type        = string  
   default = "ServiceSubnet"
 }
+
+
+variable "public_network_access_enabled" {
+  type        = bool  
+  default = true
+}
+
+variable "ai_hub_is_private" {
+  type        = bool  
+  default = false
+}
+
 
 # developer portal variables
 # sku: 50 (default 50) (readonly)

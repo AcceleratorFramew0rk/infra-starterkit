@@ -1,3 +1,5 @@
+# AI HUB - for_each = var.role_assignments
+
 # ai hub storageaccount - grant storage blob data contributor role to aiservice object id
 resource "azurerm_role_assignment" "ai_service_storage_blob_contributor" {
   scope                = module.avm_res_storage_storageaccount.resource_id
@@ -33,6 +35,147 @@ resource "azurerm_role_assignment" "search_service_to_openai" {
     module.aisearch
   ]
 }
+
+// Role Assignments for ACR Push/Pull
+resource "azurerm_role_assignment" "acr_push_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "AcrPush"
+  scope                = module.avm_res_containerregistry_registry.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]
+}
+
+resource "azurerm_role_assignment" "acr_pull_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "AcrPull"
+  scope                = module.avm_res_containerregistry_registry.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+# ai search service role assignment
+resource "azurerm_role_assignment" "search_index_data_reader_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Search Index Data Reader"
+  scope                = module.aisearch.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+resource "azurerm_role_assignment" "search_index_data_contributor_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Search Index Data Contributor"
+  scope                = module.aisearch.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+resource "azurerm_role_assignment" "search_service_contributor_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Search Service Contributor"
+  scope                = module.aisearch.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+# The role assignment already exists.
+# # storage account role assignment
+# resource "azurerm_role_assignment" "storage_blob_data_contributor_role_assignment" {
+#   principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+#   role_definition_name = "Storage Blob Data Contributor"
+#   scope                = module.avm_res_storage_storageaccount.resource.id # azurerm_container_registry.acr.id
+#   depends_on = [
+#     module.aiservices,
+#     module.aihub
+#   ]  
+# }
+
+resource "azurerm_role_assignment" "storage_blob_data_owner_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Storage Blob Data Owner"
+  scope                = module.avm_res_storage_storageaccount.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+
+resource "azurerm_role_assignment" "storage_file_data_privileged_contributor_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Storage File Data Privileged Contributor"
+  scope                = module.aiservices.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+# ai services
+resource "azurerm_role_assignment" "cognitive_services_openai_contributor_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Cognitive Services OpenAI Contributor"
+  scope                = module.aiservices.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+# resource group role assignment
+resource "azurerm_role_assignment" "ai_inference_deployment_operator_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Azure AI Inference Deployment Operator"
+  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name}"  # resource_group_id # module.aiservices.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+
+resource "azurerm_role_assignment" "user_access_administrator_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "User Access Administrator"
+  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name}"  # resource_group_id # module.aiservices.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+
+resource "azurerm_role_assignment" "Azure_AI_Enterprise_Network_Connection_Approver_role_assignment" {
+  principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+  role_definition_name = "Azure AI Enterprise Network Connection Approver"
+  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name}"  # resource_group_id # module.aiservices.resource.id # azurerm_container_registry.acr.id
+  depends_on = [
+    module.aiservices,
+    module.aihub
+  ]  
+}
+    
+
+# The role assignment already exists.
+# # key vault role assignment
+# resource "azurerm_role_assignment" "key_vault_administrator_role_assignment" {
+#   principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
+#   role_definition_name = "Key Vault Administrator"
+#   scope                =  module.avm_res_keyvault_vault.resource_id
+#   depends_on = [
+#     module.aiservices,
+#     module.aihub
+#   ]  
+# }
+
 
 # variable "eligible_roles" {
 #   type = map(string)

@@ -28,7 +28,7 @@ module "aisearch" {
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   name                          = module.naming.search_service.name_unique
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  public_network_access_enabled = false
+  public_network_access_enabled = var.public_network_access_enabled # false
   enable_telemetry              = var.enable_telemetry
 
   private_endpoints = {

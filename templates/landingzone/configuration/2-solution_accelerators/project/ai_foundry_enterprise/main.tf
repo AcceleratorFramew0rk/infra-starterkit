@@ -176,10 +176,10 @@ module "avm_res_containerregistry_registry" {
 
   version = "~> 0.4"
 
-  name                          = replace("${module.naming.container_registry.name}${random_string.this.result}aihub", "-", "")
+  name                          = replace("${module.naming.container_registry.name}aihub${random_string.this.result}", "-", "")
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name  
-  public_network_access_enabled = false
+  public_network_access_enabled = var.public_network_access_enabled # false
   zone_redundancy_enabled       = false
 
   private_endpoints = {
@@ -212,32 +212,39 @@ module "avm_res_containerregistry_registry" {
 }
 
 module "avm_res_keyvault_vault" {
-  source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "~> 0.9"
+  source              = "Azure/avm-res-keyvault-vault/azurerm"
+  version             = "~> 0.9" # "0.6.1"
 
   tenant_id           = data.azurerm_client_config.current.tenant_id
+  name                = "${module.naming.key_vault.name}-aihub-${random_string.this.result}" 
   enable_telemetry    = var.enable_telemetry
-  name                = "${module.naming.key_vault.name}${random_string.this.result}aihub" 
-  resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
+  location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
+  resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name # azurerm_resource_group.this.0.name
 
   network_acls = {
-    bypass         = "AzureServices"
-    default_action = "Deny"
+    default_action = "Allow"
   }
 
-  public_network_access_enabled = false
+  role_assignments = {
+    deployment_user_secrets = {
+      role_definition_id_or_name = "Key Vault Secrets Officer"
+      principal_id               = data.azurerm_client_config.current.object_id
+    }
+  }
 
   private_endpoints = {
     vault = {
       name                          = "pe-keyvault-vault"
-      subnet_resource_id                      = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
-
+      subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
       private_dns_zone_resource_ids = [module.private_dns_keyvault_vault.resource_id]
       inherit_lock                  = false
     }
   }
 
+  wait_for_rbac_before_secret_operations = {
+    create = "60s"
+  }
+  
   diagnostic_settings = {
     diag = {
       name                  = "aml${module.naming.monitor_diagnostic_setting.name_unique}-aihubkeyvault"
@@ -248,13 +255,13 @@ module "avm_res_keyvault_vault" {
   tags        = merge(
     local.global_settings.tags,
     {
-      purpose = "key vault" 
+      purpose = "virtual machine key vault" 
       project_code = try(local.global_settings.prefix, var.prefix) 
       env = try(local.global_settings.environment, var.environment) 
       zone = "project"
       tier = "app"   
     }
-  ) 
+  )
 }
 
 module "avm_res_storage_storageaccount" {
@@ -262,11 +269,11 @@ module "avm_res_storage_storageaccount" {
   version = "~> 0.4"
 
   enable_telemetry              = var.enable_telemetry
-  name                          = replace("${module.naming.storage_account.name}${random_string.this.result}aihub", "-", "") 
+  name                          = replace("${module.naming.storage_account.name}aihub${random_string.this.result}", "-", "") 
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   shared_access_key_enabled     = true
-  public_network_access_enabled = false
+  public_network_access_enabled = true # var.public_network_access_enabled # false
 
   managed_identities = {
     system_assigned = true
@@ -292,9 +299,15 @@ module "avm_res_storage_storageaccount" {
   }
 
   network_rules = {
-    bypass         = ["Logging", "Metrics", "AzureServices"]
-    default_action = "Deny"
+    default_action = "Allow"
   }
+
+
+  # # remove to allow public access
+  # network_rules = {
+  #   bypass         = ["Logging", "Metrics", "AzureServices"]
+  #   default_action = "Deny"
+  # }
 
   # for idempotency
   blob_properties = {
@@ -398,8 +411,13 @@ module "aihub" {
 
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   name                    = local.name
-  resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  is_private              = true
+  resource_group_name     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
+  is_private              = var.ai_hub_is_private # true # false - to enable allowList of public IPs
+
+  # TODO: Allowlist IPs for public IPs
+  # ipAllowlist = var.ip_allowlist
+  # ip_allowlist = [local.my_public_ip]
+
   kind                    = "Hub"
   workspace_friendly_name = "Private AI Studio Hub"
 
@@ -442,13 +460,26 @@ module "aihub" {
     isolation_mode = "AllowOnlyApprovedOutbound"
     outbound_rules = {
       private_endpoint = {
-        aisearch = {
-          resource_id         = module.aisearch.resource_id
+        aisearch-outbound-rule = {
+          resource_id         = module.aisearch.resource.id
           sub_resource_target = "searchService"
+        }
+        aiservices-outbound-rule = {
+          resource_id         = module.aiservices.resource.id
+          sub_resource_target = "account"
         }
       }
     }
   }
+
+  # aiservices = {
+  #   # resource_group_id         = azurerm_resource_group.this[0].id
+  #   # resource_group_id   = azurerm_resource_group.eastus.id # try(local.global_settings.resource_group_id, null) == null ? azurerm_resource_group.this.0.id : local.global_settings.resource_group_id
+  #   # resource_group_id   = "/subscriptions/0b5b13b8-0ad7-4552-936f-8fae87e0633f/resourceGroups/hc107-dev-platform" # try(local.global_settings.resource_group_id, null) == null ? azurerm_resource_group.this.0.id : local.global_settings.resource_group_id
+  #   resource_group_id   = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name}" # try(local.global_settings.resource_group_id, null) == null ? azurerm_resource_group.this.0.id : local.global_settings.resource_group_id
+  #   name                      = module.aiservices.resource.name
+  #   create_service_connection = true
+  # }
 
   application_insights = {
     resource_id          = azurerm_application_insights.this.id
@@ -525,25 +556,26 @@ module "aihub_project" {
   ) 
 }
 
-# # configure ai hub outbound rules to search services and ai services
-resource "azapi_update_resource" "ai_hub_update" {
-  type       = "Microsoft.MachineLearningServices/workspaces@2024-07-01-preview"
-  resource_id = module.aihub.resource.id # azurerm_ai_foundry.this.id
+# ## TODO: this code is not working fine, use azure CLI code to update the outbound rules
+# # # configure ai hub outbound rules to search services and ai services
+# resource "azapi_update_resource" "ai_hub_update" {
+#   type       = "Microsoft.MachineLearningServices/workspaces@2024-07-01-preview"
+#   resource_id = module.aihub.resource.id # azurerm_ai_foundry.this.id
   
-  body = {
-    properties = {
-      managedNetwork = {
-        outboundRules = local.base_ai_hub_outbound_rules 
-      }
-    }
-  }
+#   body = {
+#     properties = {
+#       managedNetwork = {
+#         outboundRules = local.base_ai_hub_outbound_rules 
+#       }
+#     }
+#   }
 
-  depends_on = [
-    module.aihub,
-    module.aisearch,
-    module.aiservices,
-  ]
-}
+#   depends_on = [
+#     module.aihub,
+#     module.aisearch,
+#     module.aiservices,
+#   ]
+# }
 
 
 

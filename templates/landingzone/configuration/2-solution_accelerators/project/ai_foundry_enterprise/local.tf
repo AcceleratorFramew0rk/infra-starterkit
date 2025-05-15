@@ -20,7 +20,7 @@ locals {
   tags = {
     scenario = "Private AI Foundry Hub"
   }
-  name                         = "${module.naming.cognitive_account.name}-${random_string.this.result}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
+  name                         = "${module.naming.cognitive_account.name}-aihub-${random_string.this.result}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
   base_name                    = "${module.naming.cognitive_account.name}" # alpha numeric characters only are allowed in "name var.name_prefix == null ? "${random_string.prefix.result}${var.acr_name}" : "${var.name_prefix}${var.acr_name}"
 
 }
@@ -65,4 +65,19 @@ locals {
       }
     }
   }
+}
+
+# get my machine public IP
+provider "http" {}
+
+data "http" "my_ip" {
+  url = "https://api.ipify.org"
+}
+
+locals {
+  my_public_ip = "${chomp(data.http.my_ip.response_body)}/32"
+}
+
+output "my_ip" {
+  value = local.my_public_ip
 }
