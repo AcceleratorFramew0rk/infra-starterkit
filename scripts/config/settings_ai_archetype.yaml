@@ -65,7 +65,7 @@ project:
   search_service: false
   service_bus: false
   stream_analytics: false
-  vm: false
+  vm: true
   vmss_linux: false
   vm_windows: false
   ai_foundry_enterprise: true

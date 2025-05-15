@@ -1,9 +1,9 @@
-resource_group_name: "hc102-dev-platform" 
+resource_group_name: "cs01-dev-platform" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f" 
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "hc102-dev" 
+prefix: "cs01-dev" 
 is_prefix: true
 is_single_resource_group: true
 location: "southeastasia"
