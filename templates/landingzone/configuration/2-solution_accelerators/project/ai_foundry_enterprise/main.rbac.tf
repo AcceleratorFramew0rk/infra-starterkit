@@ -87,17 +87,6 @@ resource "azurerm_role_assignment" "search_service_contributor_role_assignment" 
     module.aihub
   ]  
 }
-# The role assignment already exists.
-# # storage account role assignment
-# resource "azurerm_role_assignment" "storage_blob_data_contributor_role_assignment" {
-#   principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
-#   role_definition_name = "Storage Blob Data Contributor"
-#   scope                = module.avm_res_storage_storageaccount.resource.id # azurerm_container_registry.acr.id
-#   depends_on = [
-#     module.aiservices,
-#     module.aihub
-#   ]  
-# }
 
 resource "azurerm_role_assignment" "storage_blob_data_owner_role_assignment" {
   principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
@@ -163,18 +152,6 @@ resource "azurerm_role_assignment" "Azure_AI_Enterprise_Network_Connection_Appro
   ]  
 }
     
-
-# The role assignment already exists.
-# # key vault role assignment
-# resource "azurerm_role_assignment" "key_vault_administrator_role_assignment" {
-#   principal_id         = module.aihub.resource.identity[0].principal_id # azapi_resource.ai_hub.identity[0].principal_id
-#   role_definition_name = "Key Vault Administrator"
-#   scope                =  module.avm_res_keyvault_vault.resource_id
-#   depends_on = [
-#     module.aiservices,
-#     module.aihub
-#   ]  
-# }
 
 
 # variable "eligible_roles" {

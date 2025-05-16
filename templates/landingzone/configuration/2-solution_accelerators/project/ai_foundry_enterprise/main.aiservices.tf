@@ -105,7 +105,6 @@ module "aiservices" {
     system_assigned = true
   }   
 
-  ## TODO: why this is not working??? location? pep southeastasia > eastus2
   private_endpoints = {
     primary = {
       subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
@@ -142,88 +141,3 @@ module "aiservices" {
   ]
 }
 
-
-# module "private_endpoint" {
-#   # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/networking/terraform-azurerm-privateendpoint"
-#   source = "AcceleratorFramew0rk/aaf/azurerm//modules/networking/terraform-azurerm-privateendpoint"
-
-#   name                           = "${module.aiservices.resource.name}privateendpoint"
-#   location                       = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-#   resource_group_name            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-#   subnet_id                      = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
-#   tags                           = merge(
-#     local.global_settings.tags,
-#     {
-#       purpose = "ai services private endpoint" 
-#       project_code = try(local.global_settings.prefix, var.prefix) 
-#       env = try(local.global_settings.environment, var.environment) 
-#       zone = "project"
-#       tier = "service"   
-#     }
-#   ) 
-#   private_connection_resource_id = module.aiservices.resource.id
-#   is_manual_connection           = false
-#   subresource_name               = "account" 
-#   private_dns_zone_group_name    = "ai-services-dns-group"
-#   private_dns_zone_group_ids     =  [ module.private_dns_cognitiveservices.resource_id,
-#                                       module.private_dns_openai.resource_id,
-#                                       module.private_dns_services_ai.resource_id ]
-  
-#   depends_on = [
-#     module.aiservices, 
-#     module.private_dns_services_ai, 
-#     module.private_dns_openai, 
-#     module.private_dns_cognitiveservices
-#   ]
-
-# }
-
-# TODO: 
-# 1. Add private endpoint for AI Services from ServiceSubnet (or PrivateEndpointSubnet)
-
-# resource "azurerm_private_endpoint" "ai_services_private_endpoint" {
-#   name                = local.private_endpoint_name
-#   location            = var.location
-#   resource_group_name = var.resource_group_name
-#   subnet_id           = var.private_endpoint_subnet_id
-
-#   private_service_connection {
-#     name                           = "connection-${var.base_name}"
-#     private_connection_resource_id = azapi_resource.ai_services.id
-#     subresource_names              = ["account"]
-#     is_manual_connection           = false
-#   }
-
-#   private_dns_zone_group {
-#     name = "ai-services-dns-group"
-
-#     private_dns_zone_ids = concat(
-#       var.aiservice.private_dns_zone_ids,
-#       var.aiservice.deploy_private_dns_zones ? [
-#         azurerm_private_dns_zone.cognitive_services[0].id,
-#         azurerm_private_dns_zone.openai[0].id,
-#         azurerm_private_dns_zone.services_ai[0].id
-#       ] : []
-#     )
-#   }
-#   tags = { "environment" = "production" }
-# }
-
-
-# resource "azurerm_private_dns_zone" "cognitive_services" {
-#   count               = var.aiservice.deploy_private_dns_zones ? 1 : 0
-#   name                = "privatelink.cognitiveservices.azure.com"
-#   resource_group_name = var.resource_group_name
-# }
-
-# resource "azurerm_private_dns_zone" "openai" {
-#   count               = var.aiservice.deploy_private_dns_zones ? 1 : 0
-#   name                = "privatelink.openai.azure.com"
-#   resource_group_name = var.resource_group_name
-# }
-
-# resource "azurerm_private_dns_zone" "services_ai" {
-#   count               = var.aiservice.deploy_private_dns_zones ? 1 : 0
-#   name                = "privatelink.services.ai.azure.com"
-#   resource_group_name = var.resource_group_name
-# }
