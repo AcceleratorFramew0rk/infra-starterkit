@@ -73,6 +73,9 @@ Download the repo as a zip file.
 ---
 
 # Deploy the starter kit
+
+** IMPORTANT: Ensure that you have both the **Owner** and **Storage Blob Data Owner** roles assigned at the subscription level before proceeding with the deployment.
+
 ## Login to Azure
 ```bash
 az login --tenant xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # azure tenant id
