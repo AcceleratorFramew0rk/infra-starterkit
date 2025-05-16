@@ -1,0 +1,83 @@
+resource_group_name: "cs01-dev-platform" 
+log_analytics_workspace_resource_group_name: "gcci-agency-law"  
+log_analytics_workspace_name: "gcci-agency-workspace"  
+subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f" 
+# # virtual network - leave empty if there is no such virtual network   
+prefix: "cs01-dev" 
+is_prefix: true
+is_single_resource_group: true
+location: "southeastasia"
+environment: "dev" 
+app_config:
+  private_dns_zones: # to replace with your application domain name
+    internet_ingress_domain_name: internet.gov.sg 
+    intranet_ingress_domain_name: intranet.gra.gov.sg 
+# virtual networks name configuration - change the below if you are using different vnets name
+vnets:
+  # IMPORTANT: leave empty if there is no such virtual network  
+# -----------------
+  hub_ingress_internet:   
+    name: "gcci-vnet-ingress-internet"    
+    cidr: "100.127.0.0/24"
+# -----------------
+  hub_ingress_intranet:  
+    name: "gcci-vnet-ingress-intranet"    
+    cidr: "10.20.0.0/25"
+# -----------------
+  management:  
+    name: "gcci-vnet-management"        
+    cidr: "100.127.3.0/24"  
+# subnets cidr configuration
+subnets:
+  # IMPORTANT ** comment off the below any project subnets if it is not used
+# -----------------   
+  project: 
+# -----------------   
+# IMPORTANT ** comment off the below any devops subnets if it is not used  
+# -----------------           
+  devops:
+# -----------------   
+# -----------------   
+  management:
+# -----------------   
+# -----------------    
+    InfraSubnet:      
+      name: "InfraSubnet"
+      address_prefixes: ["100.127.3.64/26"]
+# -----------------    
+    SecuritySubnet:      
+      name: "SecuritySubnet"
+      address_prefixes: ["100.127.3.128/26"]
+# -----------------    
+    AzureBastionSubnet:      
+      name: "AzureBastionSubnet"
+      address_prefixes: ["100.127.3.0/26"]
+# -----------------                            
+  hub_internet_ingress: 
+# -----------------     
+# -----------------    
+    AzureFirewallSubnet: 
+      name: "AzureFirewallSubnet"
+      address_prefixes: ["100.127.0.64/26"]
+# -----------------    
+    AgwSubnet:  
+      name: "AgwSubnet"
+      address_prefixes: ["100.127.0.0/26"]
+# -----------------   
+  hub_internet_egress:
+# -----------------     
+# -----------------   
+  hub_intranet_ingress:
+# -----------------   
+# -----------------     
+    AzureFirewallSubnet:   
+      name: "AzureFirewallSubnet"
+      address_prefixes: ["10.20.0.64/26"]
+# -----------------    
+    AgwSubnet:   
+      name: "AgwSubnet"
+      address_prefixes: ["10.20.0.0/26"]
+# -----------------   
+  hub_intranet_egress:
+# -----------------   
+
