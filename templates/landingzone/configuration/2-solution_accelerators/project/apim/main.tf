@@ -15,7 +15,7 @@ module "apim" {
 
   publisher_name       = try(var.publisher_name, "My Company") # "My Company"
   publisher_email      = try(var.publisher_email, "company@terraform.io") # "company@terraform.io"
-  sku_name             = tru(var.sku_name, null) != null ? var.sku_name :  try(local.global_settings.environment, var.environment) != "Production" ? "Developer_1" : "Premium"
+  sku_name             = try(var.sku_name, null) != null ? var.sku_name :  try(local.global_settings.environment, var.environment) != "prd" ? "Developer_1" : "Premium"
 
   identity = {
     type = "UserAssigned"
