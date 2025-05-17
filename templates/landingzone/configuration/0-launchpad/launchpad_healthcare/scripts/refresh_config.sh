@@ -2,17 +2,12 @@
 
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
-
 #------------------------------------------------------------------------
 # create launchpad storage account and containers
 #------------------------------------------------------------------------
 
 # define your prefix or project code
 PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
-
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-./scripts/launchpad.sh $PREFIX
-
 
 #------------------------------------------------------------------------
 # get global variables
@@ -37,46 +32,7 @@ echo $SUBSCRIPTION_ID
 export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 
 #------------------------------------------------------------------------
-# deploy agency managed virtual networks
-#------------------------------------------------------------------------
-# ** IMPORTANT: if required, modify config.yaml file to determine the vnets name and cidr ranage you want to deploy. 
-
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-
-terraform init  -reconfigure \
--backend-config="resource_group_name=$RG_NAME" \
--backend-config="storage_account_name=$STG_NAME" \
--backend-config="container_name=0-launchpad" \
--backend-config="key=gcci-platform.tfstate"
-
-if [ $? -eq 0 ]; then
-    echo "Terraform init completed successfully."
-else
-    echo -e "\e[31mTerraform init failed. Exiting.\e[0m"
-    exit 1
-fi
-
-terraform plan
-
-if [ $? -eq 0 ]; then
-    echo "Terraform plan completed successfully."
-else
-    echo -e "\e[31mTerraform plan failed. Exiting.\e[0m"
-    exit 1
-fi
-
-terraform apply -auto-approve
-
-if [ $? -eq 0 ]; then
-    echo "Terraform apply completed successfully."
-else
-    echo -e "\e[31mTerraform apply failed. Exiting.\e[0m"
-    exit 1
-fi
-
-
-#------------------------------------------------------------------------
-# import log analytics workspace - using launchpad folder
+# import log analytics workspace - using launchpad_healthcare_law folder
 #------------------------------------------------------------------------
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare_law
 
@@ -86,11 +42,15 @@ terraform init  -reconfigure \
 -backend-config="container_name=0-launchpad" \
 -backend-config="key=gcci-platform.tfstate"
 
+# remove the existing log analytics workspace from the state file
+terraform state rm azurerm_log_analytics_workspace.gcci_agency_workspace
+
+# import the log analytics workspace into the state file
 terraform import "azurerm_log_analytics_workspace.gcci_agency_workspace" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}/providers/Microsoft.OperationalInsights/workspaces/${LOG_ANALYTICS_WORKSPACE_NAME}" 
+
 
 # process terraform based on settings.yaml
 pwd
-
 
 #------------------------------------------------------------------------
 # generate the nsg configuration
@@ -104,4 +64,4 @@ else
     exit 1
 fi
 
-echo "Import script completed successfully."
+echo "Import update script completed successfully."
