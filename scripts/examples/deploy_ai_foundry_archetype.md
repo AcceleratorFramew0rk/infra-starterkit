@@ -1,3 +1,5 @@
+# AI Foundry Archetype
+
 # Prerequisites
 
 In order to start deploying your landing zones, you need an Azure subscription (Trial, MSDN, etc.) and you need to install the following components on your machine:
@@ -39,42 +41,34 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-## Step 1 - create launchpad storage account and containers
+## 1. Launchpad - create launchpad storage account and containers
 
 - set prefix and configuration
 - modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
 
-
 ```bash
+sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 
-# goto launchpad folder
 cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
 
-# create launchpad storage account
-./scripts/import.sh 
+./scripts/import.sh
+
 ```
 
-## Step 2 - landing zone and networking
+## 2. Infra and Application Landing zone and networking
 
 ```bash
-# goto landing zone folder
-cd /tf/avm/templates/landingzone/configuration/1-landingzones
 
-# application landing zone
-./deploy_application_landingzone_script.sh
+tfexe apply run-all -include=/tf/avm/scripts/examples/AI_Foundry_LZ.hcl
+
 ```
 
-## Step 3 - solution accelerators
+### 3. Solution Accelerators
 
 ```bash
-# goto solution accelerators folder
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
 
-# application aks architype - aks, sql server, storage account etc...
-./deploy_pattern_aks_architype_script.sh
+tfexe apply run-all -include=/tf/avm/scripts/examples/AI_Foundry_pattern.hcl
 
-# devops service - runner container instance (if required)
-./deploy_pattern_devops_runner_script.sh
 ```
 
