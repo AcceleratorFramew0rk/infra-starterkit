@@ -10,7 +10,7 @@
 # tfexe import # import existing vnet into state file
 # tfexe generate-config # generate config.yaml file based on inputs
 # tfexe deploy # deploy azure resource based on settings.yaml file and inputs
-# tfexe refresh-config # refresh config.yaml file to match the current state of the infrastructure
+# tfexe update-remote-state # refresh config.yaml file to match the current state of the infrastructure
 
 # Begin Functions
 exec_terraform() {
@@ -20,10 +20,10 @@ exec_terraform() {
   local TF_VAR_FILE=$3
   local TF_VARS=("${@:4}")
 
-  if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"*  || "$ACTION" == *"generate-config"* || "$ACTION" == *"deploy"* || "$ACTION" == *"refresh-config"* ]]; then
+  if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"*  || "$ACTION" == *"generate-config"* || "$ACTION" == *"deploy"* || "$ACTION" == *"update-remote-state"* ]]; then
     # alway exec terraform init
 
-    if [[ "$ACTION" != *"import"* && "$ACTION" != *"generate-config"* && "$ACTION" != *"deploy"* && "$ACTION" != *"refresh-config"* ]]; then
+    if [[ "$ACTION" != *"import"* && "$ACTION" != *"generate-config"* && "$ACTION" != *"deploy"* && "$ACTION" != *"update-remote-state"* ]]; then
 
       echo "Using config file: $TF_CONFIG"
       PREFIX=$(yq  -r '.prefix' $TF_CONFIG)
@@ -168,7 +168,7 @@ exec_terraform() {
       echo -e "\e[32mTerraform $ACTION succeeded!\e[0m"
     fi    
 
-  elif [[ "$ACTION" == *"refresh-config"* ]]; then
+  elif [[ "$ACTION" == *"update-remote-state"* ]]; then
     echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts"
     echo "Running..."
     echo "./refresh_config.sh"
@@ -210,7 +210,7 @@ exec_terraform() {
 
 # Check if at least 2 arguments are provided
 if [[ $# -lt 1 ]]; then
-    echo "Usage: tfexe <init|apply|plan|import|generate-config|deploy|refresh-config> [-var=key=value | -path=path | -config=configpath]..."
+    echo "Usage: tfexe <init|apply|plan|import|generate-config|deploy|update-remote-state> [-var=key=value | -path=path | -config=configpath]..."
     echo " "
     echo "The available commands for execution are listed below."
     echo "The primary workflow commands are given first, followed by"
@@ -223,7 +223,7 @@ if [[ $# -lt 1 ]]; then
     echo "  import          Import existing VNET infrastructure into your Terraform state"
     echo "  generate-config Generate config.yaml file based on inputs"
     echo "  deploy          Deploy azure resource based on settings.yaml file and prompt inputs"
-    echo "  refresh-config  Refresh config.yaml file to match the current state of the infrastructure"
+    echo "  update-remote-state  Update remote terraform state with the latest config.yaml file content"
 
     echo " "
     echo "All other commands:"
@@ -246,7 +246,7 @@ if [[ $# -lt 1 ]]; then
     echo "tfexe import"
     echo "tfexe generate-config"
     echo "tfexe deploy"
-    echo "tfexe refresh-config"
+    echo "tfexe update-remote-state"
     exit 1
 fi
 
@@ -254,8 +254,8 @@ fi
 ACTION=$1
 shift
 
-if [[ "$ACTION" != "apply" && "$ACTION" != "plan" && "$ACTION" != "init"  && "$ACTION" != "import"  && "$ACTION" != "generate-config" && "$ACTION" != "deploy" && "$ACTION" != "refresh-config" ]]; then
-    echo -e "\e[31mError: First parameter must be 'init' or 'apply' or 'plan' or 'import' or 'generate-config' or 'deploy' or 'refresh-config'\e[0m"
+if [[ "$ACTION" != "apply" && "$ACTION" != "plan" && "$ACTION" != "init"  && "$ACTION" != "import"  && "$ACTION" != "generate-config" && "$ACTION" != "deploy" && "$ACTION" != "update-remote-state" ]]; then
+    echo -e "\e[31mError: First parameter must be 'init' or 'apply' or 'plan' or 'import' or 'generate-config' or 'deploy' or 'update-remote-state'\e[0m"
     exit 1
 fi
 
