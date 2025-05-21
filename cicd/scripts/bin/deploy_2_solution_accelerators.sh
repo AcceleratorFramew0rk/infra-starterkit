@@ -72,7 +72,7 @@ jq -c '.[]' "$selected_services_file" | while read -r item; do
 
                 # Append to varString
                 if [ -n "$var" ] && [ "$var" != "null" ]; then
-                  tfString+="-var=\"${var}=${selected_value}\" "
+                  tfString+="-var=${var}=${selected_value} "
                 fi
 
             done <<< "$(echo "$fields" | jq -c '.[]')"  # Avoids subshell issue
