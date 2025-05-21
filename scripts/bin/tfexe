@@ -341,7 +341,8 @@ if [[ -z "$TF_RUN_ALL" ]]; then
     if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
       TF_VAR_FILE="null"
     fi
-    exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
+    # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS  # only one var variable only
+    exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE "${TF_VARS[@]}" 
 
 else
 
@@ -361,7 +362,8 @@ else
         if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
           TF_VAR_FILE="null"
         fi
-        exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
+        # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
+        exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE "${TF_VARS[@]}" 
       fi
     done
 
@@ -384,7 +386,8 @@ else
       if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
         TF_VAR_FILE="null"
       fi
-      exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
+      # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
+      exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE "${TF_VARS[@]}"
 
     done < "$FILE"
 
