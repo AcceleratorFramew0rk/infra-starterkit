@@ -52,6 +52,8 @@ SUBSCRIPTION_ID=$(yq -r '.subscription_id' './templates/landingzone/configuratio
 LOCATION=southeastasia 
 VNET_PROJECT_NAME=gcci-vnet-project 
 VNET_DEVOPS_NAME=gcci-vnet-devops
+VNET_PROJECT_CIDR=$(yq -r '.vnets.project.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+VNET_DEVOPS_CIDR=$(yq -r '.vnets.devops.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
 
 echo "parameters for generate_config.sh:"
 echo $PREFIX

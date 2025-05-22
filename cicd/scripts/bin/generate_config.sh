@@ -62,8 +62,13 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 # Variables for the resource group
 RESOURCE_GROUP="GCCI-Platform"
 # Variables for GCCI Project VNet and DevOps VNet CIDR
-GCCI_VNET_PROJECT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_PROJECT_NAME")
-GCCI_VNET_DEVOPS_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_DEVOPS_NAME")
+# GCCI_VNET_PROJECT_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_PROJECT_NAME")
+# GCCI_VNET_DEVOPS_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_DEVOPS_NAME")
+
+# Use the cidr from the config.yaml file
+GCCI_VNET_PROJECT_CIDR=$(yq -r '.vnets.project.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+GCCI_VNET_DEVOPS_CIDR=$(yq -r '.vnets.devops.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+
 
 # Output the collected inputs
 echo "Configuration:"
