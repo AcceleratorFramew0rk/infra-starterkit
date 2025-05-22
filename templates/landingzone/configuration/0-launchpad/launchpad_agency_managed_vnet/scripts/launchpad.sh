@@ -36,7 +36,7 @@ CONTAINER3="2-solution-accelerators"
 az group show --name $RG_NAME > /dev/null 2>&1
 
 if [ $? -eq 0 ]; then
-    read -p "ERROR: Resource group $RG_NAME already exists. Exiting."
+    echo -p "ERROR: Resource group $RG_NAME already exists. Exiting."
     exit 1
 else
     # If the resource group does not exist, attempt to create it
@@ -44,17 +44,31 @@ else
     if [ $? -eq 0 ]; then
         echo "Resource group $RG_NAME created successfully."
     else
-        read -p "ERROR: Failed to create resource group $RG_NAME. Exiting."
+        echo -p "ERROR: Failed to create resource group $RG_NAME. Exiting."
         exit 1
     fi
 fi
 
 # Create Storage account and containers for storing state files
 az storage account create --name $STG_NAME --resource-group $RG_NAME --location $LOC --sku Standard_LRS --kind StorageV2 --allow-blob-public-access true --min-tls-version TLS1_2
-
+if [ $? -eq 0 ]; then
+    echo -p "ERROR: Failed to create storage. Exiting."
+    exit 1
+fi
 az storage container create --account-name $STG_NAME --name $CONTAINER1 --public-access blob --fail-on-exist
+if [ $? -eq 0 ]; then
+    echo -p "ERROR: Failed to create container $CONTAINER1. Exiting."
+    exit 1
+fi
 az storage container create --account-name $STG_NAME --name $CONTAINER2 --public-access blob --fail-on-exist
+if [ $? -eq 0 ]; then
+    echo -p "ERROR: Failed to create container $CONTAINER2. Exiting."
+    exit 1
+fi
 az storage container create --account-name $STG_NAME --name $CONTAINER3 --public-access blob --fail-on-exist
-
+if [ $? -eq 0 ]; then
+    echo -p "ERROR: Failed to create container $CONTAINER3. Exiting."
+    exit 1
+fi
 
 
