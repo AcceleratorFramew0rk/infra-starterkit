@@ -1,5 +1,5 @@
 # This is the name of the workflow, which will appear in the GitHub Actions interface
-name: Developer Portal workflow - Internet / Intranet Compartment
+name: Developer Portal workflow
 # The "on" keyword defines the event that triggers the workflow
 on:
   
@@ -58,6 +58,7 @@ jobs:
       # Step 1: Checks out the code from the repository using the official GitHub action
       - uses: actions/checkout@v4
 
+
       # Step 2: Send RUN_ID to REST API
       - name: Init job
         run: |
@@ -69,23 +70,8 @@ jobs:
           echo "Send RUN_ID to REST API: $GITHUB_RUN_ID completed successfully" 
 
 
-      # Step 3: Installs `yq`, a tool for parsing and modifying YAML files
-      - name: clone starterkit and install dependencies
-        run: |
-
-          # clone starterkit
-          pwd
-          ls
-          git clone https://github.com/AcceleratorFramew0rk/terraform-azurerm-aaf.git ./modules/terraform-azurerm-aaf
-          git clone https://github.com/AcceleratorFramew0rk/infra-starterkit ./starterkit
-
-          # setup dependencies
-          cd $(pwd)/starterkit
-          ./cicd/scripts/bin/setup_dependencies.sh
-
-
-      # Step 4: Logs into Azure using service principal credentials stored in GitHub Secrets
-      - name: Login to Azure with service principal
+      # Step 3: Logs into Azure using service principal credentials stored in GitHub Secrets
+      - name: Login to Azure with service principal and clone starterkit
         env:
           ARM_CLIENT_ID: ${{ github.event.inputs.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ github.event.inputs.ARM_CLIENT_SECRET }}
@@ -93,6 +79,9 @@ jobs:
           ARM_TENANT_ID: ${{ github.event.inputs.ARM_TENANT_ID }}
         run: |
 
+          pwd
+          ls
+          
           echo "client id: ${{ github.event.inputs.ARM_CLIENT_ID }}"
           echo "subscription id: ${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}"
           echo "tenant id: ${{ github.event.inputs.ARM_TENANT_ID }}"
@@ -101,6 +90,23 @@ jobs:
           az login --service-principal -u "${{ github.event.inputs.ARM_CLIENT_ID }}" -p "${{ github.event.inputs.ARM_CLIENT_SECRET }}" --tenant "${{ github.event.inputs.ARM_TENANT_ID }}"
           az account set --subscription "${{ github.event.inputs.ARM_SUBSCRIPTION_ID }}"
           az account show
+
+          # clone starter kit repo
+          git clone https://github.com/AcceleratorFramew0rk/terraform-azurerm-aaf.git ./modules/terraform-azurerm-aaf
+          git clone https://github.com/AcceleratorFramew0rk/infra-starterkit ./starterkit
+
+          
+      # Step 4: Installs `yq`, a tool for parsing and modifying YAML files
+      - name: install dependencies
+        run: |
+
+          pwd
+          ls
+
+          # setup dependencies
+          sudo chmod -R -f 777 $(pwd)/starterkit/cicd/scripts/bin/
+          cd $(pwd)/starterkit
+          ./cicd/scripts/bin/setup_dependencies.sh
 
 
       # Step 5: Clone the necessary Terraform module and StarterKit repositories
@@ -114,9 +120,11 @@ jobs:
 
           pwd
           ls
-          # setup dependencies
+          
+          # initialize data
+          sudo chmod -R -f 777 $(pwd)/starterkit/cicd/scripts/bin/
           cd $(pwd)/starterkit
-          ./cicd/scripts/bin/initialize_data.sh "starterkit" "${{ github.event.inputs.config_yaml }}" "${{ github.event.inputs.solution_accelerator }}"
+          ./cicd/scripts/bin/initialize_data.sh "starterkit" "${{ github.event.inputs.config_yaml }}" "${{ github.event.inputs.solution_accelerator }}" "${{ github.event.inputs.environment }}"
 
 
       # Process 0: launchpad
@@ -133,11 +141,13 @@ jobs:
           ls
 
           # Apply launchpad and import yaml configuration to tfstate file
-          sudo chmod -R -f 777 ./starterkit/templates/landingzone/configuration/0-launchpad/launchpad/scripts/import.sh
-          sudo chmod -R -f 777 ./starterkit/templates/landingzone/configuration
+          sudo chmod -R -f 777 $(pwd)/starterkit/templates/landingzone/configuration/0-launchpad/launchpad/scripts/import.sh
+          sudo chmod -R -f 777 $(pwd)/starterkit/templates/landingzone/configuration
 
           # import will check if there is existing rg, will trigger either import or import_update
-          # deploy level 0 launchpad - must start with directory "$(pwd)/starterkit"
+          # deploy level 0 launchpad
+          sudo chmod -R -f 777 $(pwd)/starterkit/cicd/scripts/bin/
+          sudo chmod -R -f 777 $(pwd)/starterkit/scripts/bin/
           cd $(pwd)/starterkit
           ./cicd/scripts/bin/deploy_0_launchpad.sh
 
@@ -156,12 +166,13 @@ jobs:
           ls
 
           # Apply project and devops networking
-          sudo chmod -R 777 ./starterkit/cicd/scripts/
+          sudo chmod -R 777 $(pwd)/starterkit/cicd/scripts/
+          sudo chmod -R -f 777 $(pwd)/starterkit/scripts/bin/
 
           # production
-          # deploy level 1 landingzones - must start with directory "$(pwd)/starterkit"
+          # deploy level 1 landingzones
           cd $(pwd)/starterkit
-          ./cicd/scripts/bin/deploy_0_launchpad_internet_intranet_vnet.sh
+          ./cicd/scripts/bin/deploy_1_landingzones.sh
           
 
       # Process 2: solution accelerators
@@ -178,10 +189,11 @@ jobs:
           ls
 
           # Apply solution accelerators
-          sudo chmod -R 777 ./starterkit/cicd/scripts/
+          sudo chmod -R 777 $(pwd)/starterkit/cicd/scripts/
+          sudo chmod -R -f 777 $(pwd)/starterkit/scripts/bin/
 
           # production
-          # deploy level 3 solution accelerators - must start with directory "$(pwd)/starterkit"
+          # deploy level 3 solution accelerators
           cd $(pwd)/starterkit
           ./cicd/scripts/bin/deploy_2_solution_accelerators.sh
           
