@@ -7,6 +7,7 @@
 WORKING_DIR="${1:-/tf/avm}"
 echo "Working Directory: ${WORKING_DIR}"
 
+echo "getting the prefix from config.yaml"
 # cannot change mode in github pipeline
 # sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
 
@@ -16,10 +17,14 @@ echo "Working Directory: ${WORKING_DIR}"
 #------------------------------------------------------------------------
 
 # define your prefix or project code
-PREFIX=$(yq  -r '.prefix' "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml")
+CONFIG_FILE="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+echo "Config file: ${CONFIG_FILE}"
 
+PREFIX=$(yq  -r '.prefix' "${CONFIG_FILE}")
+echo "en getting the prefix from config.yaml"
 # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
 cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
+pwd
 ./scripts/launchpad.sh $PREFIX
 
 
