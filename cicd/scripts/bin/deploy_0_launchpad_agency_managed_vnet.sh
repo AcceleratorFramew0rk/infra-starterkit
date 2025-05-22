@@ -36,7 +36,10 @@ if [ $? -ne 0 ] || [ -z "$STG_NAME" ]; then
 
   # ** IMPORTANT: cd to the directory where the script is located
   cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
-  echo "Start importing vnet tfstate"            
+  echo "Start importing vnet tfstate"   
+  echo "$(pwd)"
+  echo "Running ..."         
+  echo "./scripts/import.sh ${WORKING_DIR}"         
   ./scripts/import.sh "${WORKING_DIR}"
   if [ $? -ne 0 ]; then
     echo "Failed to import vnet tfstate. Exiting."
@@ -50,6 +53,10 @@ else
   echo "Start updating tfstate config info"    
   # ** IMPORTANT: cd to the directory where the script is located   
   cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
+  echo "Start importing vnet tfstate"   
+  echo "$(pwd)"
+  echo "Running ..."         
+  echo "./scripts/update_remote_state.sh ${WORKING_DIR}"    
   ./scripts/update_remote_state.sh "${WORKING_DIR}"
   if [ $? -ne 0 ]; then
     echo "Failed to update remote state. Exiting."
