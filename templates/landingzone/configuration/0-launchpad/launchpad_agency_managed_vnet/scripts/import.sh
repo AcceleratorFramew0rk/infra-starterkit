@@ -23,7 +23,12 @@ echo "getting the prefix from config.yaml"
 cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 pwd
 ./scripts/launchpad.sh $PREFIX
-
+if [ $? -eq 0 ]; then
+    echo "launchpad.sh completed successfully."
+else
+    echo -e "\e[31mlaunchpad.sh failed. Exiting.\e[0m"
+    exit 1
+fi
 
 #------------------------------------------------------------------------
 # get global variables
@@ -102,9 +107,20 @@ terraform init  -reconfigure \
 -backend-config="storage_account_name=$STG_NAME" \
 -backend-config="container_name=0-launchpad" \
 -backend-config="key=gcci-platform.tfstate"
+if [ $? -eq 0 ]; then
+    echo "terraform init completed successfully."
+else
+    echo -e "\e[31mTerraform init failed. Exiting.\e[0m"
+    exit 1
+fi
 
 terraform import "azurerm_log_analytics_workspace.gcci_agency_workspace" "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}/providers/Microsoft.OperationalInsights/workspaces/${LOG_ANALYTICS_WORKSPACE_NAME}" 
-
+if [ $? -eq 0 ]; then
+    echo "terraform import completed successfully."
+else
+    echo -e "\e[31mTerraform import azurerm_log_analytics_workspace failed. Exiting.\e[0m"
+    exit 1
+fi
 # process terraform based on settings.yaml
 pwd
 

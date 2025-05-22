@@ -53,22 +53,30 @@ fi
 # Create Storage account and containers for storing state files
 az storage account create --name $STG_NAME --resource-group $RG_NAME --location $LOC --sku Standard_LRS --kind StorageV2 --allow-blob-public-access true --min-tls-version TLS1_2
 if [ $? -eq 0 ]; then
-    echo -p "ERROR: Failed to create storage. Exiting."
+    echo "create storage completed successfully."
+else
+    echo -e "\e[31mERROR: Create Storage failed. Exiting.\e[0m"
     exit 1
 fi
 az storage container create --account-name $STG_NAME --name $CONTAINER1 --public-access blob --fail-on-exist
 if [ $? -eq 0 ]; then
-    echo -p "ERROR: Failed to create container $CONTAINER1. Exiting."
+    echo "create container completed successfully."
+else
+    echo -e "\e[31mERROR: Create container $CONTAINER1 failed. Exiting.\e[0m"
     exit 1
 fi
 az storage container create --account-name $STG_NAME --name $CONTAINER2 --public-access blob --fail-on-exist
 if [ $? -eq 0 ]; then
-    echo -p "ERROR: Failed to create container $CONTAINER2. Exiting."
+    echo "create container completed successfully."
+else
+    echo -e "\e[31mERROR: Create container $CONTAINER2 failed. Exiting.\e[0m"
     exit 1
 fi
 az storage container create --account-name $STG_NAME --name $CONTAINER3 --public-access blob --fail-on-exist
 if [ $? -eq 0 ]; then
-    echo -p "ERROR: Failed to create container $CONTAINER3. Exiting."
+    echo "create container completed successfully."
+else
+    echo -e "\e[31mERROR: Create container $CONTAINER3 failed. Exiting.\e[0m"
     exit 1
 fi
 
