@@ -1,5 +1,5 @@
 # This is the name of the workflow, which will appear in the GitHub Actions interface
-name: Developer Portal workflow
+name: Developer Portal workflow - Internet / Intranet Compartment
 # The "on" keyword defines the event that triggers the workflow
 on:
   
@@ -137,7 +137,7 @@ jobs:
           sudo chmod -R -f 777 ./starterkit/templates/landingzone/configuration
 
           # import will check if there is existing rg, will trigger either import or import_update
-          # deploy level 0 launchpad
+          # deploy level 0 launchpad - must start with directory "$(pwd)/starterkit"
           cd $(pwd)/starterkit
           ./cicd/scripts/bin/deploy_0_launchpad.sh
 
@@ -159,9 +159,9 @@ jobs:
           sudo chmod -R 777 ./starterkit/cicd/scripts/
 
           # production
-          # deploy level 1 landingzones
+          # deploy level 1 landingzones - must start with directory "$(pwd)/starterkit"
           cd $(pwd)/starterkit
-          ./cicd/scripts/bin/deploy_1_landingzones.sh
+          ./cicd/scripts/bin/deploy_0_launchpad_internet_intranet_vnet.sh
           
 
       # Process 2: solution accelerators
@@ -181,7 +181,7 @@ jobs:
           sudo chmod -R 777 ./starterkit/cicd/scripts/
 
           # production
-          # deploy level 3 solution accelerators
+          # deploy level 3 solution accelerators - must start with directory "$(pwd)/starterkit"
           cd $(pwd)/starterkit
           ./cicd/scripts/bin/deploy_2_solution_accelerators.sh
           
