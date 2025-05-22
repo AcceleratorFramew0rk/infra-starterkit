@@ -13,8 +13,9 @@ echo "Working Directory: ${WORKING_DIR}"
 # Echo the contents of ./config.yaml
 echo "config.yaml content:"
 # cat ./config.yaml
-cat ./templates/landingzone/configuration/0-launchpad/scripts/config.yaml
-PREFIX=$(yq -r '.prefix' './config.yaml')
+CONFIG_FILE="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+cat "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+PREFIX=$(yq -r '.prefix' ${CONFIG_FILE})
 RG_NAME="${PREFIX}-rg-launchpad"
 echo "Resource Group name: ${RG_NAME}"
 
@@ -34,7 +35,7 @@ if [ $? -ne 0 ] || [ -z "$STG_NAME" ]; then
   echo "No existing storage account: ${STG_NAME}"
 
   # ** IMPORTANT: cd to the directory where the script is located
-  cd ./templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
+  cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
   echo "Start importing vnet tfstate"            
   ./scripts/import.sh "${WORKING_DIR}"
   if [ $? -ne 0 ]; then
@@ -48,7 +49,7 @@ else
   echo "Using existing Resource group and storage account"
   echo "Start updating tfstate config info"    
   # ** IMPORTANT: cd to the directory where the script is located   
-  cd ./templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
+  cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
   ./scripts/update_remote_state.sh "${WORKING_DIR}"
   if [ $? -ne 0 ]; then
     echo "Failed to update remote state. Exiting."
