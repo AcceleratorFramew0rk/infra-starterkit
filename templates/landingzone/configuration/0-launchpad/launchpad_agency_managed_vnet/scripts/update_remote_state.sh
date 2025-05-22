@@ -6,7 +6,8 @@
 # If $1 is unset or empty, default to /tf/avm
 WORKING_DIR="${1:-/tf/avm}"
 
-sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
+# cannot change mode in github pipeline
+# sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
 
 
 #------------------------------------------------------------------------

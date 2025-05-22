@@ -7,7 +7,8 @@
 WORKING_DIR="${1:-/tf/avm}"
 echo "Working Directory: ${WORKING_DIR}"
 
-sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
+# cannot change mode in github pipeline
+# sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
 
 
 #------------------------------------------------------------------------
