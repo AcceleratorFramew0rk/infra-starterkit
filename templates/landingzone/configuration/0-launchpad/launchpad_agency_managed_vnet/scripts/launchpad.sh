@@ -23,7 +23,8 @@ PREFIX=$1
 # Generate storage acc name to store state file
 LOC="southeastasia"
 PROJECT_CODE="${PREFIX}"
-RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
+# RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
+RND_NUM=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 3)
 
 RG_NAME="${PROJECT_CODE}-rg-launchpad"
 STG_NAME="${PROJECT_CODE}stgtfstate${RND_NUM}"
