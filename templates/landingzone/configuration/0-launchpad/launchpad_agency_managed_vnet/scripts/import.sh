@@ -5,6 +5,7 @@
 #------------------------------------------------------------------------
 # If $1 is unset or empty, default to /tf/avm
 WORKING_DIR="${1:-/tf/avm}"
+echo "Working Directory: ${WORKING_DIR}"
 
 sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
 
@@ -17,7 +18,7 @@ sudo chmod -R -f 777 "${WORKING_DIR}/templates/landingzone/configuration"
 PREFIX=$(yq  -r '.prefix' "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml")
 
 # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare"
+cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 ./scripts/launchpad.sh $PREFIX
 
 
@@ -37,9 +38,12 @@ SUBSCRIPTION_ID=$(echo "$ACCOUNT_INFO" | jq ".id" -r)
 LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME="gcci-agency-law"
 LOG_ANALYTICS_WORKSPACE_NAME="gcci-agency-workspace"
 
+echo $SUBSCRIPTION_ID
+echo $PREFIX
 echo $RG_NAME
 echo $STG_NAME
-echo $SUBSCRIPTION_ID
+echo $LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME
+echo $LOG_ANALYTICS_WORKSPACE_NAME
 
 export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 
@@ -49,7 +53,7 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 # ** IMPORTANT: if required, modify config.yaml file to determine the vnets name and cidr ranage you want to deploy. 
 
 # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare"
+cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 
 terraform init  -reconfigure \
 -backend-config="resource_group_name=$RG_NAME" \
@@ -87,7 +91,8 @@ fi
 # import log analytics workspace - using launchpad folder
 #------------------------------------------------------------------------
 # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare_law
-cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare_law"
+# cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare_law"
+cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet_law"
 
 terraform init  -reconfigure \
 -backend-config="resource_group_name=$RG_NAME" \
@@ -105,7 +110,8 @@ pwd
 # generate the nsg configuration
 #------------------------------------------------------------------------
 # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare"
+# cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare"
+cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 ./scripts/nsg.sh "${WORKING_DIR}"
 if [ $? -eq 0 ]; then
     echo "nsg.sh completed successfully."
