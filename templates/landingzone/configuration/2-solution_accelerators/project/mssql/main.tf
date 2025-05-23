@@ -43,12 +43,12 @@ locals {
     elasticpool1 = {
       sku = {
         name     = "StandardPool"
-        capacity = 50
+        capacity = var.max_capacity # 50
         tier     = var.tier # "Standard"
       }
       per_database_settings = {
         min_capacity = 10
-        max_capacity = var.max_capacity # 50
+        max_capacity = 50 # 50
       }
       maintenance_configuration_name = "SQL_Default"
       zone_redundant                 = false
