@@ -99,7 +99,7 @@ variable "usernodewindows_subnet_name" {
 
 variable "kubernetes_version" {
   description = "Specifies the AKS Kubernetes version"
-  default     = "1.31" # "1.26.3"
+  default     = "1.33" # "1.26.3"
   type        = string
 }
 
