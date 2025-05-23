@@ -99,7 +99,25 @@ module "aks_cluster" {
   }
 
   node_resource_group = try(local.global_settings.resource_group_name, null) != null ? "${module.naming.resource_group.name}-aks-nodes" : "${azurerm_resource_group.this.0.name}-aks-nodes"
-  container_registry_id = module.container_registry.resource.id 
+  
+  # container_registry_id = module.container_registry.resource.id 
+
+  acr = {
+    name                          = replace("${module.naming.container_registry.name}aks${random_string.this.result}", "-", "") # "${module.naming.container_registry.name_unique}${random_string.this.result}" # module.naming.container_registry.name_unique
+    private_dns_zone_resource_ids = [module.private_dns_zones.resource.id] 
+    subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.acr_subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.acr_subnet_name].resource.id : var.acr_subnet_id 
+  }
+
+  # variable "acr" {
+  #   type = object({
+  #     name                          = string
+  #     private_dns_zone_resource_ids = set(string)
+  #     subnet_resource_id            = string
+
+  #   })
+  #   default     = null
+  #   description = "(Optional) Parameters for the Azure Container Registry to use with the Kubernetes Cluster."
+  # }
 
   log_analytics_workspace_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
 
@@ -198,5 +216,9 @@ module "aks_cluster" {
       tier = "nodes"   
     }
   ) 
+
+  depends_on = [
+    module.container_registry
+  ]
 
 }
