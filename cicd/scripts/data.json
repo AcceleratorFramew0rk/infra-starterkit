@@ -1,4 +1,6 @@
 [
+  { "ACR":  "acr"},
+  { "KeyVault":  "keyvault"},
   { "SqlServer":  "mssql"},
   { "CosmosDB":  "cosmos_db_sql"},
   { "MySql":  "mysql"},
@@ -18,10 +20,8 @@
   { "IoTHub":  "iot_hub"},
   { "DataExplorer":  "data_explorer"},
   { "StreamAnalytics":  "stream_analytics"},
-  { "AIFoundary":  "ai_foundry_enterprise"},
   { "SearchService":  "search_service"},
-  { "ACR":  "acr"},
-  { "KeyVault":  "keyvault"},
+  { "AIFoundary":  "ai_foundry_enterprise"},
   { "NotificationHub":  "notification_hub"},
   { "FrontDoor":  "frontdoor"}
 ]
