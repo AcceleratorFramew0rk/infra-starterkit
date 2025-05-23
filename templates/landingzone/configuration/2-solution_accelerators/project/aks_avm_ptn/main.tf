@@ -99,9 +99,7 @@ module "aks_cluster" {
   }
 
   node_resource_group = try(local.global_settings.resource_group_name, null) == null ? "${module.naming.resource_group.name}-solution-accelerators-aks-nodes" : "${azurerm_resource_group.this.0.name}-aks-nodes"
-  # custom container registry id - from local remote state
-  
-  container_registry_id = local.container_registry.id
+  container_registry_id = module.container_registry.resource.id 
 
   log_analytics_workspace_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
 

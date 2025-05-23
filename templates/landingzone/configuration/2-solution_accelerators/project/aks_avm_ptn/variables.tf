@@ -103,7 +103,15 @@ variable "kubernetes_version" {
   type        = string
 }
 
+variable "acr_subnet_name" {
+  type        = string  
+  default = "ServiceSubnet"
+}
 
+variable "acr_subnet_id" {
+  type        = string  
+  default = null
+}
 
 # developer portal variables
 # min_count: 2 (default 2)
