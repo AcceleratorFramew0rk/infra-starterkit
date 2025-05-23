@@ -1,3 +1,54 @@
+module "private_dns_zones" {
+  source                = "Azure/avm-res-network-privatednszone/azurerm"   
+  version = "0.3.0"
+
+  enable_telemetry      = true
+  resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
+  domain_name           = "privatelink.azurecr.io"
+  tags         = merge(
+    local.global_settings.tags,
+    {
+      purpose = "container registry dns zone" 
+      project_code = try(local.global_settings.prefix, var.prefix) 
+      env = try(local.global_settings.environment, var.environment) 
+      zone = "project"
+      tier = "service"   
+    }
+  )
+  virtual_network_links = {
+      vnetlink1 = {
+        vnetlinkname     = "vnetlink1"
+        vnetid           = try(local.remote.networking.virtual_networks.spoke_project.virtual_network.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_network.id : var.vnet_id  
+        autoregistration = false # true
+        tags = merge(
+          local.global_settings.tags,
+          {
+            purpose = "container registry vnet link" 
+            project_code = try(local.global_settings.prefix, var.prefix) 
+            env = try(local.global_settings.environment, var.environment) 
+            zone = "project"
+            tier = "service"   
+          }
+        )
+      }
+      vnetlink2 = {
+        vnetlinkname     = "vnetlink2"
+        vnetid           = try(local.remote.networking.virtual_networks.spoke_devops.virtual_network.id, null) != null ? local.remote.networking.virtual_networks.spoke_devops.virtual_network.id : var.vnet_id  
+        autoregistration = false # true
+        tags = merge(
+          local.global_settings.tags,
+          {
+            purpose = "container registry vnet link" 
+            project_code = try(local.global_settings.prefix, var.prefix) 
+            env = try(local.global_settings.environment, var.environment) 
+            zone = "project"
+            tier = "service"   
+          }
+        )
+      }      
+    }
+}
+
 resource "azurerm_user_assigned_identity" "this" {
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   name                = "uami-${lower(module.naming.kubernetes_cluster.name)}" 
@@ -100,6 +151,7 @@ module "aks_cluster" {
 
   node_resource_group = try(local.global_settings.resource_group_name, null) != null ? "${module.naming.resource_group.name}-aks-nodes" : "${azurerm_resource_group.this.0.name}-aks-nodes"
   
+  # Note: AKS cluster avm will create the container registry
   # container_registry_id = module.container_registry.resource.id 
 
   acr = {
@@ -107,17 +159,6 @@ module "aks_cluster" {
     private_dns_zone_resource_ids = [module.private_dns_zones.resource.id] 
     subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.acr_subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.acr_subnet_name].resource.id : var.acr_subnet_id 
   }
-
-  # variable "acr" {
-  #   type = object({
-  #     name                          = string
-  #     private_dns_zone_resource_ids = set(string)
-  #     subnet_resource_id            = string
-
-  #   })
-  #   default     = null
-  #   description = "(Optional) Parameters for the Azure Container Registry to use with the Kubernetes Cluster."
-  # }
 
   log_analytics_workspace_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
 
@@ -216,9 +257,4 @@ module "aks_cluster" {
       tier = "nodes"   
     }
   ) 
-
-  depends_on = [
-    module.container_registry
-  ]
-
 }
