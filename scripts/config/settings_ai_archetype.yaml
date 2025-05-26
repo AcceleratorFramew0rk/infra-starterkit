@@ -45,7 +45,7 @@ project:
   storage_account: true
   acr: false
   aks_avm_ptn: false
-  apim: false
+  apim: true
   app_service: true
   azure_open_ai: false
   container_app: false
@@ -65,7 +65,7 @@ project:
   search_service: false
   service_bus: false
   stream_analytics: false
-  vm: true
+  vm: false
   vmss_linux: false
   vm_windows: false
   ai_foundry_enterprise: true

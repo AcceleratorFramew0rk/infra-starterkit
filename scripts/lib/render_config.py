@@ -53,6 +53,9 @@ def get_config(input, solution_accelerator, landingzone_type):
         "tenant_id": "",
         "prefix": "",
         "resource_group_name": "",
+        "log_analytics_workspace_resource_group_name": "",
+        "log_analytics_workspace_name": "",
+        "settings_yaml_file_path": "",       
         "environment": "",
         # application landign zone
         "project_vnet_name": "",
@@ -107,6 +110,9 @@ def get_config(input, solution_accelerator, landingzone_type):
     tenant_id = "00000000-0000-0000-0000-000000000000"
     prefix = input.get("prefix")
     resource_group_name = input.get("resource_group_name")
+    log_analytics_workspace_resource_group_name = input.get("log_analytics_workspace_resource_group_name")
+    log_analytics_workspace_name = input.get("log_analytics_workspace_name")
+    settings_yaml_file_path = input.get("settings_yaml_file_path")
     environment = input.get("environment")
 
     project_vnet_cidr = input.get("vnets").get("project").get("cidr")
@@ -128,6 +134,9 @@ def get_config(input, solution_accelerator, landingzone_type):
     subnet_vars["prefix"] = prefix
     subnet_vars["subscription_id"] = subscription_id
     subnet_vars["resource_group_name"] = resource_group_name
+    subnet_vars["log_analytics_workspace_resource_group_name"] = log_analytics_workspace_resource_group_name
+    subnet_vars["log_analytics_workspace_name"] = log_analytics_workspace_name
+    subnet_vars["settings_yaml_file_path"] = settings_yaml_file_path
     subnet_vars["environment"] = environment
 
         

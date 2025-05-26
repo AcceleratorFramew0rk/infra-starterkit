@@ -15,12 +15,12 @@ echo "You are currently in the directory: $(pwd)"
 #------------------------------------------------------------------------
 # pre - prepare the environment
 #------------------------------------------------------------------------
-source "$(dirname "$0")/../lib/prompt.sh"
-source "$(dirname "$0")/../lib/prepare_environment.sh"
+# source "$(dirname "$0")/../lib/prompt.sh"
+# source "$(dirname "$0")/../lib/prepare_environment.sh"
 #------------------------------------------------------------------------
 # pre - generate config
 #------------------------------------------------------------------------
-source "$(dirname "$0")/../lib/generate_config.sh"
+# source "$(dirname "$0")/../lib/generate_config.sh"
 
 #------------------------------------------------------------------------
 ## 0. Launchpad - create launchpad storage account and containers
@@ -29,7 +29,7 @@ source "$(dirname "$0")/../lib/generate_config.sh"
 ### ** Follow the instruction to enter the below information
 ### Prefix, Resource Group Name, VNet Project Name and CIDR, VNet DevOps Name and CIDR, Landing Zone Type, <Your Settings File>
 #------------------------------------------------------------------------
-if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
+# if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
   # tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
   tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
@@ -40,16 +40,16 @@ if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; th
     exit 1
   fi
 
-else
+# else
 
-  tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
-    exit 1
-  fi
+#   tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
+#   if [ $? -ne 0 ]; then
+#     echo -e "     "
+#     echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
+#     exit 1
+#   fi
 
-fi
+# fi
 
 #------------------------------------------------------------------------
 ## 1. Infra and Application Landing zone and networking
@@ -59,7 +59,7 @@ fi
 # /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
 #------------------------------------------------------------------------
 
-if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
+# if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
   if [ $? -ne 0 ]; then
@@ -82,37 +82,37 @@ if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; th
     exit 1
   fi
 
-else
+# else
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_hub_internet_ingress
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_hub_internet_ingress failed. Exiting.\e[0m"
-    exit 1
-  fi
+#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_hub_internet_ingress
+#   if [ $? -ne 0 ]; then
+#     echo -e "     "
+#     echo -e "\e[31mCreate 1-Landing Zone networking_hub_internet_ingress failed. Exiting.\e[0m"
+#     exit 1
+#   fi
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_hub_intranet_ingress
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_hub_intranet_ingress failed. Exiting.\e[0m"
-    exit 1
-  fi
+#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_hub_intranet_ingress
+#   if [ $? -ne 0 ]; then
+#     echo -e "     "
+#     echo -e "\e[31mCreate 1-Landing Zone networking_hub_intranet_ingress failed. Exiting.\e[0m"
+#     exit 1
+#   fi
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_spoke_management
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_spoke_management failed. Exiting.\e[0m"
-    exit 1
-  fi
+#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_spoke_management
+#   if [ $? -ne 0 ]; then
+#     echo -e "     "
+#     echo -e "\e[31mCreate 1-Landing Zone networking_spoke_management failed. Exiting.\e[0m"
+#     exit 1
+#   fi
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_peering
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_peering failed. Exiting.\e[0m"
-    exit 1
-  fi
+#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_peering
+#   if [ $? -ne 0 ]; then
+#     echo -e "     "
+#     echo -e "\e[31mCreate 1-Landing Zone networking_peering failed. Exiting.\e[0m"
+#     exit 1
+#   fi
 
-fi
+# fi
 
 #------------------------------------------------------------------------
 # 2- solution accelerators
@@ -126,6 +126,10 @@ fi
 echo "deploy azure resources - 2-solution accelerators"
 
 cd /tf/avm/scripts/bin
+
+CONFIG_YAML_FILE_PATH="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+LANDINGZONE_TYPE="1"
+SETTINGS_YAML_FILE_PATH=$(yq  -r '.settings_yaml_file_path' "${CONFIG_YAML_FILE_PATH}")
 
 ./../lib/deploy_azure_resources.sh $SETTINGS_YAML_FILE_PATH $CONFIG_YAML_FILE_PATH $LANDINGZONE_TYPE
 

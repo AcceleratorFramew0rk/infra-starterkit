@@ -13,6 +13,8 @@
 
 echo "PREFIX: $PREFIX"
 echo "RESOURCE GROUP NAME: $RESOURCE_GROUP_NAME"
+echo "Log Analytics Workspace Resource Group Name: $LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME"
+echo "Log Analytics Workspace Name: $LOG_ANALYTICS_WORKSPACE_NAME"
 echo "VNET Project Name: $VNET_PROJECT_NAME"
 echo "VNET DevOps Name: $VNET_DEVOPS_NAME"
 echo "The CIDR of the GCCI Project Virtual Network is: $GCCI_VNET_PROJECT_CIDR"
@@ -65,11 +67,14 @@ if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; th
 cat <<EOF > ./../config/input.yaml
 subscription_id: "${SUB_ID}"
 resource_group_name: "${RESOURCE_GROUP_NAME}"
+log_analytics_workspace_resource_group_name: "${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}"  
+log_analytics_workspace_name: "${LOG_ANALYTICS_WORKSPACE_NAME}" 
 prefix: "${PREFIX}"
 is_prefix: true
 is_single_resource_group: true
 environment: "${ENVIRONMENT}"
 settings_yaml_file_path: "${SETTINGS_YAML_FILE_PATH}"
+config_yaml_file_path: "${CONFIG_YAML_FILE_PATH}"
 vnets:
   hub_ingress_internet: 
     name:   
@@ -105,11 +110,14 @@ VNET_MANAGEMENT_NAME="gcci-vnet-management"
 cat <<EOF > ./../config/input.yaml
 subscription_id: "${SUB_ID}"
 resource_group_name: "${RESOURCE_GROUP_NAME}"
+log_analytics_workspace_resource_group_name: "${LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME}"  
+log_analytics_workspace_name: "${LOG_ANALYTICS_WORKSPACE_NAME}" 
 prefix: "${PREFIX}"
 is_prefix: true
 is_single_resource_group: true
 environment: "${ENVIRONMENT}"
 settings_yaml_file_path: "${SETTINGS_YAML_FILE_PATH}"
+config_yaml_file_path: "${CONFIG_YAML_FILE_PATH}"
 vnets:
   hub_ingress_internet: 
     name: "$VNET_HUB_INGRESS_INTERNET_NAME" 

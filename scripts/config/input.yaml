@@ -1,10 +1,13 @@
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f"
-resource_group_name: "hc111-dev-platform"
-prefix: "hc111-dev"
+resource_group_name: "ds06-dev-rg-platform"
+log_analytics_workspace_resource_group_name: "central-agency-law"  
+log_analytics_workspace_name: "central-agency-workspace" 
+prefix: "ds06-dev"
 is_prefix: true
 is_single_resource_group: true
 environment: "dev"
-settings_yaml_file_path: "/tf/avm/scripts/config/settings_ai_archetype.yaml"
+settings_yaml_file_path: "/tf/avm/scripts/config/settings_vm_logicapp.yaml"
+config_yaml_file_path: "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 vnets:
   hub_ingress_internet: 
     name:   
@@ -22,8 +25,8 @@ vnets:
     name:     
     cidr: 
   project:  
-    name: "gcci-vnet-project"
+    name: "dso-vnet-project"
     cidr: "192.168.0.0/23"
   devops:  
-    name: "gcci-vnet-devops"  
+    name: "dso-vnet-devops"  
     cidr: "192.168.10.0/24"  
