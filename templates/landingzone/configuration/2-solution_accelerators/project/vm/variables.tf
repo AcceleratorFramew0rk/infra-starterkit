@@ -55,12 +55,12 @@ variable "subnet_name" {
   default = "AppSubnet"
 }
 
-# variable deprecated
-variable "resource_names" {
-  description = "List of Virtual Machine names"
-  type        = list(string)
-  default     = ["1"] # default to one virtual machine # ["1", "2"] default to two virtual machines. make sure the vaule is single digit
-}
+# # variable deprecated
+# variable "resource_names" {
+#   description = "List of Virtual Machine names"
+#   type        = list(string)
+#   default     = ["1"] # default to one virtual machine # ["1", "2"] default to two virtual machines. make sure the vaule is single digit
+# }
 
 # variable "cpu" {
 #   description = "CPU core for the Virtual Machines to deploy"
