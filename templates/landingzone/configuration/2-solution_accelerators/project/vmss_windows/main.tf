@@ -75,7 +75,7 @@ resource "random_integer" "zone_index" {
 resource "azurerm_user_assigned_identity" "user" {
   # location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
-  name                = "${module.naming.user_assigned_identity.name_unique}${random_string.this.result}"   # module.naming.user_assigned_identity.name_unique
+  name                = "${module.naming.user_assigned_identity.name_unique}-vmssw-${random_string.this.result}"   # module.naming.user_assigned_identity.name_unique
   # resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name # azurerm_resource_group.this.0.name
 

@@ -1,7 +1,7 @@
 # add your solution accelerator terraform here.
 resource "azurerm_user_assigned_identity" "this" {
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  name                = "${module.naming.user_assigned_identity.name}-${random_string.this.result}"  # "uami-${random_id.name.hex}"
+  name                = "${module.naming.user_assigned_identity.name}-apim-${random_string.this.result}"  # "uami-${random_id.name.hex}"
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
 }
 
