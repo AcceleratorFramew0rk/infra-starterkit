@@ -74,6 +74,13 @@ variable "resource_names" {
 #   default     = null # default to null. make sure the vaule is single digit
 # }
 
+
+# developer portal variables
+# - os type: windows or linux
+# - sku: 2 cpu to 16 cpu
+# - storage: 32 to 2 TB
+# - count: 1-5
+
 variable "sku" {
   description = "Sku size for the Virtual Machines to deploy"
   type        = string
@@ -92,8 +99,3 @@ variable "vm_count" {
   default     = 1 # default to 1. make sure the vaule is single digit
 }
 
-# developer portal variables
-# - os type: windows or linux
-# - sku: 2 cpu to 16 cpu
-# - storage: 32 to 2 TB
-# - count: 1-5
