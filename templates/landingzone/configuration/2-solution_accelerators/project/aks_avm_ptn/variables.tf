@@ -131,6 +131,6 @@ variable "max_count" {
 
 variable "vm_size" {
   type        = string  
-  default = "Standard_D4_v3"
+  default = "Standard_D2d_v5" # "Standard_D4_v3"
 }
 

@@ -1,3 +1,10 @@
+** IMPORTANT: 
+https://learn.microsoft.com/en-us/answers/questions/1377548/unable-to-enable-encryption-at-host-for-azure-vm
+ERROR: message": "Subscription does not enable EncryptionAtHost.
+Solution:
+go to cloud shell, execute
+Register-AzProviderFeature -FeatureName "EncryptionAtHost" -ProviderNamespace "Microsoft.Compute"
+
 ### 🔹 Step 1: Navigate to the Terraform Configuration Directory
 
 ```bash
