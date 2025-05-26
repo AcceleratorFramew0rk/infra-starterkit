@@ -47,7 +47,7 @@ module "private_dns_zones" {
 resource "azurerm_user_assigned_identity" "this_identity" {
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   # name                = module.naming.user_assigned_identity.name_unique
-  name                = "${module.naming.storage_account.name_unique}-st-${random_string.this.result}"
+  name                = "${module.naming.user_assigned_identity.name}-st-${random_string.this.result}"
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
 }
 

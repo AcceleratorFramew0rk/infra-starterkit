@@ -64,7 +64,8 @@ resource "azurerm_service_plan" "this" {
 
 resource "azurerm_user_assigned_identity" "user" {
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  name                = module.naming.user_assigned_identity.name_unique
+  # name                = module.naming.user_assigned_identity.name_unique
+  name                = "${module.naming.user_assigned_identity.name}-funcapp-${random_string.this.result}"
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
 }
 
