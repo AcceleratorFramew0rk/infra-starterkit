@@ -53,12 +53,12 @@ variable "ingress_subnet_name" {
 
 variable "tier" {
   type        = string  
-  default = "ServiceSubnet"
+  default = "WorkflowStandard"
 }
 
 
 variable "size" {
   type        = string  
-  default = "ServiceSubnet"
+  default = "WS1"
 }
 
