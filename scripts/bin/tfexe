@@ -401,23 +401,93 @@ else
 
     if [ "$ACTION" = "apply" ]; then
 
-      # Read and loop through each line
+      # # Read and loop through each line
+      # while IFS= read -r line || [[ -n "$line" ]]; do
+      #   echo "Running..."
+      #   echo "$line"
+
+      #   # # execute the command
+      #   # eval "$line"
+      #   if [ $? -ne 0 ]; then
+      #     echo -e "     "
+      #     echo -e "\e[31mCommand execution failed for '$line'. Exiting.\e[0m"
+      #     exit 1
+      #   else
+      #     echo -e "     "
+      #     echo -e "\e[32mCommand execution succeeded for '$line'!\e[0m"
+      #   fi    
+
+      # done < "$FILE"
+
+      # Initialize an empty array
+      COMMAND_ARRAY=()
+
+      # Read and store lines in the array
+      echo "Processing Commands in include file: '$FILE'"
       while IFS= read -r line || [[ -n "$line" ]]; do
-        echo "Running..."
         echo "$line"
 
-        # # execute the command
-        eval "$line"
-        if [ $? -ne 0 ]; then
-          echo -e "     "
-          echo -e "\e[31mCommand execution failed for '$line'. Exiting.\e[0m"
-          exit 1
+
+        if [[ -n "$line" ]]; then
+          # Trim leading whitespace and check if the line starts with '#'
+          trimmed_line="${line#"${line%%[![:space:]]*}"}"     
+          
+          if [[ -n "$trimmed_line" ]]; then
+
+            if [[ "${trimmed_line:0:1}" == "#" ]]; then
+              echo "Skipping comments: $line"
+            else   
+              # Extract the first word
+              first_word="${trimmed_line%% *}"
+              # Check if the first word is allowed
+              if [[ "$first_word" == "echo" || "$first_word" == "tfexe" ]]; then
+                # Add the trimmed line to the array
+                echo "Adding command to array: $trimmed_line"
+                COMMAND_ARRAY+=("$trimmed_line") 
+              else
+                echo "ERROR: Invalid command: $first_word : $trimmed_line"
+                exit 1
+              fi
+            fi   
+            
+          else
+            echo "Skipping empty lines with spaces only"
+          fi
+
         else
-          echo -e "     "
-          echo -e "\e[32mCommand execution succeeded for '$line'!\e[0m"
-        fi    
+          echo "Skipping empty lines"
+        fi
 
       done < "$FILE"
+
+
+      echo " "
+      echo "processing ${#COMMAND_ARRAY[@]} commands from the include file: '$FILE'"
+      echo " "
+      # Loop through the array and echo each line
+      for cmd in "${COMMAND_ARRAY[@]}"; do
+
+        # Trim leading whitespace and check if the line starts with '#'
+        trimmed_line="${cmd#"${cmd%%[![:space:]]*}"}"
+
+        if [[ "${trimmed_line:0:1}" == "#" ]]; then
+          echo "Skipping comments: $cmd"
+        else
+          echo "Running..."
+          echo "$trimmed_line"
+          # # execute the command
+          eval "$trimmed_line"     
+          if [ $? -ne 0 ]; then
+            echo -e "     "
+            echo -e "\e[31mCommand execution failed for '$trimmed_line'. Exiting.\e[0m"
+            exit 1
+          else
+            echo -e "     "
+            echo -e "\e[32mCommand execution succeeded for '$trimmed_line'!\e[0m"
+          fi  
+        fi
+            
+      done
 
     else
         echo -e "     "

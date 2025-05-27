@@ -1,10 +1,10 @@
-echo "0-launchpad"
+# 0-launchpad
 tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
-echo "1-landingzones"
+# 1-landingzones
 tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
 tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
 tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
-echo "2-solution_accelerators"
+# 2-solution_accelerators
 tfexe apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/devops/containter_instance
 tfexe apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/keyvault
 tfexe apply -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/app_service
