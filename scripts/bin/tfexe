@@ -399,17 +399,31 @@ else
       exit 1
     fi
 
-    # Read and loop through each line
-    while IFS= read -r line || [[ -n "$line" ]]; do
-      echo "$line"
-      cd "$line"
-      if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
-        TF_VAR_FILE="null"
-      fi
-      # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
-      exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE "${TF_VARS[@]}"
+    if [ "$ACTION" = "apply" ]; then
 
-    done < "$FILE"
+      # Read and loop through each line
+      while IFS= read -r line || [[ -n "$line" ]]; do
+        echo "Running..."
+        echo "$line"
+
+        # # execute the command
+        eval "$line"
+        if [ $? -ne 0 ]; then
+          echo -e "     "
+          echo -e "\e[31mCommand execution failed for '$line'. Exiting.\e[0m"
+          exit 1
+        else
+          echo -e "     "
+          echo -e "\e[32mCommand execution succeeded for '$line'!\e[0m"
+        fi    
+
+      done < "$FILE"
+
+    else
+        echo -e "     "
+        echo -e "\e[32mTo use -include, the first parameter must be 'apply'!\e[0m"
+        exit 1
+    fi    
 
   fi
 

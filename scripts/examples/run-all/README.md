@@ -1,4 +1,4 @@
-# AI Foundry Archetype
+# Deploy archetype using tfexe apply run-all -include=<path of [pattern].hcl file>
 
 # Prerequisites
 
@@ -27,6 +27,10 @@ az account show # to show the current login account
 
 SUBSCRIPTION_ID="xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
+
+sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
+sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
+
 ```
 
 
@@ -34,41 +38,22 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 ** IMPORTANT: if required, modify config.yaml file to determine the vnets name and cidr ranage you want to deploy. 
 
 ```bash
-cd /tf/avm/templates/0-setup_gcc_dev_env
+cd /tf/avm/templates/0-setup_subscription_law
 
 terraform init -reconfigure
 terraform plan
 terraform apply -auto-approve
 ```
 
-## 1. Launchpad - create launchpad storage account and containers
+## Step 1: Deploy 0-launchpad, 1-landingzones, 2-solution_accelerators
 
 - set prefix and configuration
 - modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
+- ensure your *.hcl contains the tfexe commands that you want to execute
 
-```bash
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
-
-cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-
-./scripts/import.sh
-
-```
-
-## 2. Infra and Application Landing zone and networking
-
+- EXAMPLE:
 ```bash
 
-tfexe apply run-all -include=/tf/avm/scripts/examples/AI_Foundry_LZ.hcl
+tfexe apply run-all -include=/tf/avm/scripts/examples/run-all/azure_ai_foundry_pattern.hcl
 
 ```
-
-### 3. Solution Accelerators
-
-```bash
-
-tfexe apply run-all -include=/tf/avm/scripts/examples/AI_Foundry_pattern.hcl
-
-```
-

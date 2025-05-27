@@ -1,3 +1,0 @@
-/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
-/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
-/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
