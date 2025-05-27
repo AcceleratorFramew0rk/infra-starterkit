@@ -113,6 +113,8 @@ tfexe deploy
 
 * **PREFIX**: Your project’s unique identifier (e.g. `hc01-dev`)
 * **RESOURCE GROUP NAME**: Name of the Azure Resource Group to host resources (e.g. `hc01-dev-platform`)
+* **LOG ANALYTICS WORKSPACE RESOURCE GROUP NAME**: Name of the Resource Group hosting Log Analytics Workspace (default: `gcci-agency-law`)
+* **LOG ANALYTICS WORKSPACE NAME**: Name of the Log Analytics Workspace (default: `gcci-agency-workspace`)
 * **ENVIRONMENT**: Deployment environment (`dev`, `sit`, `uat`, `stg`, `prd`; default: `dev`)
 * **LANDING ZONE TYPE**: Type of landing zone (Enter `1` = application)
 * **COMPARTMENT TYPE**: Type of VNET compartment (Enter `3` = agency managed)
