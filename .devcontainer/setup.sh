@@ -17,11 +17,6 @@ if [ ! -d /tf/avm/modules/framework/terraform-azurerm-aaf ]; then
   git clone https://github.com/AcceleratorFramew0rk/terraform-azurerm-aaf.git /tf/avm/modules/terraform-azurerm-aaf
 fi
 
-if [ ! -f /usr/local/bin/terraform-init-custom ]; then
-  sudo cp /tf/avm/scripts/bin/terraform-init-custom /usr/local/bin/
-  sudo chmod +x /usr/local/bin/terraform-init-custom
-fi
-
 if [ ! -f /usr/local/bin/tfexe ]; then
   sudo cp /tf/avm/scripts/bin/tfexe /usr/local/bin/
   sudo chmod +x /usr/local/bin/tfexe
