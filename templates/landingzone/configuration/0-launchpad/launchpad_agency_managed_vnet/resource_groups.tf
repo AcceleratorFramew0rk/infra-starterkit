@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "this" {
   name     = local.resource_group_name 
-  location = "${var.location}" 
+  location = "${try(local.global_settings.location, var.location)}" 
 }
 
 # resource "azurerm_resource_group" "gcci_agency_law" {

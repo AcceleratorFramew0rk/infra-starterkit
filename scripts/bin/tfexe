@@ -12,6 +12,7 @@
 # tfexe deploy-app-lz # execute import, application landing zone and solution accelerators without generate-config file commands
 # tfexe deploy # deploy azure resource based on settings.yaml file and inputs
 # tfexe update-remote-state # refresh config.yaml file to match the current state of the infrastructure
+# tfexe apply -backend-config-key=network-spoke-project.tfstate
 
 # Begin Functions
 exec_terraform() {
@@ -19,7 +20,8 @@ exec_terraform() {
   local ACTION=$1
   local TF_CONFIG=$2
   local TF_VAR_FILE=$3
-  local TF_VARS=("${@:4}")
+  local TF_BACKEND_CONFIG_KEY=$4
+  local TF_VARS=("${@:5}")
 
   if [[ "$ACTION" == *"init"* || "$ACTION" == *"plan"* || "$ACTION" == *"apply"* || "$ACTION" == *"import"*  || "$ACTION" == *"generate-config"* || "$ACTION" == *"deploy"* || "$ACTION" == *"update-remote-state"* || "$ACTION" == *"deploy-app-lz"* ]]; then
     # alway exec terraform init
@@ -44,9 +46,16 @@ exec_terraform() {
         EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{gsub("_", "", $NF); print $(NF-1) "-" $NF}')
         CONTAINER_NAME="2-solution-accelerators"
         EXTRACTED_NAME="${EXTRACTED_NAME//_/-}"
-        KEY="solution-accelerators-${EXTRACTED_NAME}.tfstate"
-        echo "Container name: ${CONTAINER_NAME}"
-        echo "Key: ${KEY}"
+        if [[ "$TF_BACKEND_CONFIG_KEY" == "" || "$TF_BACKEND_CONFIG_KEY" == "null" ]]; then
+          KEY="solution-accelerators-${EXTRACTED_NAME}.tfstate"
+          echo "Container name: ${CONTAINER_NAME}"
+          echo "Key: ${KEY}"
+        else
+          # e.g. -backend-config-key=network-spoke-project.tfstate
+            KEY="${TF_BACKEND_CONFIG_KEY}"
+            echo "Container name: ${CONTAINER_NAME}"
+            echo "Key: ${KEY}"
+        fi
 
       else 
         # 1-landingzones e.g. network-spoke-project.tfstate
@@ -55,9 +64,16 @@ exec_terraform() {
         EXTRACTED_NAME=$(echo "$PATH_STRING" | awk -F'/' '{print $NF}' | sed 's/networking/network/g')
         CONTAINER_NAME="1-landingzones"
         EXTRACTED_NAME="${EXTRACTED_NAME//_/-}"
-        KEY="${EXTRACTED_NAME}.tfstate"
-        echo "Container name: ${CONTAINER_NAME}"
-        echo "Key: ${KEY}"
+        if [[ "$TF_BACKEND_CONFIG_KEY" == "" || "$TF_BACKEND_CONFIG_KEY" == "null" ]]; then
+          KEY="${EXTRACTED_NAME}.tfstate"
+          echo "Container name: ${CONTAINER_NAME}"
+          echo "Key: ${KEY}"
+        else
+          # e.g. -backend-config-key=network-spoke-project.tfstate
+            KEY="${TF_BACKEND_CONFIG_KEY}"
+            echo "Container name: ${CONTAINER_NAME}"
+            echo "Key: ${KEY}"
+        fi
 
       fi
 
@@ -252,6 +268,7 @@ if [[ $# -lt 1 ]]; then
     echo "  -config     The path and filename to the Terraform configuration file - config.yaml"
     echo "  -var        Set a variable in the Terraform configuration"
     echo "  -var-file   Specify a variable file to use"
+    echo "  -backend-config-key   Specify a backend terraform state name for the azure resource"
     echo " "
     echo "Example: "
     echo "tfexe init -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/acr"  
@@ -262,6 +279,7 @@ if [[ $# -lt 1 ]]; then
     echo "tfexe apply run-all -path=/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project"
     echo "tfexe apply run-all -include=/tf/avm/config/path.hcl"
     echo "tfexe apply -var-file=/tf/avm/config/terraform.tfvars"
+    echo "tfexe apply -backend-config-key=network-spoke-project.tfstate"
     echo "tfexe import"
     echo "tfexe generate-config"
     echo "tfexe deploy"
@@ -286,6 +304,7 @@ TF_CONFIG=""
 TF_RUN_ALL=""
 TF_INCLUDE=""
 TF_VAR_FILE=""
+TF_BACKEND_CONFIG_KEY=""
 
 while [[ $# -gt 0 ]]; do
     # echo "Processing argument: $1"
@@ -326,7 +345,17 @@ while [[ $# -gt 0 ]]; do
             exit 1
         fi
         # e.g. -var-file=./tfvars.tfvars
-        TF_VAR_FILE="${1}"     
+        TF_VAR_FILE="${1}"        
+
+    elif [[ "$1" =~ ^-backend-config-key ]]; then
+        if [[ -n "$TF_BACKEND_CONFIG_KEY" ]]; then
+            echo -e "\e[31mError: Only one '-backend-config-key' argument is allowed.\e[0m"
+            exit 1
+        fi
+        # e.g. -var-file=./tfvars.tfvars
+        # TF_INCLUDE="${1#-include=}"  
+        TF_BACKEND_CONFIG_KEY="${1#-backend-config-key=}"          
+        # TF_BACKEND_CONFIG_KEY="${1}"     
 
     else
         echo -e "\e[31mError: invalid argument '$1'\e[0m"
@@ -361,8 +390,13 @@ if [[ -z "$TF_RUN_ALL" ]]; then
     if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
       TF_VAR_FILE="null"
     fi
-    # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS  # only one var variable only
-    exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE "${TF_VARS[@]}" 
+        
+    if [[ "$TF_BACKEND_CONFIG_KEY" == "" || "$TF_BACKEND_CONFIG_KEY" == "null" ]]; then
+      TF_BACKEND_CONFIG_KEY="null"
+    fi
+
+    # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_BACKEND_CONFIG_KEY "${TF_VARS[@]}" 
+    exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_BACKEND_CONFIG_KEY "${TF_VARS[@]}" 
 
 else
 
@@ -377,13 +411,20 @@ else
     for dir in "$PARENT_FOLDER"/*/; do
       # Check if it is a directory
       if [ -d "$dir" ]; then
+
         echo "$dir"
         cd "$dir"
         if [[ "$TF_VAR_FILE" == "" || "$TF_VAR_FILE" == "null" ]]; then 
           TF_VAR_FILE="null"
         fi
-        # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_VARS 
-        exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE "${TF_VARS[@]}" 
+        
+        if [[ "$TF_BACKEND_CONFIG_KEY" == "" || "$TF_BACKEND_CONFIG_KEY" == "null" ]]; then
+          TF_BACKEND_CONFIG_KEY="null"
+        fi
+
+        # exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_BACKEND_CONFIG_KEY "${TF_VARS[@]}" 
+        exec_terraform "$ACTION" "$TF_CONFIG" $TF_VAR_FILE $TF_BACKEND_CONFIG_KEY "${TF_VARS[@]}" 
+
       fi
     done
 

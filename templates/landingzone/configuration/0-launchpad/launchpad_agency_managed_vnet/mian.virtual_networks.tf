@@ -8,7 +8,7 @@ module "virtualnetwork_hub_internet_ingress" {
   name                     = local.hub_ingress_internet_vnet_name 
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location                 = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.hub_ingress_internet_vnet_name_cidr}"]
   address_space = ["${local.hub_ingress_internet_vnet_name_cidr}"]  
   subnets = {}  
@@ -30,7 +30,7 @@ module "virtualnetwork_hub_internet_egress" {
   name                     = local.hub_egress_internet_vnet_name # "vnet-hub-internet"
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location                 = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.hub_egress_internet_vnet_name_cidr}"]
   address_space  = ["${local.hub_egress_internet_vnet_name_cidr}"]
   subnets = {}     
@@ -51,7 +51,7 @@ module "virtualnetwork_hub_intranet_ingress" {
   name                     = local.hub_ingress_intranet_vnet_name # "vnet-hub-internet"
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location                 = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.hub_ingress_intranet_vnet_name_cidr}"]
   address_space = ["${local.hub_ingress_intranet_vnet_name_cidr}"]  
   subnets = {}       
@@ -72,7 +72,7 @@ module "virtualnetwork_hub_intranet_egress" {
   name                     = local.hub_egress_intranet_vnet_name 
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location                 = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.hub_egress_intranet_vnet_name_cidr}"]
   address_space = ["${local.hub_egress_intranet_vnet_name_cidr}"]  
   subnets = {}         
@@ -93,7 +93,7 @@ module "virtualnetwork_project" {
   name                     = local.project_vnet_name 
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location                 = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.project_vnet_name_cidr}"]
   address_space = ["${local.project_vnet_name_cidr}"]  
   subnets = {}         
@@ -114,7 +114,7 @@ module "virtualnetwork_management" {
   name                     = local.management_vnet_name 
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location                 = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.management_vnet_name_cidr}"]
   address_space = ["${local.management_vnet_name_cidr}"]  
   subnets = {}         
@@ -135,7 +135,7 @@ module "virtualnetwork_devops" {
   name                     = local.devops_vnet_name 
   enable_telemetry              = true
   resource_group_name           = azurerm_resource_group.this.name
-  location                 = var.location # "southeastasia"
+  location = "${try(local.global_settings.location, var.location)}" 
   # virtual_network_address_space = ["${local.devops_vnet_name_cidr}"]
   address_space = ["${local.devops_vnet_name_cidr}"]  
   subnets = {}         

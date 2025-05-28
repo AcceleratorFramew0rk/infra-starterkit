@@ -76,11 +76,8 @@ tfexe generate-config
 - modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
 - ensure your *.hcl contains the tfexe commands that you want to execute
 
-- EXAMPLE:
+- EXAMPLE: if "/tf/avm/scripts/examples/run-all/azure_ai_foundry_pattern.hcl" contains all your tfexe commands
 ```bash
-# generate config.yaml file
-tfexe generate-config
-
 
 tfexe apply run-all -include=/tf/avm/scripts/examples/run-all/azure_ai_foundry_pattern.hcl
 
