@@ -19,7 +19,6 @@ echo "Config file: ${CONFIG_FILE}"
 
 PREFIX=$(yq  -r '.prefix' "${CONFIG_FILE}")
 echo "getting the prefix from config.yaml"
-# cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
 cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 pwd
 ./scripts/launchpad.sh $PREFIX
@@ -43,8 +42,8 @@ STG_NAME=$(echo "$STORAGE_ACCOUNT_INFO" | jq ".[0].name" -r)
 # get subscription id 
 ACCOUNT_INFO=$(az account show 2> /dev/null)
 SUBSCRIPTION_ID=$(echo "$ACCOUNT_INFO" | jq ".id" -r)
-LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME="gcci-agency-law"
-LOG_ANALYTICS_WORKSPACE_NAME="gcci-agency-workspace"
+LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME=$(yq  -r '.log_analytics_workspace_resource_group_name' "${CONFIG_FILE}")
+LOG_ANALYTICS_WORKSPACE_NAME=$(yq  -r '.log_analytics_workspace_name' "${CONFIG_FILE}")
 
 echo $SUBSCRIPTION_ID
 echo $PREFIX
@@ -60,7 +59,6 @@ export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 #------------------------------------------------------------------------
 # ** IMPORTANT: if required, modify config.yaml file to determine the vnets name and cidr ranage you want to deploy. 
 
-# cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
 cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 
 terraform init  -reconfigure \
@@ -98,8 +96,7 @@ fi
 #------------------------------------------------------------------------
 # import log analytics workspace - using launchpad folder
 #------------------------------------------------------------------------
-# cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare_law
-# cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare_law"
+
 cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet_law"
 
 terraform init  -reconfigure \
@@ -128,8 +125,7 @@ pwd
 #------------------------------------------------------------------------
 # generate the nsg configuration
 #------------------------------------------------------------------------
-# cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-# cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_healthcare"
+
 cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
 ./scripts/nsg.sh "${WORKING_DIR}"
 if [ $? -eq 0 ]; then
