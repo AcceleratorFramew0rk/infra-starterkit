@@ -1,4 +1,4 @@
-Warning: Important information for customers using Accelerator Framework Starter-Kit.
+**Warning**: Important information for customers using Accelerator Framework Starter-Kit.
 This solution, offered by the Open-Source community, does not receive contributions nor support by Microsoft.
 
 # Starterkit
