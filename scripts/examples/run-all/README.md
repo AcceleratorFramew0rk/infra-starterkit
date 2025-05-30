@@ -8,6 +8,8 @@ In order to start deploying your landing zones, you need an Azure subscription (
 - Git
 Once installed, open Visual Studio Code and install "Remote Development" extension
 
+** Note: Ensure your terraform is version 1.9.0 and above
+
 ## Cloning the starter repository
 
 - Download the repo as a zip file.
@@ -17,6 +19,7 @@ Once installed, open Visual Studio Code and install "Remote Development" extensi
 
 # Deploy the starter kit
 ## Login to Azure
+### ** If you face permission issue, ensure you are the "Owner", "Storage Blob Data Owner", "User Access Administrator" to the subscription.
 
 ```bash
 az login --tenant xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # azure tenant id
@@ -42,6 +45,10 @@ cd /tf/avm/templates/0-setup_subscription_law
 terraform init -reconfigure
 terraform plan
 terraform apply -auto-approve
+
+# OR
+
+tfexe setup-law
 ```
 
 ## Step 1: Generate config.yaml file
