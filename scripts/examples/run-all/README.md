@@ -22,6 +22,7 @@ Once installed, open Visual Studio Code and install "Remote Development" extensi
 ### ** If you face permission issue, ensure you are the "Owner", "Storage Blob Data Owner", "User Access Administrator" to the subscription.
 
 ```bash
+
 az login --tenant xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # azure tenant id
 
 az account set --subscription xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx # subscription id
@@ -31,8 +32,8 @@ az account show # to show the current login account
 SUBSCRIPTION_ID="xxxxxxxx-xxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
 export ARM_SUBSCRIPTION_ID="${SUBSCRIPTION_ID}"
 
-sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration/level0/gcci_platform/import.sh
 sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
+sudo chmod -R -f 777 /tf/avm/scripts
 
 ```
 
@@ -40,6 +41,7 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 ## Step 0 - create log analytics workspace ** OPTIONAL (for non-gcc environment only)
 
 ```bash
+
 cd /tf/avm/templates/0-setup_subscription_law
 
 terraform init -reconfigure
@@ -49,11 +51,17 @@ terraform apply -auto-approve
 # OR
 
 tfexe setup-law
+
 ```
+Enter the following information when prompt:
+* **LOG ANALYTICS WORKSPACE RESOURCE GROUP NAME**: Name of the Resource Group hosting Log Analytics Workspace (default: `gcci-agency-law`)
+* **LOG ANALYTICS WORKSPACE NAME**: Name of the Log Analytics Workspace (default: `gcci-agency-workspace`)
+
 
 ## Step 1: Generate config.yaml file
 
 ```bash
+
 tfexe generate-config
 
 ```
