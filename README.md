@@ -1,5 +1,8 @@
+Warning: Important information for customers using Central Workload Health Dashboard
+This solution, offered by the Open-Source community, does not receive contributions nor support by Microsoft.
+
 # Starterkit
-Starter kit based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
+Starter kit is based on Accelerator Framework and allows you to create resources on Microsoft Azure in an Azure subscription. 
 This is customized to install in a specific environment setup. 
 
 ## Components
