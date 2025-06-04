@@ -92,8 +92,8 @@ echo "The CIDR of the GCCI DevOps Virtual Network is: $GCCI_VNET_DEVOPS_CIDR"
 INPUT_CONFIG=$(cat <<EOF
 subscription_id: "${SUBSCRIPTION_ID}"
 prefix: "${PREFIX}"
-is_prefix: false
-is_single_resource_group: false
+is_prefix: true
+is_single_resource_group: true
 environment: "${ENVIRONMENT}"
 vnets:
   hub_ingress_internet: 
@@ -129,17 +129,30 @@ echo "$INPUT_CONFIG" > './cicd/scripts/config/input.yaml'
 
 SOLUTION_ACCELERATOR_CONFIG=$(cat ./cicd/scripts/config/selectedServices.json)
 
-# Convert to YAML and write to config.yaml
+# # Convert to YAML and write to config.yaml
+# cat <<EOF > './cicd/scripts/config/settings.yaml'
+# devops:
+#   ContainerInstance: true
+# project:
+# EOF
+# echo "$SOLUTION_ACCELERATOR_CONFIG" | jq -r '
+#     map(to_entries[]) | 
+#     map("  " + .key + ": " + (.value | tostring)) | 
+#     join("\n")' >> './cicd/scripts/config/settings.yaml'
+
+
+# Convert to YAML and write to settings.yaml
 cat <<EOF > './cicd/scripts/config/settings.yaml'
 devops:
   ContainerInstance: true
 project:
 EOF
-echo "$SOLUTION_ACCELERATOR_CONFIG" | jq -r '
-    map(to_entries[]) | 
-    map("  " + .key + ": " + (.value | tostring)) | 
-    join("\n")' >> './cicd/scripts/config/settings.yaml'
 
+# Append project keys/values
+echo "$SOLUTION_ACCELERATOR_CONFIG" | jq -r '
+    to_entries |
+    map("  " + .key + ": " + (.value | tostring)) |
+    .[]' >> './cicd/scripts/config/settings.yaml'
 
 
 # "Usage: python3 render_config.py <settings_yaml_file_path>
