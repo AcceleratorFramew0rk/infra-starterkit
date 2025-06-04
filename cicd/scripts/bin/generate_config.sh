@@ -147,13 +147,20 @@ devops:
   ContainerInstance: true
 project:
 EOF
+if [ $? -ne 0 ]; then
+  echo -e "\e[31moutput devops to settings.yaml execution failed. Exiting.\e[0m"
+  exit 1
+fi
 
 # Append project keys/values
 echo "$SOLUTION_ACCELERATOR_CONFIG" | jq -r '
     to_entries |
     map("  " + .key + ": " + (.value | tostring)) |
     .[]' >> './cicd/scripts/config/settings.yaml'
-
+if [ $? -ne 0 ]; then
+  echo -e "\e[31moutput project to settings.yaml execution failed. Exiting.\e[0m"
+  exit 1
+fi
 
 # "Usage: python3 render_config.py <settings_yaml_file_path>
 python3 ./cicd/scripts/lib/render_config.py 
