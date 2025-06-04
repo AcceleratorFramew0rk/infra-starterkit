@@ -27,13 +27,16 @@ echo $decoded_solution_accelerator
 
 # get solution accelerator selectedServices and selectedServicesConfig from input 
 selectedServices=$(echo "$decoded_solution_accelerator" | jq -r '.[0].selectedServices')
-# Convert to JSON object
-validSelectedServices=$(echo "$selectedServices" | jq '.')
 
-# Convert to array format
-selectedServices=$(echo "$validSelectedServices" | jq '[to_entries[] | {(.key): .value}]')
+# *** do not need to convert to JSON object or array format as it is already in the correct format
+# # Convert to JSON object
+# validSelectedServices=$(echo "$selectedServices" | jq '.')
+# # Convert to array format
+# selectedServices=$(echo "$validSelectedServices" | jq '[to_entries[] | {(.key): .value}]')
+
 echo "selectedServices:"
 echo $selectedServices
+
 selectedServicesConfig=$(echo "$decoded_solution_accelerator" | jq -r '.[1].selectedServicesConfig')
 echo "selectedServicesConfig:"
 echo $selectedServicesConfig
