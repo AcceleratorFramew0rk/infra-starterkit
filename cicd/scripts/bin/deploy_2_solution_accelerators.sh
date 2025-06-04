@@ -25,10 +25,17 @@ echo "Data file config: $data_file_config"
 
 # Key: service name, value: folder name in /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project folder
 # Loop through selectedServices.json
-jq -c '.[]' "$selected_services_file" | while read -r item; do
-    key=$(echo "$item" | jq -r 'keys[0]')                # Extract the key (service name)
-    selected_value=$(echo "$item" | jq -r ".[\"$key\"]") # Extract the true/false value
-    
+
+# the below is not working
+# jq -c '.[]' "$selected_services_file" | while read -r item; do
+#     key=$(echo "$item" | jq -r 'keys[0]')                # Extract the key (service name)
+#     selected_value=$(echo "$item" | jq -r ".[\"$key\"]") # Extract the true/false value
+
+jq -c 'to_entries[]' "$selected_services_file" | while read -r item; do
+    key=$(echo "$item" | jq -r '.key')
+    selected_value=$(echo "$item" | jq -r '.value')
+    echo "Service: $key, Selected: $selected_value"
+
     if [ "$selected_value" == "true" ]; then
         # Check if the key exists in data file object
         value=$(jq -r --arg key "$key" '.[] | select(has($key)) | .[$key]' "$data_file")
