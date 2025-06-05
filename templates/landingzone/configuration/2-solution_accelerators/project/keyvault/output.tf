@@ -1,6 +1,22 @@
 output "resource" {
-  value       = module.keyvault.resource 
+  value       = {
+    id = module.keyvault.resource_id, 
+    name = module.keyvault.name, 
+   }
   description = "The Azure keyvault resource"
+  sensitive = true  
+}
+
+
+output "resource_id" {
+  value = module.keyvault.resource_id
+  description = "The Azure keyvault resource id"
+  sensitive = true  
+}
+
+output "name" {
+  value = module.keyvault.name
+  description = "The Azure keyvault resource name"
   sensitive = true  
 }
 

@@ -34,6 +34,10 @@ variable "subnet_name" {
   default = "ServiceSubnet"
 }
 
+variable "vnet_name" {
+  type        = string  
+  default = "spoke_project"
+}
 # developer portal variables
 # Purge Protect: yes (readonly) purge_protection_enabled 
 # Soft Delete: yes (readonly) soft_delete_retention_days 
