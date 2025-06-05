@@ -61,7 +61,7 @@ variable "subnet_name" {
 
 variable "ingress_subnet_name" {
   type        = string  
-  default = "WebSubnet"
+  default = "ServiceSubnet"
 }
 
 variable "resource_names" {
