@@ -16,8 +16,8 @@ resource "azurerm_container_app_environment" "this" {
     
     # ** IMPORTANT ** workload_profile_type = "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
     workload_profile_type = var.workload_profile_type # "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
-    maximum_count = try(var.maximum_count, 10) # - (Required) The maximum number of instances of workload profile that can be deployed in the Container App Environment.
-    minimum_count = try(var.minimum_count, 1) # - (Required) The minimum number of instances of workload profile that can be deployed in the Container App Environment.
+    maximum_count = 8 # try(var.maximum_count, 10) # - (Required) The maximum number of instances of workload profile that can be deployed in the Container App Environment.
+    minimum_count = 1 # try(var.minimum_count, 1) # - (Required) The minimum number of instances of workload profile that can be deployed in the Container App Environment.
 
   }
 
@@ -34,65 +34,10 @@ resource "azurerm_container_app_environment" "this" {
 }
 
 
-module "private_dns_zones" {
-  source                = "Azure/avm-res-network-privatednszone/azurerm"   
-  version = "0.3.0" 
-
-  count = var.private_dns_zones_enabled ? 1 : 0
-
-  enable_telemetry      = true
-  resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  domain_name           = "privatelink.azurecontainerapps.io"
-  tags = merge(
-    local.global_settings.tags,
-    {
-      purpose = "container app environment private dns zone" 
-      project_code = try(local.global_settings.prefix, var.prefix) 
-      env = try(local.global_settings.environment, var.environment) 
-      zone = "project"
-      tier = "app"   
-    }
-  ) 
-  virtual_network_links = {
-      vnetlink1 = {
-        vnetlinkname     = "vnetlink1"
-        vnetid           = try(local.remote.networking.virtual_networks.spoke_project.virtual_network.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_network.id : var.vnet_id  
-        autoregistration = false # true
-        tags = {
-          "env" = "dev"
-        }
-      }
-    }
-}
-
-module "private_endpoint" {
-  # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/networking/terraform-azurerm-privateendpoint"
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/networking/terraform-azurerm-privateendpoint"
- 
-  name                           = "${azurerm_container_app_environment.this.name}-web-privateendpoint"
-  location                       = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
-  resource_group_name            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
-  subnet_id                      = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.ingress_subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.ingress_subnet_name].resource.id : var.ingress_subnet_id 
-  tags = merge(
-    local.global_settings.tags,
-    {
-      purpose = "container app environment private endpoint" 
-      project_code = try(local.global_settings.prefix, var.prefix) 
-      env = try(local.global_settings.environment, var.environment) 
-      zone = "project"
-      tier = "app"   
-    }
-  ) 
-  private_connection_resource_id = azurerm_container_app_environment.this.id
-  is_manual_connection           = false
-  subresource_name               = "managedEnvironments" 
-  private_dns_zone_group_name    = "default" 
-  private_dns_zone_group_ids     = [module.private_dns_zones[0].resource.id] 
-}
-
 module "containerapp" {
   source  = "Azure/avm-res-app-containerapp/azurerm"
-  version = "0.3.0"
+  # version = "0.3.0"
+  version = "0.6.0"
 
   for_each                     = toset(var.resource_names)
   
@@ -107,6 +52,8 @@ module "containerapp" {
         memory = var.memory # "0.5Gi"
         cpu    = var.cpu # 0.25
         image  = var.frontend_image # "docker.io/hashicorp/counting-service:0.0.2"
+        min_replicas = 1
+        max_replicas = 10
         # env = [
         #   {
         #     name  = "PORT"

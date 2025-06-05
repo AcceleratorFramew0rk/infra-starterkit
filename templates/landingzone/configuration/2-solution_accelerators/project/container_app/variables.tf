@@ -44,25 +44,25 @@ variable "backend_image" {
   default = "docker.io/hashicorp/dashboard-service:0.0.4"
 }
 
-variable "private_dns_zones_enabled" {
-  type        = bool  
-  default = true
-}
+# variable "private_dns_zones_enabled" {
+#   type        = bool  
+#   default = true
+# }
 
-variable "ingress_subnet_id" {
-  type        = string  
-  default = null
-}
+# variable "ingress_subnet_id" {
+#   type        = string  
+#   default = null
+# }
 
 variable "subnet_name" {
   type        = string  
   default = "ContainerAppSubnet"
 }
 
-variable "ingress_subnet_name" {
-  type        = string  
-  default = "ServiceSubnet"
-}
+# variable "ingress_subnet_name" {
+#   type        = string  
+#   default = "ServiceSubnet"
+# }
 
 variable "resource_names" {
   description = "List of Virtual Machine names"
@@ -77,15 +77,15 @@ variable "resource_names" {
 # }
 
 
-variable "minimum_count" {
-  type        = string  
-  default = "1"
-}
+# variable "minimum_count" {
+#   type        = number  
+#   default = 1
+# }
 
-variable "maximum_count" {
-  type        = string  
-  default = "10"
-}
+# variable "maximum_count" {
+#   type    = number  
+#   default = 10
+# }
 
 # developer portal variables
 # workload_profile_type: "D16" default (D16) : Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
