@@ -1,8 +1,6 @@
 resource "azurerm_resource_group" "this" {
   count = try(local.global_settings.resource_group_name, null) == null ? 1 : 0
   
-  name = lower("${module.naming.resource_group.name}-solution-accelerators-${var.vnet_type}virtualmachinedb-${var.virtualmachine_os_type}")
+  name     = "${module.naming.resource_group.name}-solution-accelerators-azureaiservices" 
   location = "${try(local.global_settings.location, var.location)}" 
 }
-
-

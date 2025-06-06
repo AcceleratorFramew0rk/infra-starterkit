@@ -55,6 +55,36 @@ variable "subnet_name" {
   default = "AppSubnet"
 }
 
+variable "source_image_reference" {
+  type = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = string
+  })
+  default = {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2022-datacenter-g2"
+    version   = "latest"
+  }
+}
+
+variable "source_image_reference_linux" {
+  type = object({
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = string
+  })
+  default = {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "latest"    
+  }
+}
+
 # # variable deprecated
 # variable "resource_names" {
 #   description = "List of Virtual Machine names"

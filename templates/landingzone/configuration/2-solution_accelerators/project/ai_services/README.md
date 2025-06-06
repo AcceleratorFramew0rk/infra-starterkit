@@ -1,7 +1,7 @@
 ### 🔹 Step 1: Navigate to the Terraform Configuration Directory
 
 ```bash
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/vm
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/ai_services
 ```
 ### 🔹 Step 2: Run the Custom Terraform Script (`tfexe`) to Initialize and Apply
 
@@ -21,25 +21,3 @@ tfexe apply
 > This custom script abstracts complexity, enforces consistency, and apply terraform specific logic, such as injecting environment variables, setting backends dynamically, or handling module paths.
 
 ---
-
-
-
-
-# deploy two virtual machines 
-# -----------------------------------------------------------------------------------
-
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/vm
-
-# max count is 5 only
-count='2'
-
-# Run the Custom Terraform initialization script "terraform-init-custom" at location "/usr/local/bin" to set up the backend and providers
-terraform-init-custom
-
-# Generate an execution plan to preview the changes Terraform will make
-terraform plan \
--var="count=${count}" 
-
-# Apply the Terraform configuration and automatically approve changes without prompting for confirmation
-terraform apply -auto-approve \
--var="count=${count}" 

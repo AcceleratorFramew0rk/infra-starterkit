@@ -45,19 +45,33 @@ locals {
   }
   regions = ["southeastasia", "southeastasia"]
 
-  source_image_reference = {
+  source_image_reference = var.source_image_reference != null ? var.source_image_reference : {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
     sku       = "2022-datacenter-g2"
     version   = "latest"
   }
 
-  source_image_reference_linux = {
+  # source_image_reference = {
+  #   publisher = "MicrosoftWindowsServer"
+  #   offer     = "WindowsServer"
+  #   sku       = "2022-datacenter-g2"
+  #   version   = "latest"
+  # }
+
+  source_image_reference_linux = var.source_image_reference_linux != null ? var.source_image_reference_linux : {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
     version   = "latest"    
   }
+
+  # source_image_reference_linux = {
+  #   publisher = "Canonical"
+  #   offer     = "0001-com-ubuntu-server-jammy"
+  #   sku       = "22_04-lts-gen2"
+  #   version   = "latest"    
+  # }
 }
 
 resource "random_integer" "region_index" {

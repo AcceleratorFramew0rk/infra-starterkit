@@ -1,6 +1,10 @@
 # ------------------------------------------------------------------
-# Standalone deployment with -var-file option
+# Deploy Azure Resource using -var-file option
 # ------------------------------------------------------------------
+
 ```bash
-tfexe apply -var-file="/tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/keyvault/example/terraform.tfvars" 
+
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/keyvault
+tfexe apply -var-file=./example/terraform.tfvars
+
 ```
