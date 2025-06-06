@@ -8,16 +8,17 @@ resource "azurerm_container_app_environment" "this" {
   log_analytics_workspace_id = local.remote.log_analytics_workspace.id 
   
   workload_profile {
-    name = (
-      length(replace("${module.naming.container_app_environment.name}-${random_string.this.result}", "-", "")) > 16
-      ? substr(replace("${module.naming.container_app_environment.name}-${random_string.this.result}", "-", ""), 0, 16)
-      : replace("${module.naming.container_app_environment.name}-${random_string.this.result}", "-", "")
-    )
+    name = "profile_${var.workload_profile_type}"
+    # (
+    #   length(replace("${module.naming.container_app_environment.name}-${random_string.this.result}", "-", "")) > 16
+    #   ? substr(replace("${module.naming.container_app_environment.name}-${random_string.this.result}", "-", ""), 0, 16)
+    #   : replace("${module.naming.container_app_environment.name}-${random_string.this.result}", "-", "")
+    # )
     
     # ** IMPORTANT ** workload_profile_type = "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
     workload_profile_type = var.workload_profile_type # "D16" # Possible values include Consumption, D4, D8, D16, D32, E4, E8, E16 and E32
     maximum_count = 8 # try(var.maximum_count, 10) # - (Required) The maximum number of instances of workload profile that can be deployed in the Container App Environment.
-    minimum_count = 1 # try(var.minimum_count, 1) # - (Required) The minimum number of instances of workload profile that can be deployed in the Container App Environment.
+    minimum_count = 3 # minimum is 3 for production due to redundency concern: try(var.minimum_count, 1) # - (Required) The minimum number of instances of workload profile that can be deployed in the Container App Environment.
 
   }
 
