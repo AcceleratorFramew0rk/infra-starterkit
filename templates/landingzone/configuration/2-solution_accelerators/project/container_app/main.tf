@@ -85,4 +85,9 @@ module "containerapp" {
     }
   ) 
 
+
+  depends_on = [
+    azurerm_container_app_environment.this
+  ]
+
 }
