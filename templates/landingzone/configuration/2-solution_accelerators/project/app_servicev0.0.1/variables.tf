@@ -46,7 +46,7 @@ variable "subnet_name" {
 
 variable "ingress_subnet_name" {
   type        = string  
-  default = "ServiceSubnet"
+  default = "WebSubnet"
 }
 
 variable "linux_fx_version" {
