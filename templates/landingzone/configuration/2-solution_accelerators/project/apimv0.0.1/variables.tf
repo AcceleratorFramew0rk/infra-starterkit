@@ -34,9 +34,11 @@ variable "subnet_name" {
   default = "ApiSubnet"
 }
 
+
+
 variable "publisher_name" {
   type        = string  
-  default = "Apim Publisher"
+  default = "My Company"
 }
 
 variable "publisher_email" {

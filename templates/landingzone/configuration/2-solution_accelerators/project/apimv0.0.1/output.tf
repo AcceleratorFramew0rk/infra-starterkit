@@ -1,5 +1,5 @@
 output "resource" {
-  value       = module.apim.resource 
+  value       = module.apim 
   description = "The Azure Apim resource"
   sensitive = true  
 }
