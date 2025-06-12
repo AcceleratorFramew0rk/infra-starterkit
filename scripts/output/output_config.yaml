@@ -1,9 +1,10 @@
-resource_group_name: "cs01-dev-platform" 
+resource_group_name: "ps03-dev-rg-platform" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f" 
+settings_yaml_file_path: "/tf/avm/scripts/config/settings_ai_archetype.yaml" 
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "cs01-dev" 
+prefix: "ps03-dev" 
 is_prefix: true
 is_single_resource_group: true
 location: "southeastasia"
@@ -16,67 +17,87 @@ app_config:
 vnets:
   # IMPORTANT: leave empty if there is no such virtual network  
 # -----------------
-  hub_ingress_internet:   
-    name: "gcci-vnet-ingress-internet"    
-    cidr: "100.127.0.0/24"
+  project:  
+    name: "gcci-vnet-project" 
+    cidr: "192.168.0.0/23" 
 # -----------------
-  hub_ingress_intranet:  
-    name: "gcci-vnet-ingress-intranet"    
-    cidr: "10.20.0.0/25"
-# -----------------
-  management:  
-    name: "gcci-vnet-management"        
-    cidr: "100.127.3.0/24"  
+  devops:  
+    name: "gcci-vnet-devops"   
+    cidr: "192.168.10.0/24" 
 # subnets cidr configuration
 subnets:
   # IMPORTANT ** comment off the below any project subnets if it is not used
 # -----------------   
   project: 
 # -----------------   
+# app service pep, container app pep, linux function app pep
+# -----------------
+    WebSubnet: # DO NOT CHANGE subnet name
+     name: "WebSubnet"
+     address_prefixes: ["192.168.0.96/27"]
+# mssql pep, postgresql pep, redis cache pep, storage account pep
+# ----------------- 
+    DbSubnet: # DO NOT CHANGE subnet name
+      name: "DbSubnet"    
+      address_prefixes: ["192.168.0.128/27"]
+# keyvault pep, acr pep, logic app pep
+# -----------------
+    ServiceSubnet: # DO NOT CHANGE subnet name
+      name: "ServiceSubnet"
+      address_prefixes: ["192.168.0.160/27"]
+# apim
+# -----------------               
+    ApiSubnet: # DO NOT CHANGE subnet name
+      name: "ApiSubnet"    
+      address_prefixes: ["192.168.0.32/27"]
+# ai, search service, ai_foundary
+# -----------------
+    AiSubnet: # DO NOT CHANGE subnet name
+      name: "AiSubnet"    
+      address_prefixes: ["192.168.0.0/27"]   
+# app service vnet integration
+# -----------------
+    AppServiceSubnet: # DO NOT CHANGE subnet name
+      name: "AppServiceSubnet"
+      address_prefixes: ["192.168.0.64/27"]
+      delegations: [ 
+        {
+          name: "AppServiceSubnet",
+          service_delegation: {
+            name: "Microsoft.Web/serverFarms", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
 # IMPORTANT ** comment off the below any devops subnets if it is not used  
 # -----------------           
   devops:
 # -----------------   
+# -----------------    
+    RunnerSubnet:    
+      name: "RunnerSubnet"
+      address_prefixes: ["192.168.10.0/27"]
+      delegations: [
+        {
+          name: "runner",
+          service_delegation: {
+            name: "Microsoft.ContainerInstance/containerGroups", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
 # -----------------   
   management:
 # -----------------   
-# -----------------    
-    InfraSubnet:      
-      name: "InfraSubnet"
-      address_prefixes: ["100.127.3.64/26"]
-# -----------------    
-    SecuritySubnet:      
-      name: "SecuritySubnet"
-      address_prefixes: ["100.127.3.128/26"]
-# -----------------    
-    AzureBastionSubnet:      
-      name: "AzureBastionSubnet"
-      address_prefixes: ["100.127.3.0/26"]
 # -----------------                            
   hub_internet_ingress: 
 # -----------------     
-# -----------------    
-    AzureFirewallSubnet: 
-      name: "AzureFirewallSubnet"
-      address_prefixes: ["100.127.0.64/26"]
-# -----------------    
-    AgwSubnet:  
-      name: "AgwSubnet"
-      address_prefixes: ["100.127.0.0/26"]
 # -----------------   
   hub_internet_egress:
 # -----------------     
 # -----------------   
   hub_intranet_ingress:
 # -----------------   
-# -----------------     
-    AzureFirewallSubnet:   
-      name: "AzureFirewallSubnet"
-      address_prefixes: ["10.20.0.64/26"]
-# -----------------    
-    AgwSubnet:   
-      name: "AgwSubnet"
-      address_prefixes: ["10.20.0.0/26"]
 # -----------------   
   hub_intranet_egress:
 # -----------------   

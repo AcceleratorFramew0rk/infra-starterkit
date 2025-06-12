@@ -1,6 +1,3 @@
-# Warning: Important information for customers using Azure Accelerator Framework (AAF)
-# This solution, offered by the Open-Source community, does not receive contributions nor support by Microsoft.
- 
 # Deploy archetype using tfexe apply run-all -include=<path of [pattern].hcl file>
 
 # Prerequisites
