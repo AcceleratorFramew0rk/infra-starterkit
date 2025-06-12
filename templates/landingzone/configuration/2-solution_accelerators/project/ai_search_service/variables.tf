@@ -31,8 +31,8 @@ variable "environment" {
 
 variable "subnet_name" {
   type        = string  
-  default = "ApiSubnet"
-  # default = "AiSubnet"
+  # default = "ApiSubnet"
+  default = "AiSubnet"
 }
 
 # variable "private_link_subnet_name" {

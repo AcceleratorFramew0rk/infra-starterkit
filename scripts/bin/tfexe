@@ -154,12 +154,12 @@ exec_terraform() {
     fi
 
   elif [[ "$ACTION" == *"import"* ]]; then
-    echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts"
+    echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts"
     echo "Running..."
     echo "./import.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts
+    cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts
     ./import.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
