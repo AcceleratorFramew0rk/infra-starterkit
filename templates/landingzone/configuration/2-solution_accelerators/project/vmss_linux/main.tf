@@ -4,8 +4,6 @@ module "avm_res_keyvault_vault" {
 
   tenant_id           = data.azurerm_client_config.current.tenant_id
   name                = "${module.naming.key_vault.name}-vm-${random_string.this.result}" # "${module.naming.key_vault.name_unique}${random_string.this.result}vm"  
-  # resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name 
-  # location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location 
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name # azurerm_resource_group.this.0.name
 
@@ -73,10 +71,8 @@ resource "random_integer" "zone_index" {
 }
 
 resource "azurerm_user_assigned_identity" "user" {
-  # location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
   name                = "${module.naming.user_assigned_identity.name_unique}-vmssl-${random_string.this.result}"   # module.naming.user_assigned_identity.name_unique
-  # resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name # azurerm_resource_group.this.0.name
 
 }
@@ -110,8 +106,6 @@ module "vmss" {
   version = "0.6.0"
 
   name                        = "${module.naming.virtual_machine_scale_set.name_unique}${random_string.this.result}"
-  # resource_group_name         = azurerm_resource_group.this.name
-  # location                    = azurerm_resource_group.this.location
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name # azurerm_resource_group.this.0.name
   enable_telemetry            = var.enable_telemetry
@@ -135,9 +129,7 @@ module "vmss" {
     name = "VMSS-NIC"
     ip_configuration = [{
       name      = "VMSS-IPConfig"
-      # subnet_id = try(var.subnet_id, null) != null ? var.subnet_id : local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id # azurerm_subnet.subnet.id
       subnet_id = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id 
-
     }]
   }]
   os_profile = {
@@ -167,7 +159,6 @@ module "vmss" {
   managed_identities = {
     system_assigned = false
     user_assigned_resource_ids = [
-      # azurerm_user_assigned_identity.user_identity.id
       azurerm_user_assigned_identity.user.id
     ]
   }
@@ -189,7 +180,6 @@ module "vmss" {
       tier = "app"   
     }
   )
-  # depends_on = [azurerm_subnet_nat_gateway_association.this]
   
   depends_on = [
     module.avm_res_keyvault_vault

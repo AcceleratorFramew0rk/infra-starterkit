@@ -11,7 +11,7 @@ variable "vnet_id" {
 
 variable "vnet_name" {
   type        = string  
-  default = null
+  default = "spoke_project"
 }
 
 variable "subnet_id" {

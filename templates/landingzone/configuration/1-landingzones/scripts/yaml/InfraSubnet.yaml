@@ -9,6 +9,16 @@ InfraSubnet:
     destination_port_range: "443"
     access: "Allow"
     direction: "Inbound"
+  AllowRDPVirtualNetwork:
+    name: "AllowRDPVirtualNetwork"
+    priority: "200"
+    source_port_range: "*"
+    protocol: "Tcp"
+    source_address_prefix: "VirtualNetwork"
+    destination_address_prefix: "VirtualNetwork"
+    destination_port_range: "3389"
+    access: "Allow"
+    direction: "Inbound"
   CustomDenyAllInbound:
     name: "CustomDenyAllInbound"
     priority: "4060"

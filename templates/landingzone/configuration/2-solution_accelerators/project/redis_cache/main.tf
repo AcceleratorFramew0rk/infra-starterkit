@@ -1,6 +1,6 @@
 module "private_dns_zones" {
   source                = "Azure/avm-res-network-privatednszone/azurerm"   
-  version = "0.3.0"
+  version = "0.3.3"
 
   enable_telemetry      = true
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -41,7 +41,8 @@ module "private_dns_zones" {
 # This is the module call
 module "redis_cache" {
   source             = "Azure/avm-res-cache-redis/azurerm"
-  version            = "0.2.0"
+  # version            = "0.2.0"
+  version = "0.4.0"
 
   enable_telemetry              = var.enable_telemetry
   name                          = "${module.naming.redis_cache.name}-${random_string.this.result}"  # module.naming.redis_cache.name_unique

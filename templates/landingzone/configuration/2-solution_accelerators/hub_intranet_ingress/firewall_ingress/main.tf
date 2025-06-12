@@ -1,6 +1,7 @@
 module "public_ip_firewall1" {
   source  = "Azure/avm-res-network-publicipaddress/azurerm"
-  version = "0.1.0"
+  # version = "0.1.0"
+  version = "0.2.0"
   
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -15,7 +16,8 @@ module "public_ip_firewall1" {
 
 module "firewall" {
   source  = "Azure/avm-res-network-azurefirewall/azurerm"
-  version = "0.1.4"
+  # version = "0.1.4"
+  version = "0.3.0"
   
   name                = "${module.naming.firewall.name}-ingress-intranet"
   enable_telemetry    = var.enable_telemetry
@@ -28,11 +30,19 @@ module "firewall" {
   firewall_ip_configuration = [
     {
       name                 = "${module.naming.firewall.name}-fwingressiz-ipconfig" 
-      subnet_id            = try(local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets["AzureFirewallSubnet"].resource.id, null) != null ? local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets["AzureFirewallSubnet"].resource.id : var.subnet_id 
+      subnet_id            = try(local.remote.networking.virtual_networks[var.vnet_name].virtual_subnets["AzureFirewallSubnet"].resource.id, null) != null ? local.remote.networking.virtual_networks[var.vnet_name].virtual_subnets["AzureFirewallSubnet"].resource.id : var.subnet_id 
       public_ip_address_id = module.public_ip_firewall1.public_ip_id 
     }
   ]
-
+  diagnostic_settings = {
+    log1 = {
+      workspace_resource_id    = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
+      name                           = "${module.naming.firewall.name_unique}-iz-diagnostic-setting"
+      log_analytics_destination_type = "Dedicated" # Or "AzureDiagnostics"
+      log_groups        = ["allLogs"]
+      metric_categories = ["AllMetrics"]
+    }
+  }
   tags        = merge(
     local.global_settings.tags,
     {

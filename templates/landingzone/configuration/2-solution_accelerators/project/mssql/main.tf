@@ -1,6 +1,7 @@
 module "private_dns_zones" {
   source                = "Azure/avm-res-network-privatednszone/azurerm"   
-  version = "0.1.2" 
+  # version = "0.1.2" 
+  version = "0.3.3" 
 
   enable_telemetry      = true
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -41,6 +42,7 @@ module "private_dns_zones" {
 locals {
   elastic_pools = {
     elasticpool1 = {
+      name = "elasticpool1"
       sku = {
         name     = "StandardPool"
         capacity = var.max_capacity # 50
@@ -59,9 +61,11 @@ locals {
 
   databases = {
     database1 = {
+      name = "database1"
       create_mode     = "Default"
       collation       = "SQL_Latin1_General_CP1_CI_AS"
-      elastic_pool_id = module.sql_server.resource_elasticpools["elasticpool1"].id
+      # elastic_pool_id = module.sql_server.resource_elasticpools["elasticpool1"].resource_elasticpools.id
+      elastic_pool_key = "elasticpool1"
       license_type    = "LicenseIncluded"
       max_size_gb     = var.max_size # 50
       sku_name        = "ElasticPool"
@@ -84,12 +88,16 @@ locals {
 # This is the module call
 module "sql_server" {
   # source = "./../../../../../../modules/terraform-azurerm-aaf/modules/databases/terraform-azurerm-avm-res-sql-server"  
-  source = "AcceleratorFramew0rk/aaf/azurerm//modules/databases/terraform-azurerm-avm-res-sql-server"  
+  # source = "AcceleratorFramew0rk/aaf/azurerm//modules/databases/terraform-azurerm-avm-res-sql-server"  
+  source  = "Azure/avm-res-sql-server/azurerm"
+  version = "0.1.5"
+  # insert the 3 required variables here
   
   enable_telemetry             = var.enable_telemetry
   name                         = "${module.naming.mssql_server.name}-${random_string.this.result}" 
   resource_group_name          = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
   location                     = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
+  server_version               = "12.0"
   administrator_login          = "sqladminuser"
   administrator_login_password = random_password.sql_admin.result 
 
@@ -97,11 +105,30 @@ module "sql_server" {
   elastic_pools = local.elastic_pools
 
   private_endpoints = {
-    primary = {
+    primarySql = {
       private_dns_zone_resource_ids = [module.private_dns_zones.resource.id] 
       subnet_resource_id            = try(local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.spoke_project.virtual_subnets[var.subnet_name].resource.id : var.subnet_id  
+      subresource_name = "sqlServer" # "sqlServer" or "sqlManagement"
     }
   }
+  
+  # # ERROR: 'allLogs' is not supported, supported ones are: ''"}
+
+  # diagnostic_settings = {
+  #   default = {
+  #     name                                     = "${module.naming.monitor_diagnostic_setting.name_unique}-sql-server"
+  #     log_categories                           = null # ["AuditEvent"]
+  #     log_groups                               = null # ["allLogs"]
+  #     metric_categories                        = ["AllMetrics"]
+  #     log_analytics_destination_type           = "Dedicated"
+  #     # workspace_resource_id                    = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/monitoring-rg/providers/Microsoft.OperationalInsights/workspaces/log-analytics-ws"
+  #     workspace_resource_id    = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
+  #     storage_account_resource_id              = null
+  #     event_hub_authorization_rule_resource_id = null
+  #     event_hub_name                           = null
+  #     marketplace_partner_resource_id          = null
+  #   }
+  # }
 
   tags        = merge(
     local.global_settings.tags,

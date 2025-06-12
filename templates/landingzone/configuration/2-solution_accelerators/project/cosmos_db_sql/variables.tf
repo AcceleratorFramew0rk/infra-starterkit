@@ -206,7 +206,8 @@ variable "vnet_resource_group_name" {
 
 variable "subnet_name" {
   type        = string  
-  default = "CosmosDbSubnet"
+  default = "DbSubnet"
+  # default = "CosmosDbSubnet"
 }
 
 
@@ -236,3 +237,28 @@ variable "container_max_throughput" {
   type        = string  
   default = "4000"
 }
+
+variable "instance_count" {
+  type        = string  
+  default = "1"
+}
+
+variable "instance_size" {
+  type        = string  
+  default = "Cosmos.D4s"
+}
+
+variable "throughout" {
+  type        = string  
+  default = "400"
+}
+
+variable "max_throughput" {
+  type        = string  
+  default = "4000"
+}
+
+  # sql_dedicated_gateway = {
+  #   instance_count = 1
+  #   instance_size  = "Cosmos.D4s"
+  # }

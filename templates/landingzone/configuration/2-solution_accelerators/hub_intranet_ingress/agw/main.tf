@@ -1,6 +1,7 @@
 module "public_ip" {
   source  = "Azure/avm-res-network-publicipaddress/azurerm"
-  version = "0.1.0"
+  # version = "0.1.0"
+  version = "0.2.0"
 
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -16,7 +17,8 @@ module "public_ip" {
 
 module "application_gateway" {
   source  = "Azure/avm-res-network-applicationgateway/azurerm"
-  version = "0.3.0"
+  # version = "0.3.0"
+  version = "0.4.2"
 
   name = "${module.naming.application_gateway.name}${random_string.this.result}iz" 
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -24,7 +26,7 @@ module "application_gateway" {
   enable_telemetry    = var.enable_telemetry
 
   gateway_ip_configuration = {
-    subnet_id = try(local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets[var.subnet_name].resource.id : var.subnet_id  # azurerm_subnet.backend.id
+    subnet_id = try(local.remote.networking.virtual_networks[var.vnet_name].virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks[var.vnet_name].virtual_subnets[var.subnet_name].resource.id : var.subnet_id  # azurerm_subnet.backend.id
   }
 
   # WAF : Azure Application Gateways v2 are always deployed in a highly available fashion with multiple instances by default. Enabling autoscale ensures the service is not reliant on manual intervention for scaling.
@@ -48,10 +50,10 @@ module "application_gateway" {
 
   frontend_ip_configuration_private = {
     name                 = "private" 
-    private_ip_address            = try(cidrhost(local.global_settings.subnets.hub_intranet_ingress.AgwSubnet.address_prefixes.0, 10), null) # (agw subnet cidr 100.127.0.64/27, offset 10) >"100.127.0.74" 
+    private_ip_address            = try(cidrhost(local.global_settings.subnets[var.vnet_name].AgwSubnet.address_prefixes.0, 10), null) # (agw subnet cidr 100.127.0.64/27, offset 10) >"100.127.0.74" 
     private_ip_address_allocation = "Static" # Dynamic and Static default to Dynamic
     private_link_configuration_name = null
-    subnet_id                     = try(local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks.hub_intranet_ingress.virtual_subnets[var.subnet_name].resource.id : var.subnet_id  
+    subnet_id                     = try(local.remote.networking.virtual_networks[var.vnet_name].virtual_subnets[var.subnet_name].resource.id, null) != null ? local.remote.networking.virtual_networks[var.vnet_name].virtual_subnets[var.subnet_name].resource.id : var.subnet_id  
   }
 
   # frontend port configuration block for the application gateway

@@ -230,3 +230,9 @@ variable "subnet_name" {
   type        = string  
   default = "AgwSubnet"
 }
+
+variable "vnet_name" {
+  type        = string  
+  default = "hub_intranet_ingress"
+}
+

@@ -42,7 +42,8 @@ module "keyvault" {
 
 module "private_dns_zones" {
   source                = "Azure/avm-res-network-privatednszone/azurerm"   
-  version = "0.1.2" 
+  # version = "0.1.2" 
+  version = "0.3.3" 
 
   enable_telemetry      = true
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name

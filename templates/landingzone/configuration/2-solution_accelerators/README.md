@@ -1,5 +1,5 @@
 # goto solution accelerators folder
-cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators
+cd /tf/avm/scripts/examples/patterns/2-solution_accelerators
 
 # platform common services - firewall, agw, bastion host, tooling server
 ./deploy_pattern_platform_internet_egress.sh

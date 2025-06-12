@@ -1,6 +1,7 @@
 module "public_ip_firewall1" {
   source  = "Azure/avm-res-network-publicipaddress/azurerm"
-  version = "0.1.0"
+  # version = "0.1.0"
+  version = "0.2.0"
   
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -15,7 +16,8 @@ module "public_ip_firewall1" {
 
 module "public_ip_firewall2" {
   source  = "Azure/avm-res-network-publicipaddress/azurerm"
-  version = "0.1.0"
+  # version = "0.1.0"
+  version = "0.2.0"
 
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -30,7 +32,8 @@ module "public_ip_firewall2" {
 
 module "firewall" {
   source  = "Azure/avm-res-network-azurefirewall/azurerm"
-  version = "0.1.4"
+  # version = "0.1.4"
+  version = "0.3.0"
   
   name                = "${module.naming.firewall.name}-egress-internet"
   enable_telemetry    = var.enable_telemetry
@@ -53,6 +56,16 @@ module "firewall" {
     name                 = "${module.naming.firewall.name}-fwegressez-ipconfigmgmt" 
     subnet_id            = try(local.remote.networking.virtual_networks.hub_internet_egress.virtual_subnets["AzureFirewallManagementSubnet"].resource.id, null) != null ? local.remote.networking.virtual_networks.hub_internet_egress.virtual_subnets["AzureFirewallManagementSubnet"].resource.id : var.azurefirewallmanagement_subnet_id 
     public_ip_address_id = module.public_ip_firewall2.public_ip_id 
+  }
+
+  diagnostic_settings = {
+    log1 = {
+      workspace_resource_id    = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id 
+      name                           = "${module.naming.firewall.name_unique}-ezegress-diagnostic-setting"
+      log_analytics_destination_type = "Dedicated" # Or "AzureDiagnostics"
+      log_groups        = ["allLogs"]
+      metric_categories = ["AllMetrics"]
+    }
   }
 
   tags        = merge(

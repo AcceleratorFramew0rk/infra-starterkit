@@ -1,5 +1,5 @@
-output "cosmos_db_id" {
-  value       = module.cosmos_db.cosmosdb_id 
+output "resource" {
+  value       = module.cosmos_db 
   description = "The Azure cosmos_db resource"
   sensitive = true  
 }

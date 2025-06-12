@@ -10,7 +10,7 @@ python3 csv_to_yaml.py
 ./replace.sh --> -->
 
 # goto landing zone folder
-cd /tf/avm/templates/landingzone/configuration/1-landingzones
+cd /tf/avm/scripts/examples/patterns/1-landingzones
 
 # platform landing zone
 # ./deploy_platform_landingzone.sh

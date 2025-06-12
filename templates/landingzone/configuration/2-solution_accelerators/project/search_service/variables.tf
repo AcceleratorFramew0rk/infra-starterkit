@@ -31,8 +31,15 @@ variable "environment" {
 
 variable "subnet_name" {
   type        = string  
+  # default = "ApiSubnet"
   default = "AiSubnet"
 }
+
+
+# variable "ai_services_location" {
+#   type        = string  
+#   default = "eastus2"
+# }
 
 # developer portal variables
 # sku: "Standard" default (Premium) Possible values include basic, free, standard, standard2, standard3, storage_optimized_l1 and storage_optimized_l2
@@ -42,6 +49,7 @@ variable "subnet_name" {
 
 variable "sku" {
   type        = string  
-  default = "Standard"
+  default = "standard" # # The sku must be one of the following values: free, basic, standard, standard2, standard3, storage_optimized_l1, storage_optimized_l2.
+
 }
 

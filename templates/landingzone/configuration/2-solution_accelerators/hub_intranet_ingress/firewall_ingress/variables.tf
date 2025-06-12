@@ -9,11 +9,6 @@ variable "vnet_id" {
   default = null
 }
 
-variable "vnet_name" {
-  type        = string  
-  default = null
-}
-
 variable "subnet_id" {
   type        = string  
   default = null
@@ -38,4 +33,11 @@ variable "platform_resource_group_name" {
   type        = string  
   default = "gcci_platform"
 }
+
+variable "vnet_name" {
+  type        = string  
+  default = "hub_intranet_ingress"
+}
+
+
 

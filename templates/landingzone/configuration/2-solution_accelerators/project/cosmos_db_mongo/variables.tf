@@ -122,5 +122,6 @@ variable "vnet_resource_group_name" {
 
 variable "subnet_name" {
   type        = string  
-  default = "CosmosDbSubnet"
+  default = "DbSubnet"
+  # default = "CosmosDbSubnet"
 }

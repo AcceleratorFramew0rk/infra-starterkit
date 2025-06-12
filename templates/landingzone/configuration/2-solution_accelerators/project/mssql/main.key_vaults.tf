@@ -1,7 +1,8 @@
 module "keyvault" {
   # grant spn to be secret reader  
   source  = "Azure/avm-res-keyvault-vault/azurerm"
-  version = "0.5.2"  
+  # version = "0.5.2"  
+  version = "0.10.0"
 
   enable_telemetry              = var.enable_telemetry
   location                        = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location

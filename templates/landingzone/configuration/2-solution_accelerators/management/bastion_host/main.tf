@@ -1,6 +1,7 @@
 module "public_ip" {
   source  = "Azure/avm-res-network-publicipaddress/azurerm"
-  version = "0.1.0"
+  # version = "0.1.0"
+  version = "0.2.0"
 
   enable_telemetry    = var.enable_telemetry
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -16,7 +17,8 @@ module "public_ip" {
 
 module "azure_bastion" {
   source  = "Azure/avm-res-network-bastionhost/azurerm"
-  version = "0.2.0"
+  # version = "0.2.0"
+  version = "0.7.2"
 
   // Pass in the required variables from the module
   enable_telemetry     = true

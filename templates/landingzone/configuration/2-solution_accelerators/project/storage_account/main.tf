@@ -4,7 +4,8 @@ locals {
 
 module "private_dns_zones" {
   source                = "Azure/avm-res-network-privatednszone/azurerm"   
-  version = "0.1.2" 
+  # version = "0.1.2" 
+  version = "0.3.3" 
 
   enable_telemetry      = true
   resource_group_name   = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name
@@ -58,7 +59,8 @@ data "azurerm_role_definition" "this" {
 #create azure storage account
 module "storageaccount" {
   source  = "Azure/avm-res-storage-storageaccount/azurerm"
-  version = "0.1.3"
+  # version = "0.1.3"
+  version = "0.6.3"
 
   account_replication_type      = "LRS" # "GRS"
   account_tier                  = "Standard"
@@ -139,6 +141,27 @@ module "storageaccount" {
           principal_id               = data.azurerm_client_config.current.object_id 
         }
       }
+
+      # TODO: below code not working?
+      # # setting up diagnostic settings for blob
+      # diagnostic_settings_blob = {
+      #   blob11 = {
+      #     name                                     = "diag"
+      #     workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
+      #     log_categories                           = ["audit", "alllogs"]
+      #     metric_categories                        = ["Capacity", "Transaction"]
+      #   }
+      # }
+      # # setting up diagnostic settings for file
+      # diagnostic_settings_file = {
+      #   file1 = {
+      #     name                                     = "diag"
+      #     workspace_resource_id = try(local.remote.log_analytics_workspace.id, null) != null ? local.remote.log_analytics_workspace.id : var.log_analytics_workspace_id
+      #     log_categories                           = ["audit", "alllogs"]
+      #     metric_categories                        = ["Capacity", "Transaction"]
+      #   }
+      # }
+
     }
   }
 

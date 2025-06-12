@@ -1,3 +1,33 @@
+
+### **Version 0.1.0 (15 Jun 2025)**
+#### **Compatibility:**
+- **AAF AVM SDE:** `gccstarterkit/gccstarterkit-avm-sde:0.3`
+- **Azurerm:** Version 4.0
+- **AAF:** Version 0.0.20
+
+#### **New Features:**
+- add a new pattern "ai_search_services" of ai services, search services and storage account
+
+#### **Enhancements:**
+- *Upgrade Apim to avm v0.0.1.*
+- *Upgrade Keyvault to avm v0.10.0.*
+- *Upgrade CosmosDb Mongo to avm v0.8.0.*
+- *Upgrade CosmosDb SQL to avm v0.8.0.*
+- *Upgrade SQLServer to avm v0.1.5.*
+- *Upgrade AppService to avm v0.17.0.*
+- *Upgrade LogicApp to avm v0.17.0.*
+- *Upgrade Postgresql to avm v0.1.4.*
+- *Upgrade RedisCache to avm v0.4.0.*
+- *Upgrade SearchService to avm v0.1.5.*
+- *Upgrade Ingress Internet Azure Firewall to avm v0.3.0.*
+
+
+
+#### **Bug Fixes:**
+- *No Bug Fixes added in this release.*
+
+---
+
 ### **Version 0.0.14 (17 Feb 2025)**
 #### **Compatibility:**
 - **AAF AVM SDE:** `gccstarterkit/gccstarterkit-avm-sde:0.2`
