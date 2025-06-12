@@ -84,7 +84,7 @@ module "aiservices" {
   public_network_access_enabled      = false # var.public_network_access_enabled # false # true # required for AI Foundry
   local_auth_enabled                 = true
   outbound_network_access_restricted = false
-  custom_subdomain_name = "aiservices-${random_string.this.result}" # ramdom
+  custom_subdomain_name = replace("${module.naming.cognitive_account.name_unique}${random_string.this.result}aiservices${random_string.this.result}", "-", "")   # ramdom
 
   # network_acls = {
   #   default_action = "Allow"

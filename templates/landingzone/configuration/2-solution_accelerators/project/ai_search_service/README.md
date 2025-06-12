@@ -1,7 +1,7 @@
 ### 🔹 Step 1: Navigate to the Terraform Configuration Directory
 
 ```bash
-cd cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/ai_search_service
+cd /tf/avm/templates/landingzone/configuration/2-solution_accelerators/project/ai_search_service
 ```
 ### 🔹 Step 2: Run the Custom Terraform Script (`tfexe`) to Initialize and Apply
 
