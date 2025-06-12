@@ -20,6 +20,7 @@
 - *Upgrade RedisCache to avm v0.4.0.*
 - *Upgrade SearchService to avm v0.1.5.*
 - *Upgrade Ingress Internet Azure Firewall to avm v0.3.0.*
+- *Upgrade Ingress Intranet Azure Firewall to avm v0.3.0.*
 
 
 
