@@ -16,7 +16,7 @@ ENVIRONMENT=${4:-dev} # default value is dev if empty
 WORKING_DIRECTORY=$(pwd) # pwd should always be ./starterkit or $(pwd)/starterkit
 echo $WORKING_DIRECTORY
 decoded_config_yaml=$(echo "${CONFIG_YAML}" | base64 --decode)
-echo "$decoded_config_yaml" > "./templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+echo "$decoded_config_yaml" > "./config/config.yaml"
 echo "$decoded_config_yaml" > "./../config.yaml"
 
 # ** IMPORTANT: ensure config.yaml file is available as the path is hardcoded in the terraform code
@@ -48,15 +48,15 @@ echo "$selectedServicesConfig" > "./cicd/scripts/config/selectedServicesConfig.j
 sudo chmod -R -f 777 "./cicd/scripts/"
 
 # Read YAML file and extract "prefix"
-PREFIX=$(yq -r '.prefix' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+PREFIX=$(yq -r '.prefix' './config/config.yaml')
 
-SUBSCRIPTION_ID=$(yq -r '.subscription_id' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+SUBSCRIPTION_ID=$(yq -r '.subscription_id' './config/config.yaml')
 # ENVIRONMENT=$ENVIRONMENT 
 LOCATION=southeastasia 
 VNET_PROJECT_NAME=gcci-vnet-project 
 VNET_DEVOPS_NAME=gcci-vnet-devops
-VNET_PROJECT_CIDR=$(yq -r '.vnets.project.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
-VNET_DEVOPS_CIDR=$(yq -r '.vnets.devops.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+VNET_PROJECT_CIDR=$(yq -r '.vnets.project.cidr' './config/config.yaml')
+VNET_DEVOPS_CIDR=$(yq -r '.vnets.devops.cidr' './config/config.yaml')
 
 echo "parameters for generate_config.sh:"
 echo $PREFIX
@@ -71,4 +71,4 @@ echo $VNET_DEVOPS_NAME
 
 # # copy final config.yaml to destination
 cp "./cicd/scripts/config/output_config.yaml" "./../config.yaml"
-cp "./cicd/scripts/config/output_config.yaml" "./templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+cp "./cicd/scripts/config/output_config.yaml" "./config/config.yaml"

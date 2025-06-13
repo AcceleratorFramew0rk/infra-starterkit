@@ -66,8 +66,8 @@ RESOURCE_GROUP="GCCI-Platform"
 # GCCI_VNET_DEVOPS_CIDR=$(get_vnet_cidr "$RESOURCE_GROUP" "$VNET_DEVOPS_NAME")
 
 # Use the cidr from the config.yaml file
-GCCI_VNET_PROJECT_CIDR=$(yq -r '.vnets.project.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
-GCCI_VNET_DEVOPS_CIDR=$(yq -r '.vnets.devops.cidr' './templates/landingzone/configuration/0-launchpad/scripts/config.yaml')
+GCCI_VNET_PROJECT_CIDR=$(yq -r '.vnets.project.cidr' './config/config.yaml')
+GCCI_VNET_DEVOPS_CIDR=$(yq -r '.vnets.devops.cidr' './config/config.yaml')
 
 
 # Output the collected inputs

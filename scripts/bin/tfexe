@@ -15,6 +15,8 @@
 # tfexe apply -backend-config-key=network-spoke-project.tfstate
 # tfexe setup-law # create subscription log analytics workspace and resource group
 
+TF_WORKING_DIRECTORY="/tf/avm"
+
 # Begin Functions
 exec_terraform() {
 
@@ -154,12 +156,14 @@ exec_terraform() {
     fi
 
   elif [[ "$ACTION" == *"import"* ]]; then
-    echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts"
+    # echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts"
+    echo "Go to working directory /tf/avm/scripts/bin"
     echo "Running..."
     echo "./import.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts
+    # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts
+    cd "${TF_WORKING_DIRECTORY}/scripts/bin"
     ./import.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -176,7 +180,7 @@ exec_terraform() {
     echo "./generate_config.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/scripts/bin
+    cd "${TF_WORKING_DIRECTORY}/scripts/bin"
     ./generate_config.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -188,12 +192,14 @@ exec_terraform() {
     fi    
 
   elif [[ "$ACTION" == *"update-remote-state"* ]]; then
-    echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts"
+    # echo "Go to working directory /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts"
+    echo "Go to working directory /tf/avm/scripts/bin"
     echo "Running..."
     echo "./update_remote_state.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts
+    # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare/scripts
+    cd "${TF_WORKING_DIRECTORY}/scripts/bin"
     ./update_remote_state.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -210,7 +216,7 @@ exec_terraform() {
     echo "./deploy_app_lz.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/scripts/bin
+    cd "${TF_WORKING_DIRECTORY}/scripts/bin"
     ./deploy_app_lz.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -227,7 +233,7 @@ exec_terraform() {
     echo "./setup_law.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/scripts/bin
+    cd "${TF_WORKING_DIRECTORY}/scripts/bin"
     ./setup_law.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -244,7 +250,7 @@ exec_terraform() {
     echo "./deploy.sh"
     echo "     "
     # execute from current folder or -path parameter if exists
-    cd /tf/avm/scripts/bin
+    cd "${TF_WORKING_DIRECTORY}/scripts/bin"
     ./deploy.sh  # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
@@ -387,7 +393,9 @@ done
 
 if [[ -z "$TF_CONFIG" ]]; then
   echo "Using default config file"
-  TF_CONFIG="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+  # TODO: change this to /tf/avm/config/config.yaml
+  # TF_CONFIG="${TF_WORKING_DIRECTORY}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+  TF_CONFIG="${TF_WORKING_DIRECTORY}/config/config.yaml"
 fi
 
 # Ensure at least one -path is provided

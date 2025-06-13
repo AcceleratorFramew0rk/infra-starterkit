@@ -14,14 +14,17 @@ echo "getting the prefix from config.yaml"
 #------------------------------------------------------------------------
 
 # define your prefix or project code
-CONFIG_FILE="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+# CONFIG_FILE="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+CONFIG_FILE="${WORKING_DIR}/config/config.yaml"
 echo "Config file: ${CONFIG_FILE}"
 
 PREFIX=$(yq  -r '.prefix' "${CONFIG_FILE}")
 echo "getting the prefix from config.yaml"
-cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
+# cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
+cd "${WORKING_DIR}/scripts/bin"
 pwd
-./scripts/launchpad.sh $PREFIX
+# ./scripts/launchpad.sh $PREFIX
+./launchpad.sh $PREFIX
 if [ $? -eq 0 ]; then
     echo "launchpad.sh completed successfully."
 else
@@ -126,8 +129,10 @@ pwd
 # generate the nsg configuration
 #------------------------------------------------------------------------
 
-cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
-./scripts/nsg.sh "${WORKING_DIR}"
+# cd "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet"
+cd "${WORKING_DIR}/scripts/bin"
+# ./scripts/nsg.sh "${WORKING_DIR}"
+./nsg.sh "${WORKING_DIR}"
 if [ $? -eq 0 ]; then
     echo "nsg.sh completed successfully."
 else

@@ -11,6 +11,8 @@
 # prepare the environment
 #------------------------------------------------------------------------
 
+WORKING_DIR="/tf/avm"
+
 echo "PREFIX: $PREFIX"
 echo "RESOURCE GROUP NAME: $RESOURCE_GROUP_NAME"
 echo "Log Analytics Workspace Resource Group Name: $LOG_ANALYTICS_WORKSPACE_RESOURCE_GROUP_NAME"
@@ -43,7 +45,7 @@ SUBSCRIPTION_ID="${SUB_ID}"
 RG_NAME="${PREFIX}-rg-launchpad"
 STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
 
-CONFIG_YAML_FILE_PATH="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+CONFIG_YAML_FILE_PATH="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 
 echo "PREFIX: ${PREFIX}"
 echo "RESOURCE GROUP NAME: ${RESOURCE_GROUP_NAME}"

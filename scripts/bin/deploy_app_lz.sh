@@ -6,8 +6,11 @@
 # ./deploy.sh
 #------------------------------------------------------------------------
 
+
+WORKING_DIR="/tf/avm"
+
 # goto working directory
-cd /tf/avm/scripts/bin
+cd "${WORKING_DIR}/scripts/bin"
 
 echo "You are currently in the directory: $(pwd)"
 
@@ -32,7 +35,7 @@ echo "You are currently in the directory: $(pwd)"
 # if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
   # tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-  tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
+  tfexe import -path=$WORKING_DIR/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
 
   if [ $? -ne 0 ]; then
     echo -e "     "
@@ -61,21 +64,21 @@ echo "You are currently in the directory: $(pwd)"
 
 # if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
+  tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mCreate 1-Landing Zone networking_spoke_project failed. Exiting.\e[0m"
     exit 1
   fi
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
+  tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mCreate 1-Landing Zone networking_spoke_devops failed. Exiting.\e[0m"
     exit 1
   fi
 
-  tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
+  tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
   if [ $? -ne 0 ]; then
     echo -e "     "
     echo -e "\e[31mCreate 1-Landing Zone networking_peering_project_devops failed. Exiting.\e[0m"
@@ -125,9 +128,10 @@ echo "You are currently in the directory: $(pwd)"
 #------------------------------------------------------------------------
 echo "deploy azure resources - 2-solution accelerators"
 
-cd /tf/avm/scripts/bin
+cd "${WORKING_DIR}/scripts/bin"
 
-CONFIG_YAML_FILE_PATH="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+# CONFIG_YAML_FILE_PATH="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+CONFIG_YAML_FILE_PATH="${WORKING_DIR}/config/config.yaml"
 LANDINGZONE_TYPE="1"
 SETTINGS_YAML_FILE_PATH=$(yq  -r '.settings_yaml_file_path' "${CONFIG_YAML_FILE_PATH}")
 

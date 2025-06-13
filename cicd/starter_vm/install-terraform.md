@@ -12,7 +12,7 @@ unzip terraform.zip
 # if unzip not working, use windows unzip
 
 # Move the Terraform binary to a directory in your PATH
-sudo mv terraform /usr/local/bin/
+sudo mv ./terraform/terraform /usr/local/bin/
 
 # Verify the installation
 terraform -version

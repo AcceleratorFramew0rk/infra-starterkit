@@ -1,12 +1,12 @@
-resource_group_name: "gcci-platform" 
+resource_group_name: "rg-ps32-dev-platform" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "aoaiuat"
-is_prefix: true
-is_single_resource_group: false
+prefix: "ps32-dev"
+is_prefix: false
+is_single_resource_group: true
 location: "southeastasia"
-environment: "uat"
+environment: "dev"
 app_config:
   private_dns_zones: # to replace with your application domain name
     internet_ingress_domain_name: internet.sandpitlabs.com 
@@ -77,7 +77,7 @@ subnets:
       address_prefixes: ["100.64.1.0/27"]
     UserNodePoolSubnet: # DO NOT CHANGE subnet name
       name: "UserNodePoolSubnet"    
-      address_prefixes: ["100.64.0.32/27"]
+      address_prefixes: ["100.64.1.32/27"]
     UserNodePoolIntranetSubnet: # DO NOT CHANGE subnet name
       name: "UserNodePoolIntranetSubnet"    
       address_prefixes: ["100.64.1.64/27"]         
@@ -142,7 +142,21 @@ subnets:
             actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
             }
         }
-      ]        
+      ]   
+# container app vnet integration
+# -----------------
+    ContainerAppSubnet: # DO NOT CHANGE subnet name
+      name: "ContainerAppSubnet"    
+      address_prefixes: ["100.64.3.96/27"]
+      delegations: [
+        {
+          name: "ContainerAppSubnet",
+          service_delegation: {
+            name: "Microsoft.App/environments", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
   # IMPORTANT ** comment off the below any devops subnets if it is not used          
   devops:
     RunnerSubnet:    

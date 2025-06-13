@@ -66,7 +66,7 @@ locals {
 variable "config_path" {
   description = "Path to the config.yaml file"
   type        = string
-  default     = "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+  default     = "/tf/avm/config/config.yaml"
 }
 
 data "external" "get_backend_config" {

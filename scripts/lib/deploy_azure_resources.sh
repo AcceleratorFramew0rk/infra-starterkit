@@ -14,8 +14,10 @@
 # 2-solution accelerators
 #------------------------------------------------------------------------
 
+WORKING_DIR="/tf/avm"
+
 # goto working directory
-cd /tf/avm/scripts
+cd "${WORKING_DIR}/scripts"
 
 # Define the YAML file path
 yaml_file=$1 
@@ -30,7 +32,7 @@ fi
 
 if [[ -z "$config_file" ]]; then
   echo "set the default config file path to /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-  config_file="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+  config_file="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 fi
 
 # Check if the file exists
@@ -56,7 +58,7 @@ while IFS= read -r section_entry; do
       clean_key="${key//_/}"
       clean_section="${section//_/-}"
       backend_config_key="solution-accelerators-${clean_section}-${clean_key}"
-      working_path="/tf/avm/templates/landingzone/configuration/2-solution_accelerators/${section}/${key}"
+      working_path="${WORKING_DIR}/templates/landingzone/configuration/2-solution_accelerators/${section}/${key}"
       echo "backend_config_key: $backend_config_key"
       echo "working_path: $working_path"
 

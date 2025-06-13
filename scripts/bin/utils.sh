@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+WORKING_DIR="/tf/avm"
+
 #------------------------------------------------------------------------
 # functions
 #------------------------------------------------------------------------
@@ -69,7 +72,8 @@ exec_terraform() {
 
 exec_approve_stream_analytics_managed_private_endpoint() {
 
-  PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+  # PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+  PREFIX=$(yq  -r '.prefix' $WORKING_DIR/config/config.yaml)
 
   # iot hub
   # --------------------------------

@@ -7,7 +7,7 @@ is_prefix: true
 is_single_resource_group: true
 environment: "dev"
 settings_yaml_file_path: "/tf/avm/scripts/config/settings_ai_archetype.yaml"
-config_yaml_file_path: "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+config_yaml_file_path: "/tf/avm/config/config.yaml"
 vnets:
   hub_ingress_internet: 
     name:   

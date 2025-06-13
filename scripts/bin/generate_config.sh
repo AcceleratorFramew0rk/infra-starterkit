@@ -6,8 +6,11 @@
 # ./generate_config.sh
 #------------------------------------------------------------------------
 
+
+WORKING_DIR="/tf/avm"
+
 # goto working directory
-cd /tf/avm/scripts/bin
+cd "${WORKING_DIR}/scripts/bin"
 
 echo "You are currently in the directory: $(pwd)"
 

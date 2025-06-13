@@ -1,12 +1,12 @@
-resource_group_name: "gcci-platform" 
+resource_group_name: "rg-ps33-dev-platform" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "he01-dev"
-is_prefix: true
-is_single_resource_group: false
+prefix: "ps33-dev"
+is_prefix: false
+is_single_resource_group: true
 location: "southeastasia"
-environment: "uat"
+environment: "dev"
 app_config:
   private_dns_zones: # to replace with your application domain name
     internet_ingress_domain_name: internet.sandpitlabs.com 
@@ -71,7 +71,92 @@ subnets:
       ]                  
     ApiSubnet: # DO NOT CHANGE subnet name
       name: "ApiSubnet"    
-      address_prefixes: ["100.64.0.224/27"]     
+      address_prefixes: ["100.64.0.224/27"]
+    SystemNodePoolSubnet: # DO NOT CHANGE subnet name
+      name: "SystemNodePoolSubnet"    
+      address_prefixes: ["100.64.1.0/27"]
+    UserNodePoolSubnet: # DO NOT CHANGE subnet name
+      name: "UserNodePoolSubnet"    
+      address_prefixes: ["100.64.1.32/27"]
+    UserNodePoolIntranetSubnet: # DO NOT CHANGE subnet name
+      name: "UserNodePoolIntranetSubnet"    
+      address_prefixes: ["100.64.1.64/27"]         
+    UserNodePoolWindowsSubnet: # DO NOT CHANGE subnet name
+      name: "UserNodePoolWindowsSubnet"    
+      address_prefixes: ["100.64.1.96/27"]      
+    AiSubnet: # DO NOT CHANGE subnet name
+      name: "AiSubnet"    
+      address_prefixes: ["100.64.1.128/27"]   
+      service_endpoints: 
+        - "Microsoft.Storage"      
+    LogicAppSubnet: # DO NOT CHANGE subnet name
+      name: "LogicAppSubnet"
+      address_prefixes: ["100.64.1.160/27"]   
+      delegations: [
+        {
+          name: "logicapp",
+          service_delegation: {
+            name: "Microsoft.Web/serverFarms", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ]  
+    CiSubnet: # DO NOT CHANGE subnet name 
+      name: "CiSubnet"    
+      address_prefixes: ["100.64.1.192/27"]   
+      delegations: [
+        {
+          name: "ci",
+          service_delegation: {
+            name: "Microsoft.ContainerInstance/containerGroups", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ]  
+    ServiceBusSubnet: # DO NOT CHANGE subnet name
+      name: "ServiceBusSubnet"    
+      address_prefixes: ["100.64.1.224/27"]         
+    CosmosDbSubnet: # DO NOT CHANGE subnet name 
+      name: "CosmosDbSubnet"
+      address_prefixes: ["100.64.2.0/27"]    
+    AppServiceSubnet: # DO NOT CHANGE subnet name
+      name: "AppServiceSubnet"
+      address_prefixes: ["100.64.2.32/27"]
+      delegations: [ 
+        {
+          name: "AppServiceSubnet",
+          service_delegation: {
+            name: "Microsoft.Web/serverFarms", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
+    AppServiceIntranetSubnet: # DO NOT CHANGE subnet name
+      name: "AppServiceIntranetSubnet"
+      address_prefixes: ["100.64.3.64/27"]
+      delegations: [ 
+        {
+          name: "AppServiceSubnet",
+          service_delegation: {
+            name: "Microsoft.Web/serverFarms", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ]   
+# container app vnet integration
+# -----------------
+    ContainerAppSubnet: # DO NOT CHANGE subnet name
+      name: "ContainerAppSubnet"    
+      address_prefixes: ["100.64.3.96/27"]
+      delegations: [
+        {
+          name: "ContainerAppSubnet",
+          service_delegation: {
+            name: "Microsoft.App/environments", 
+            actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
+            }
+        }
+      ] 
   # IMPORTANT ** comment off the below any devops subnets if it is not used          
   devops:
     RunnerSubnet:    

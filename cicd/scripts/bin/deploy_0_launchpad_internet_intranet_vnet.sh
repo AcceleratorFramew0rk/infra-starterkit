@@ -11,7 +11,7 @@
 # Echo the contents of ./config.yaml
 echo "config.yaml content:"
 # cat ./config.yaml
-cat ./templates/landingzone/configuration/0-launchpad/scripts/config.yaml
+cat ./config/config.yaml
 PREFIX=$(yq -r '.prefix' './config.yaml')
 RG_NAME="${PREFIX}-rg-launchpad"
 echo "Resource Group name: ${RG_NAME}"

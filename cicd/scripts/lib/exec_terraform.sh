@@ -67,7 +67,7 @@ exec_terraform() {
 
 # # perform copy
 # echo "copy output_config.yaml to working directory"
-# cp "./output_config.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+# cp "./output_config.yaml" "/tf/avm/config/config.yaml"
 
 
 #------------------------------------------------------------------------
@@ -106,7 +106,7 @@ USER_NAME=$(echo "$ACCOUNT_INFO" | jq ".user.name" -r)
 SUBSCRIPTION_ID="${SUB_ID}" 
 
 # get resource group and storage account name
-PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+PREFIX=$(yq  -r '.prefix' /tf/avm/config/config.yaml)
 RG_NAME="${PREFIX}-rg-launchpad"
 STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
 
@@ -148,7 +148,7 @@ cd /tf/avm/scripts
 # # #------------------------------------------------------------------------
 # # # get configuration file path, resource group name, storage account name, subscription id, subscription name
 # # #------------------------------------------------------------------------
-PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+PREFIX=$(yq  -r '.prefix' /tf/avm/config/config.yaml)
 RG_NAME="${PREFIX}-rg-launchpad"
 STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
 if [[ -z "$STG_NAME" ]]; then
