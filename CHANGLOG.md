@@ -21,8 +21,10 @@
 - *Upgrade SearchService to avm v0.1.5.*
 - *Upgrade Ingress Internet Azure Firewall to avm v0.3.0.*
 - *Upgrade Ingress Intranet Azure Firewall to avm v0.3.0.*
+- *Upgrade Azure Virtual Machine to avm v0.19.3.*
+- *Upgrade VMSS Windows to avm v0.7.1".*
+- *Upgrade VMSS Linux to avm v0.7.1".*
 - *Change path of config.yaml to /tf/avm/config/config.yaml.*
-
 
 
 #### **Bug Fixes:**

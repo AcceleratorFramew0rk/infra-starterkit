@@ -33,8 +33,9 @@ exec_terraform() {
 
       echo "Using config file: $TF_CONFIG"
       PREFIX=$(yq  -r '.prefix' $TF_CONFIG)
-      RG_NAME="${PREFIX}-rg-launchpad"
-      STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
+      # RG_NAME="${PREFIX}-rg-launchpad"
+      RG_NAME="rg-${PREFIX}-launchpad"
+      STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, 'stg${PREFIX//-/}tfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
       echo "Resource Group name: ${RG_NAME}"
       echo "Storage Account name: ${STG_NAME}"
 
@@ -164,7 +165,8 @@ exec_terraform() {
     # execute from current folder or -path parameter if exists
     # cd /tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet/scripts
     cd "${TF_WORKING_DIRECTORY}/scripts/bin"
-    ./import.sh  # Check if the command was successful
+    ./import.sh  
+    # Check if the command was successful
     if [ $? -ne 0 ]; then
       echo -e "     "
       echo -e "\e[31mTerraform $ACTION failed. Exiting.\e[0m"
@@ -279,8 +281,7 @@ if [[ $# -lt 1 ]]; then
     echo "  init                  Prepare your working directory for other commands"
     echo "  plan                  Execute init and then show changes required by the current configuration"
     echo "  apply                 Execute init and then create or update infrastructure"
-    echo "  import                Import existing VNET infrastructure into your Terraform state"
-    echo "  generate-config       Generate config.yaml file based on inputs"
+    echo "  import                Import existing VNET infrastructure into your Terraform state"    echo "  generate-config       Generate config.yaml file based on inputs"
     echo "  setup-law             Setup subscription log analytics workspace and resource group"
     echo "  deploy                Deploy azure resource based on settings.yaml file and prompt inputs"
     echo "  update-remote-state   Update remote terraform state with the latest config.yaml file content"
@@ -394,7 +395,7 @@ done
 if [[ -z "$TF_CONFIG" ]]; then
   echo "Using default config file"
   # TODO: change this to /tf/avm/config/config.yaml
-  # TF_CONFIG="${TF_WORKING_DIRECTORY}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+  # TF_CONFIG="${TF_WORKING_DIRECTORY}/config/config.yaml"
   TF_CONFIG="${TF_WORKING_DIRECTORY}/config/config.yaml"
 fi
 

@@ -367,7 +367,9 @@ yaml_obj = None
 csv_to_yaml()
 
 # Load the YAML file and assign it to the global object
-load_yaml_file('./../../0-launchpad/scripts/config.yaml')
+
+# load_yaml_file('./../../0-launchpad/scripts/config.yaml')
+load_yaml_file('./../../../../../config/config.yaml')
 
 # Replace variables in config_nsg.yaml
 configure_nsg()

@@ -60,8 +60,8 @@ configure_nsg () {
 #------------------------------------------------------------------------
 
 
-# CONFIG_FILE_PATH="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-CONFIG_FILE_PATH="./../../0-launchpad/scripts/config.yaml"
+# CONFIG_FILE_PATH="/tf/avm/config/config.yaml"
+CONFIG_FILE_PATH="./../../../../../config/config.yaml"
 echo $CONFIG_FILE_PATH
 eval $(parse_yaml $CONFIG_FILE_PATH "CONFIG_")
 # e,g,

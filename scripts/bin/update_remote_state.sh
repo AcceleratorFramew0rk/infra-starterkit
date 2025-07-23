@@ -15,7 +15,7 @@ WORKING_DIR="${1:-/tf/avm}"
 #------------------------------------------------------------------------
 
 # define your prefix or project code
-# PREFIX=$(yq  -r '.prefix' "${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml")
+# PREFIX=$(yq  -r '.prefix' "${WORKING_DIR}/config/config.yaml")
 PREFIX=$(yq  -r '.prefix' "${WORKING_DIR}/config/config.yaml")
 
 #------------------------------------------------------------------------

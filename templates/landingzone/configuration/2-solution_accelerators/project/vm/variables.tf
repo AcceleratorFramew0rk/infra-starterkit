@@ -85,6 +85,11 @@ variable "source_image_reference_linux" {
   }
 }
 
+variable "encryption_at_host_enabled" {
+  type        = bool  
+  default = false
+}
+
 # # variable deprecated
 # variable "resource_names" {
 #   description = "List of Virtual Machine names"

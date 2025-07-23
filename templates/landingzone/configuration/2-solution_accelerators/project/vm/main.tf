@@ -94,8 +94,9 @@ resource "azurerm_user_assigned_identity" "user" {
 
 module "virtualmachine1" {
   source = "Azure/avm-res-compute-virtualmachine/azurerm"
-  version = "0.14.0"
+  # version = "0.14.0"
   # version = "0.18.1" # Mar 2025
+  version = "0.19.3"
 
   # for_each                     = toset(var.resource_names)
   for_each                     = local.vm_indices 
@@ -104,14 +105,27 @@ module "virtualmachine1" {
   location            = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location # azurerm_resource_group.this.0.location
   resource_group_name = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.name : local.global_settings.resource_group_name # azurerm_resource_group.this.0.name
 
-  virtualmachine_os_type                 = var.virtualmachine_os_type # default is "Windows"
+  # virtualmachine_os_type                 = var.virtualmachine_os_type # default is "Windows"
+  os_type                 = var.virtualmachine_os_type # default is "Windows"
+  encryption_at_host_enabled = var.encryption_at_host_enabled # false # The property 'securityProfile.encryptionAtHost' is not valid because the 'Microsoft.Compute/EncryptionAtHost' feature is not enabled for this subscription.
   name = (
     length(replace("${module.naming.virtual_machine.name}-${each.value}-${random_string.this.result}", "-", "")) > 15
     ? substr(replace("${module.naming.virtual_machine.name}-${each.value}-${random_string.this.result}", "-", ""), 0, 15)
     : replace("${module.naming.virtual_machine.name}-${each.value}-${random_string.this.result}", "-", "")
   )
-  admin_credential_key_vault_resource_id = module.avm_res_keyvault_vault.resource_id # module.avm_res_keyvault_vault.resource.id
-  virtualmachine_sku_size                = var.sku # "Standard_D8s_v3" # "Standard_D8s_v3" 
+  # admin_credential_key_vault_resource_id = module.avm_res_keyvault_vault.resource_id # module.avm_res_keyvault_vault.resource.id
+  account_credentials = {
+    key_vault_configuration = {
+      resource_id = module.avm_res_keyvault_vault.resource_id
+      secret_configuration = {
+        name         = "vault-pub-key-${module.naming.virtual_machine.name}-${each.value}"
+      }
+    }
+    password_authentication_disabled = true # Use of password_authentication_disabled == false is limited to Linux operating systems. Please set to true when using os_type of Windows.
+  }
+
+  # virtualmachine_sku_size                = var.sku # "Standard_D8s_v3" # "Standard_D8s_v3" 
+  sku_size                = var.sku # "Standard_D8s_v3" # "Standard_D8s_v3" 
   zone                                   = random_integer.zone_index.result 
 
   # use source_image_resource_id for gcc, else use default source_image_reference

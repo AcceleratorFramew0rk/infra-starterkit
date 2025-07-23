@@ -40,7 +40,7 @@ management:
   bastion_host: true
   vm: true
 devops:
-  containter_instance: false
+  container_instance: false
 project:
   storage_account: false
   acr: false

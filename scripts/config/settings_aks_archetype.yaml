@@ -15,16 +15,14 @@ management:
   bastion_host: false
   vm: false
 devops:
-  containter_instance: true
+  container_instance: true
 project:
-  acr: true
+  acr: false
   ai_foundry_enterprise: false
+  ai_search_service: false
   aks_avm_ptn: true
   apim: false
   app_service: false
-  app_service_intranet: false
-  app_service_windows: false
-  azure_open_ai: false
   container_instance: false
   cosmos_db_mongo: false
   cosmos_db_sql: false
@@ -37,6 +35,7 @@ project:
   mssql: true
   redis_cache: false
   search_service: false
+  ai_search_service: false
   service_bus: false
   storage_account: true
   stream_analytics: false

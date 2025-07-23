@@ -28,31 +28,19 @@ echo "You are currently in the directory: $(pwd)"
 #------------------------------------------------------------------------
 ## 0. Launchpad - create launchpad storage account and containers
 ### - set prefix and configuration
-### - modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
+### - modify /tf/avm/config/config.yaml according to your vnet and subnet requirements
 ### ** Follow the instruction to enter the below information
 ### Prefix, Resource Group Name, VNet Project Name and CIDR, VNet DevOps Name and CIDR, Landing Zone Type, <Your Settings File>
 #------------------------------------------------------------------------
-# if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
-  # tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad_healthcare
-  tfexe import -path=$WORKING_DIR/templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
+tfexe import 
 
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
-    exit 1
-  fi
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
+  exit 1
+fi
 
-# else
-
-#   tfexe import -path=/tf/avm/templates/landingzone/configuration/0-launchpad/launchpad
-#   if [ $? -ne 0 ]; then
-#     echo -e "     "
-#     echo -e "\e[31m0-Launchpad failed. Exiting.\e[0m"
-#     exit 1
-#   fi
-
-# fi
 
 #------------------------------------------------------------------------
 ## 1. Infra and Application Landing zone and networking
@@ -62,60 +50,28 @@ echo "You are currently in the directory: $(pwd)"
 # /tf/avm/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
 #------------------------------------------------------------------------
 
-# if [[ "$LANDINGZONE_TYPE" == "application"  || "$LANDINGZONE_TYPE" == "1" ]]; then
 
-  tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_spoke_project failed. Exiting.\e[0m"
-    exit 1
-  fi
+tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_spoke_project
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mCreate 1-Landing Zone networking_spoke_project failed. Exiting.\e[0m"
+  exit 1
+fi
 
-  tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_spoke_devops failed. Exiting.\e[0m"
-    exit 1
-  fi
+tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_spoke_devops
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mCreate 1-Landing Zone networking_spoke_devops failed. Exiting.\e[0m"
+  exit 1
+fi
 
-  tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
-  if [ $? -ne 0 ]; then
-    echo -e "     "
-    echo -e "\e[31mCreate 1-Landing Zone networking_peering_project_devops failed. Exiting.\e[0m"
-    exit 1
-  fi
+tfexe apply -path=$WORKING_DIR/templates/landingzone/configuration/1-landingzones/application/networking_peering_project_devops
+if [ $? -ne 0 ]; then
+  echo -e "     "
+  echo -e "\e[31mCreate 1-Landing Zone networking_peering_project_devops failed. Exiting.\e[0m"
+  exit 1
+fi
 
-# else
-
-#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_hub_internet_ingress
-#   if [ $? -ne 0 ]; then
-#     echo -e "     "
-#     echo -e "\e[31mCreate 1-Landing Zone networking_hub_internet_ingress failed. Exiting.\e[0m"
-#     exit 1
-#   fi
-
-#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_hub_intranet_ingress
-#   if [ $? -ne 0 ]; then
-#     echo -e "     "
-#     echo -e "\e[31mCreate 1-Landing Zone networking_hub_intranet_ingress failed. Exiting.\e[0m"
-#     exit 1
-#   fi
-
-#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_spoke_management
-#   if [ $? -ne 0 ]; then
-#     echo -e "     "
-#     echo -e "\e[31mCreate 1-Landing Zone networking_spoke_management failed. Exiting.\e[0m"
-#     exit 1
-#   fi
-
-#   tfexe apply -path=/tf/avm/templates/landingzone/configuration/1-landingzones/platform/networking_peering
-#   if [ $? -ne 0 ]; then
-#     echo -e "     "
-#     echo -e "\e[31mCreate 1-Landing Zone networking_peering failed. Exiting.\e[0m"
-#     exit 1
-#   fi
-
-# fi
 
 #------------------------------------------------------------------------
 # 2- solution accelerators
@@ -123,14 +79,13 @@ echo "You are currently in the directory: $(pwd)"
 # USAGE:
 # ./../lib/deploy_azure_resources.sh <path_to_settings_yaml_file> <path_to_config_yaml_file> <landingzone_type>
 # EXAMPLE: 
-# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml" "1"
-# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings_platform_landing_zone.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml" "2"
+# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings.yaml" "/tf/avm/config/config.yaml" "1"
+# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings_platform_landing_zone.yaml" "/tf/avm/config/config.yaml" "2"
 #------------------------------------------------------------------------
 echo "deploy azure resources - 2-solution accelerators"
 
 cd "${WORKING_DIR}/scripts/bin"
 
-# CONFIG_YAML_FILE_PATH="/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
 CONFIG_YAML_FILE_PATH="${WORKING_DIR}/config/config.yaml"
 LANDINGZONE_TYPE="1"
 SETTINGS_YAML_FILE_PATH=$(yq  -r '.settings_yaml_file_path' "${CONFIG_YAML_FILE_PATH}")

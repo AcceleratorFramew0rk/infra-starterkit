@@ -1,12 +1,12 @@
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f"
-resource_group_name: "ps03-dev-rg-platform"
+resource_group_name: "rg-ts200-dev-platform"
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace" 
-prefix: "ps03-dev"
+prefix: "ts200-dev"
 is_prefix: true
 is_single_resource_group: true
 environment: "dev"
-settings_yaml_file_path: "/tf/avm/scripts/config/settings_ai_archetype.yaml"
+settings_yaml_file_path: "/tf/avm/scripts/config/settings_vm_logicapp_archetype.yaml"
 config_yaml_file_path: "/tf/avm/config/config.yaml"
 vnets:
   hub_ingress_internet: 

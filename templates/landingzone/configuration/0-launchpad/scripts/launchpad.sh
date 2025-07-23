@@ -25,8 +25,8 @@ LOC="southeastasia"
 PROJECT_CODE="${PREFIX}"
 RND_NUM=$(env LC_CTYPE=C tr -dc 'a-z' </dev/urandom | fold -w 3 | head -n 1)
 
-RG_NAME="${PROJECT_CODE}-rg-launchpad"
-STG_NAME="${PROJECT_CODE}stgtfstate${RND_NUM}"
+RG_NAME="rg-${PROJECT_CODE}-launchpad"
+STG_NAME="stg${PROJECT_CODE}tfstate${RND_NUM}"
 CONTAINER1="0-launchpad"
 CONTAINER2="1-landingzones"
 CONTAINER3="2-solution-accelerators"

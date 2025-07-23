@@ -94,7 +94,8 @@ echo $PROJECT_CODE
 SUBSCRIPTION_ID="${SUB_ID}" 
 
 # Generate resource group name to store state file
-RG_NAME="${PROJECT_CODE}-rg-launchpad"
+# RG_NAME="${PROJECT_CODE}-rg-launchpad"
+RG_NAME="rg-${PROJECT_CODE}-launchpad"
 
 # Location
 LOC=$(yq -r '.location' $CONFIG_FILE_PATH)
@@ -102,7 +103,7 @@ echo $LOC
 
 RND_NUM=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 3)
 echo "Generated Code: $RND_NUM"
-STG_NAME="${PROJECT_CODE}stgtfstate${RND_NUM}"
+STG_NAME="stg${PROJECT_CODE}tfstate${RND_NUM}"
 echo $STG_NAME
 STG_NAME="${STG_NAME//-/}"
 echo $STG_NAME

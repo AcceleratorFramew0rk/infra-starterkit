@@ -54,7 +54,7 @@ sudo chmod -R -f 777 /tf/avm/templates/landingzone/configuration
 # deploy azure resources based on </tf/avm/scripts/config/settings.yaml> and prompt inputs
 tfexe generate-config
 
-# verify the content of config.yaml file in "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+# verify the content of config.yaml file in "/tf/avm/config/config.yaml"
 
 # exeute 01-launchpad import, 02-landingzones, 03-solution_accelerators
 tfexe deploy-app-lz

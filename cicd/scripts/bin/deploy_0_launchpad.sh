@@ -3,10 +3,14 @@
 # -----------------------------------------------------------------------------------------
 # USAGE:
 # cd $(pwd)/starterkit
-# ./cicd/scripts/deploy_0_launchpad.sh
+# ./cicd/scripts/bin/deploy_0_launchpad.sh
 # -----------------------------------------------------------------------------------------
 
 # ** IMPORTANT: always start with top level path of starterkit
+
+
+# must start with the top level path of starterkit
+WORKING_DIRECTORY=$(pwd) # pwd should always be ./starterkit or $(pwd)/starterkit
 
 # Echo the contents of ./config.yaml
 echo "config.yaml content:"
@@ -32,11 +36,9 @@ if [ $? -ne 0 ] || [ -z "$STG_NAME" ]; then
   echo "No existing storage account: ${STG_NAME}"
 
   # ** IMPORTANT: cd to the directory where the script is located
-  # cd ./templates/landingzone/configuration/0-launchpad/launchpad
-  cd ./templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
-  echo "Start importing vnet tfstate"            
-  # ./scripts/import_app_lz.sh        
-  ./scripts/import.sh
+  cd "${WORKING_DIRECTORY}/scripts/bin"
+  echo "Start importing vnet tfstate"  
+  ./import.sh
   if [ $? -ne 0 ]; then
     echo "Failed to import vnet tfstate. Exiting."
     exit 1
@@ -47,13 +49,11 @@ else
   echo "Storage Account name: ${STG_NAME}"
   echo "Using existing Resource group and storage account"
   echo "Start updating tfstate config info"    
-  # ** IMPORTANT: cd to the directory where the script is located   
-  # cd ./templates/landingzone/configuration/0-launchpad/launchpad
-  cd ./templates/landingzone/configuration/0-launchpad/launchpad_agency_managed_vnet
-  # ./scripts/import_update_app_lz.sh
-  ./scripts/update_remote_state.sh
+  # # ** IMPORTANT: cd to the directory where the script is located   
+  cd "${WORKING_DIRECTORY}/scripts/bin"
+  ./update_remote_state.sh $WORKING_DIRECTORY
   if [ $? -ne 0 ]; then
-    echo "Failed to import vnet tfstate. Exiting."
+    echo "Failed to Update Remote State vnet tfstate. Exiting."
     exit 1
   fi
 

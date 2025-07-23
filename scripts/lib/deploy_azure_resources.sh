@@ -5,8 +5,8 @@
 # USAGE:
 # exec_solution_accelerators.sh <path_to_settings_yaml_file> <path_to_config_yaml_file> <landingzone_type>
 # EXAMPLE: 
-# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml" "1"
-# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings_platform_landing_zone.yaml" "/tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml" "2"
+# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings.yaml" "/tf/avm/config/config.yaml" "1"
+# ./../lib/deploy_azure_resources.sh "/tf/avm/scripts/config/settings_platform_landing_zone.yaml" "/tf/avm/config/config.yaml" "2"
 #------------------------------------------------------------------------
 
 
@@ -31,8 +31,8 @@ if [[ -z "$yaml_file" ]]; then
 fi
 
 if [[ -z "$config_file" ]]; then
-  echo "set the default config file path to /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
-  config_file="${WORKING_DIR}/templates/landingzone/configuration/0-launchpad/scripts/config.yaml"
+  echo "set the default config file path to /tf/avm/config/config.yaml"
+  config_file="${WORKING_DIR}/config/config.yaml"
 fi
 
 # Check if the file exists

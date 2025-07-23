@@ -88,7 +88,7 @@ tfexe generate-config
 ## Step 1: Deploy 0-launchpad, 1-landingzones, 2-solution_accelerators
 
 - set prefix and configuration
-- modify /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml according to your vnet and subnet requirements
+- modify /tf/avm/config/config.yaml according to your vnet and subnet requirements
 - ensure your *.hcl contains the tfexe commands that you want to execute
 
 - EXAMPLE: if "/tf/avm/scripts/examples/run-all/azure_ai_foundry_pattern.hcl" contains all your tfexe commands

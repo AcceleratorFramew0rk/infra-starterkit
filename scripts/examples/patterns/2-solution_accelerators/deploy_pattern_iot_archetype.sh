@@ -5,7 +5,7 @@ source "./utils.sh"
 # #------------------------------------------------------------------------
 # # get configuration file path, resource group name, storage account name, subscription id, subscription name
 # #------------------------------------------------------------------------
-PREFIX=$(yq  -r '.prefix' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+PREFIX=$(yq  -r '.prefix' /tf/avm/config/config.yaml)
 RG_NAME="${PREFIX}-rg-launchpad"
 STG_NAME=$(az storage account list --resource-group $RG_NAME --query "[?contains(name, '${PREFIX//-/}stgtfstate')].[name]" -o tsv 2>/dev/null | head -n 1)
 if [[ -z "$STG_NAME" ]]; then
@@ -29,7 +29,7 @@ echo "Subscription Name: ${SUB_NAME}"
 echo "Storage Account Name: ${STG_NAME}"
 echo "Resource Group Name: ${RG_NAME}"
 
-RESOURCE_GROUP_NAME=$(yq  -r '.resource_group_name' /tf/avm/templates/landingzone/configuration/0-launchpad/scripts/config.yaml)
+RESOURCE_GROUP_NAME=$(yq  -r '.resource_group_name' /tf/avm/config/config.yaml)
 
 #------------------------------------------------------------------------
 # end get configuration file path, resource group name, storage account name, subscription id, subscription name

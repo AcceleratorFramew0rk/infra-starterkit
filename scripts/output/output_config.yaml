@@ -1,10 +1,10 @@
-resource_group_name: "ps03-dev-rg-platform" 
+resource_group_name: "rg-ts200-dev-platform" 
 log_analytics_workspace_resource_group_name: "gcci-agency-law"  
 log_analytics_workspace_name: "gcci-agency-workspace"  
 subscription_id: "0b5b13b8-0ad7-4552-936f-8fae87e0633f" 
-settings_yaml_file_path: "/tf/avm/scripts/config/settings_ai_archetype.yaml" 
+settings_yaml_file_path: "/tf/avm/scripts/config/settings_vm_logicapp_archetype.yaml" 
 # # virtual network - leave empty if there is no such virtual network   
-prefix: "ps03-dev" 
+prefix: "ts200-dev" 
 is_prefix: true
 is_single_resource_group: true
 location: "southeastasia"
@@ -30,45 +30,35 @@ subnets:
 # -----------------   
   project: 
 # -----------------   
-# app service pep, container app pep, linux function app pep
+# vm, vmss_linux, vmss_windows
 # -----------------
-    WebSubnet: # DO NOT CHANGE subnet name
-     name: "WebSubnet"
-     address_prefixes: ["192.168.0.96/27"]
+    AppSubnet: # DO NOT CHANGE subnet name
+      name: "AppSubnet"    
+      address_prefixes: ["192.168.0.96/27"]
 # mssql pep, postgresql pep, redis cache pep, storage account pep
 # ----------------- 
     DbSubnet: # DO NOT CHANGE subnet name
       name: "DbSubnet"    
-      address_prefixes: ["192.168.0.128/27"]
+      address_prefixes: ["192.168.0.64/27"]
 # keyvault pep, acr pep, logic app pep
 # -----------------
     ServiceSubnet: # DO NOT CHANGE subnet name
       name: "ServiceSubnet"
-      address_prefixes: ["192.168.0.160/27"]
-# apim
-# -----------------               
-    ApiSubnet: # DO NOT CHANGE subnet name
-      name: "ApiSubnet"    
-      address_prefixes: ["192.168.0.32/27"]
-# ai, search service, ai_foundary
+      address_prefixes: ["192.168.0.0/27"]
+# logic app vnet integration
 # -----------------
-    AiSubnet: # DO NOT CHANGE subnet name
-      name: "AiSubnet"    
-      address_prefixes: ["192.168.0.0/27"]   
-# app service vnet integration
-# -----------------
-    AppServiceSubnet: # DO NOT CHANGE subnet name
-      name: "AppServiceSubnet"
-      address_prefixes: ["192.168.0.64/27"]
-      delegations: [ 
+    LogicAppSubnet: # DO NOT CHANGE subnet name
+      name: "LogicAppSubnet"
+      address_prefixes: ["192.168.0.32/27"]   
+      delegations: [
         {
-          name: "AppServiceSubnet",
+          name: "LogicAppSubnet",
           service_delegation: {
             name: "Microsoft.Web/serverFarms", 
             actions: ["Microsoft.Network/virtualNetworks/subnets/action"]
             }
         }
-      ] 
+      ]  
 # IMPORTANT ** comment off the below any devops subnets if it is not used  
 # -----------------           
   devops:

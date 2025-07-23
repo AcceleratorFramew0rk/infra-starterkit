@@ -27,7 +27,9 @@ while true; do
 done
 
 # Prompt for VNET Project Name with a default value
-RESOURCE_GROUP_NAME=$(prompt_for_input "Enter the Resource Group Name" "gcci-platform")
+# RESOURCE_GROUP_NAME=$(prompt_for_input "Enter the Resource Group Name" "gcci-platform")
+DEFAULT_RESOURCE_GROUP_NAME="rg-${PREFIX}-platform"
+RESOURCE_GROUP_NAME=$(prompt_for_input "Enter the Resource Group Name" "${DEFAULT_RESOURCE_GROUP_NAME}")
 
 # Prompt for VNET Project Name with a default value
 ENVIRONMENT=$(prompt_for_input "Enter the ENVIRONMENT (dev, sit, uat, prd)" "dev")
@@ -52,12 +54,16 @@ if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; the
   COMPARTMENT_TYPE=$(prompt_for_input "Enter the Compartment Type (1: Internet or 2: Intranet or 3: Agency Managed)" "3")
 
   # Prompt for VNET Project Name with a default value
-  VNET_PROJECT_NAME=$(prompt_for_input "Enter the VNET Project Name" "gcci-vnet-project")
+  DEFAULT_VNET_PROJECT_NAME="vnet-${PREFIX}-project"
+  # VNET_PROJECT_NAME=$(prompt_for_input "Enter the VNET Project Name" "gcci-vnet-project")
+  VNET_PROJECT_NAME=$(prompt_for_input "Enter the VNET Project Name" "${DEFAULT_VNET_PROJECT_NAME}")
   if [[ "$COMPARTMENT_TYPE" == "3" ]]; then
     GCCI_VNET_PROJECT_CIDR=$(prompt_for_input "Enter the Agency Managed VNET Project CIDR" "192.168.0.0/23")
   fi
   # Prompt for VNET DevOps Name with a default value
-  VNET_DEVOPS_NAME=$(prompt_for_input "Enter the VNET DevOps Name" "gcci-vnet-devops")
+  DEFAULT_VNET_DEVOPS_NAME="vnet-${PREFIX}-devops"
+  # VNET_DEVOPS_NAME=$(prompt_for_input "Enter the VNET DevOps Name" "gcci-vnet-devops")
+  VNET_DEVOPS_NAME=$(prompt_for_input "Enter the VNET DevOps Name" "${DEFAULT_VNET_DEVOPS_NAME}")
   if [[ "$COMPARTMENT_TYPE" == "3" ]]; then
     GCCI_VNET_DEVOPS_CIDR=$(prompt_for_input "Enter the Agency Managed VNET DevOps CIDR" "192.168.10.0/24")
   fi
@@ -65,7 +71,7 @@ fi
 
 if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; then
   # Prompt for settings.yaml path with a default value
-  ARCHETYPE=$(prompt_for_input "Enter the Archetype to deploy (1: AI Foundry or 2: AKS or 3: App Service or 4: IoT or 5: VM or 0: Custom Settings)" "1")
+  ARCHETYPE=$(prompt_for_input "Enter the Archetype to deploy (1: AI Foundry or 2: AKS or 3: App Service or 4: IoT or 5: VM  or 6: Container App or 0: Custom Settings)" "1")
 
   if [[ "$ARCHETYPE" == "1" ]]; then
     SETTINGS_YAML_FILE_PATH="${WORKING_DIR}/scripts/config/settings_ai_archetype.yaml"
@@ -76,7 +82,9 @@ if [[ "$LANDINGZONE_TYPE" == "1" || "$LANDINGZONE_TYPE" == "application" ]]; the
   elif [[ "$ARCHETYPE" == "4" ]]; then
     SETTINGS_YAML_FILE_PATH="${WORKING_DIR}/scripts/config/settings_iot_archetype.yaml"
   elif [[ "$ARCHETYPE" == "5" ]]; then
-    SETTINGS_YAML_FILE_PATH="${WORKING_DIR}/scripts/config/settings_vm_logicapp.yaml"
+    SETTINGS_YAML_FILE_PATH="${WORKING_DIR}/scripts/config/settings_vm_logicapp_archetype.yaml"
+  elif [[ "$ARCHETYPE" == "6" ]]; then
+    SETTINGS_YAML_FILE_PATH="${WORKING_DIR}/scripts/config/settings_containerapp_archetype.yaml"
   elif [[ "$ARCHETYPE" == "0" ]]; then
     SETTINGS_YAML_FILE_PATH=$(prompt_for_input "Enter the settings.yaml path" "${WORKING_DIR}/scripts/config/settings.yaml")
   else

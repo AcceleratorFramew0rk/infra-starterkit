@@ -79,6 +79,32 @@ variable "resource_names" {
   default     = ["web", "api"]
 }
 
+variable "intranet_resource_names" {
+  description = "List of App Service names"
+  type        = list(string)
+  # default     = ["web", "api"]
+  default     = [] # if you want to disable the intranet app service
+}
+
+variable "intranet_subnet_name" {
+  type        = string  
+  default = "AppServiceIntranetSubnet"
+}
+variable "intranet_subnet_id" {
+  type        = string  
+  default = null
+}
+
+variable "ingress_intranet_subnet_name" {
+  type        = string  
+  default = "ServiceSubnet"
+}
+
+# variable "intranet_appservice_enabled" {
+#   type        = bool  
+#   default = true
+# }
+
 
 
 # developer portal variables
