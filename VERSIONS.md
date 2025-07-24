@@ -27,3 +27,5 @@
 | ✔️25  | vm                             | 0.19.3                                                   | 0.19.3         | Azure/avm-res-compute-virtualmachine/azurerm                        |
 | ✔️26  | vmss_linux                     | 0.7.1                                                    |                | Azure/avm-res-compute-virtualmachinescaleset/azurerm               |
 | ✔️27  | vmss_windows                   | 0.7.1                                                    |                | Azure/avm-res-compute-virtualmachinescaleset/azurerm               |
+
+
