@@ -1,4 +1,7 @@
-| S/N   | Azure Services                 | Current Version                                           | Latest Version | AVM                                                                 |
+## AVM Resources Version used in Accelerators
+
+
+| S/N   | Azure Services                 | Current Version Used                                          | Latest Version | AVM Name                                                                |
 |-------|--------------------------------|-----------------------------------------------------------|----------------|----------------------------------------------------------------------|
 | ✔️1   | acr                            | 0.4.0                                                    | 0.4.0          | Azure/avm-res-containerregistry-registry/azurerm                    |
 | ✔️2   | ai_foundry_enterprise          | 0.8.0                                                    | 0.8.0          | Azure/avm-res-machinelearningservices-workspace/azurerm            |
