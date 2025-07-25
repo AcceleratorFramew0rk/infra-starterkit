@@ -407,7 +407,8 @@ module "diagnosticsetting_appinsight" {
 # outbound private link to ai service, search service
 module "aihub" {
   source  = "Azure/avm-res-machinelearningservices-workspace/azurerm"
-  version = "0.4.1"
+  # version = "0.4.1" # Jul 2025 version
+  version = "0.8.0"
 
   location                      = try(local.global_settings.resource_group_name, null) == null ? azurerm_resource_group.this.0.location : local.global_settings.location
   name                    = local.name
@@ -455,15 +456,17 @@ module "aihub" {
   #   create_service_connection = true
   # }
 
-  # configure ai hub outbound rules to search services 
+  ## TODO: this is not working, use azapi_update_resource to update the outbound rules "searchService" - code break in AVM module
+  # # configure ai hub outbound rules to search services 
   workspace_managed_network = {
     isolation_mode = "AllowOnlyApprovedOutbound"
     outbound_rules = {
       private_endpoint = {
-        aisearch-outbound-rule = {
-          resource_id         = module.aisearch.resource.id
-          sub_resource_target = "searchService"
-        }
+        # # TODO: aisearch outbound rule is not working, use azapi_update_resource to update the outbound rules
+        # aisearch-outbound-rule = {
+        #   resource_id         = module.aisearch.resource.id
+        #   sub_resource_target = "searchService"
+        # }
         aiservices-outbound-rule = {
           resource_id         = module.aiservices.resource.id
           sub_resource_target = "account"
@@ -521,7 +524,8 @@ module "aihub" {
     module.private_dns_aml_api,
     module.private_dns_aml_notebooks,
     azurerm_application_insights.this,
-    module.aiservices
+    module.aiservices,
+    module.aisearch
   ]
 }
 
@@ -535,7 +539,7 @@ module "aihub_project" {
   kind                    = "Project"
   workspace_description = "ai hub project 1"
   workspace_friendly_name = "${local.base_name}-ai-project"
-  ai_studio_hub_id = module.aihub.resource.id
+  ai_studio_hub_id = module.aihub.resource_id # module.aihub.resource.id
 
   diagnostic_settings = {
     diag = {

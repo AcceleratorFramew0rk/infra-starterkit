@@ -1,6 +1,6 @@
-output "resource" {
-  value       = module.aihub.resource 
-  description = "The Azure ai_foundry resource"
+output "resource_id" {
+  value       = module.aihub.resource_id 
+  description = "The Azure ai_foundry resource id"
   sensitive = true  
 }
 
